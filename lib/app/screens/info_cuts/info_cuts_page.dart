@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:share_plus/share_plus.dart';
 
 import 'components/clip_thumbnail_widget.dart';
 
@@ -15,6 +15,15 @@ class InfoCutsPage extends StatefulWidget {
 
 class _InfoCutsPageState extends State<InfoCutsPage> {
   int selectedClip = 0;
+
+  late InfoCutsController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = InfoCutsController(widget.cuts);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +50,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () async {
-              //TODO: Controller com função de pegar os caminhos
-              List<String> paths = [];
-              for (var element in widget.cuts) {
-                paths.add(element.path);
-              }
-
-              await Share.shareFiles(paths);
-
-              Navigator.pop(context);
-            },
+            onPressed: _shareCuts,
           ),
         ],
       ),
@@ -94,5 +93,11 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
         ),
       ),
     );
+  }
+
+  _shareCuts() async {
+    await controller.shareCuts();
+
+    Navigator.pop(context);
   }
 }
