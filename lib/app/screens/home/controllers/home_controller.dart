@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:flutter_video_cut/core/video_core.dart';
 import 'package:mobx/mobx.dart';
@@ -60,5 +61,12 @@ abstract class HomeControllerBase with Store {
       cuts.add(cut);
     }
     return cuts;
+  }
+
+  Future disposeCuts(List<CutModel> cuts) async {
+    for (CutModel cut in cuts) {
+      await FileService().deleteIfExists(cut.path);
+    }
+    cuts.clear();
   }
 }
