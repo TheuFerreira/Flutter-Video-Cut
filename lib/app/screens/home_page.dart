@@ -78,18 +78,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-/*
-
-
-                String originalVideo = video.path;
-                final paths = await VideoCore().cutInSubclips(originalVideo);
-                if (paths == null) {
-                  return;
-                }
-
-                await Share.shareFiles(paths);
-
-                paths.map((e) async => await FileService().deleteIfExists(e));
-*/

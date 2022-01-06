@@ -1,6 +1,7 @@
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
-import 'package:flutter_video_cut/core/ffmpeg_status.dart';
 import 'package:path_provider/path_provider.dart';
 
 class VideoCore {
@@ -10,25 +11,26 @@ class VideoCore {
     String prefixFileName = 'file',
   }) async {
     final duration = await getDuration(path);
-    final values = duration.split('.');
-    final seconds = int.parse(values[0]);
+    String value = duration.split('.')[0];
+    int seconds = int.parse(value);
 
     List<String> paths = [];
-    final clips = (seconds / 29).ceil();
+    final clips = (seconds / maxSecondsByClip).ceil();
     final directoryPath = (await getTemporaryDirectory()).path;
 
     for (int i = 0; i < clips; i++) {
-      String fileName = prefixFileName + i.toString();
+      String fileName = prefixFileName + (i + 1).toString();
       final newFile = directoryPath + '/$fileName.mp4';
       await FileService().deleteIfExists(newFile);
 
-      final secondsToStart = i * maxSecondsByClip;
-      String command =
-          "-i $path -ss $secondsToStart -t $maxSecondsByClip -c copy $newFile";
+      final secondsToStart = (i * maxSecondsByClip);
+      final command =
+          "-ss $secondsToStart -i $path -t $maxSecondsByClip -c copy $newFile";
 
-      final result = await FlutterFFmpeg().execute(command);
+      final result = await FFmpegKit.execute(command);
+      final returnCode = await result.getReturnCode();
 
-      if (result == FFmpegStatus.success) {
+      if (ReturnCode.isSuccess(returnCode)) {
         paths.add(newFile);
       } else {
         return paths;
@@ -39,7 +41,7 @@ class VideoCore {
   }
 
   Future<String> getDuration(String path) async {
-    final videoInformation = await FlutterFFprobe().getMediaInformation(path);
-    return videoInformation.getMediaProperties()!['duration'];
+    final videoInformation = await FFprobeKit.getMediaInformation(path);
+    return videoInformation.getMediaInformation()!.getDuration()!;
   }
 }
