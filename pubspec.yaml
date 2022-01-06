@@ -35,7 +35,7 @@ dependencies:
   font_awesome_flutter: ^9.2.0
   mobx: ^2.0.6+1
   flutter_mobx: ^2.0.3+2
-  ffmpeg_kit_flutter: 4.5.1-LTS
+  ffmpeg_kit_flutter_min: 4.5.1-LTS
 
 dev_dependencies:
   flutter_test:
