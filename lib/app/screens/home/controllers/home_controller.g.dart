@@ -42,7 +42,7 @@ mixin _$HomeController on HomeControllerBase, Store {
   final _$cutVideoAsyncAction = AsyncAction('HomeControllerBase.cutVideo');
 
   @override
-  Future<dynamic> cutVideo() {
+  Future<List<CutModel>?> cutVideo() {
     return _$cutVideoAsyncAction.run(() => super.cutVideo());
   }
 
