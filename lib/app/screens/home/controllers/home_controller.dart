@@ -32,11 +32,10 @@ abstract class HomeControllerBase with Store {
       return null;
     }
 
-    final _core = VideoCore();
-
     message = 'Cortando o vídeo em pedacinhos...';
     String originalVideo = video.path;
-    final paths = await _core.cutInSubclips(originalVideo);
+    final _core = VideoCore(originalVideo);
+    final paths = await _core.cutInClips();
     if (paths!.isEmpty) {
       statusPage = Status.normal;
       message = '';
