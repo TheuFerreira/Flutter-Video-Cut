@@ -24,6 +24,21 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
     });
   }
 
+  final _$selectedAtom = Atom(name: '_InfoCutsControllerBase.selected');
+
+  @override
+  int get selected {
+    _$selectedAtom.reportRead();
+    return super.selected;
+  }
+
+  @override
+  set selected(int value) {
+    _$selectedAtom.reportWrite(value, super.selected, () {
+      super.selected = value;
+    });
+  }
+
   final _$shareCutsAsyncAction =
       AsyncAction('_InfoCutsControllerBase.shareCuts');
 
@@ -32,10 +47,25 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
     return _$shareCutsAsyncAction.run(() => super.shareCuts());
   }
 
+  final _$_InfoCutsControllerBaseActionController =
+      ActionController(name: '_InfoCutsControllerBase');
+
+  @override
+  void selectClip(int index) {
+    final _$actionInfo = _$_InfoCutsControllerBaseActionController.startAction(
+        name: '_InfoCutsControllerBase.selectClip');
+    try {
+      return super.selectClip(index);
+    } finally {
+      _$_InfoCutsControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-cuts: ${cuts}
+cuts: ${cuts},
+selected: ${selected}
     ''';
   }
 }

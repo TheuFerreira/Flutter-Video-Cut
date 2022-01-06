@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,8 +15,6 @@ class InfoCutsPage extends StatefulWidget {
 }
 
 class _InfoCutsPageState extends State<InfoCutsPage> {
-  int selectedClip = 0;
-
   late InfoCutsController controller;
 
   @override
@@ -66,21 +65,20 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
               child: Column(
                 children: [
                   Expanded(
-                    // TODO: Observer
                     child: ListView.builder(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.cuts.length,
-                      itemBuilder: (builder, i) => ClipThumbnailWidget(
-                        i,
-                        widget.cuts[i],
-                        isSelected: selectedClip == i,
-                        onTap: (index) {
-                          setState(() {
-                            selectedClip = index;
-                          });
-                        },
-                      ),
+                      itemBuilder: (builder, i) {
+                        return Observer(
+                          builder: (context) => ClipThumbnailWidget(
+                            i,
+                            widget.cuts[i],
+                            isSelected: controller.selected == i,
+                            onTap: controller.selectClip,
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Row(

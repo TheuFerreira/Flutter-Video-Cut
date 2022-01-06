@@ -10,6 +10,9 @@ abstract class _InfoCutsControllerBase with Store {
   @observable
   List<CutModel> cuts = ObservableList<CutModel>();
 
+  @observable
+  int selected = 0;
+
   _InfoCutsControllerBase(this.cuts);
 
   @action
@@ -24,5 +27,10 @@ abstract class _InfoCutsControllerBase with Store {
       paths.add(element.path);
     }
     return paths;
+  }
+
+  @action
+  void selectClip(int index) {
+    selected = index;
   }
 }
