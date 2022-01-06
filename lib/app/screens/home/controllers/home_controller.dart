@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:flutter_video_cut/core/video_core.dart';
@@ -19,7 +20,6 @@ abstract class HomeControllerBase with Store {
   @observable
   String message = '';
 
-// TODO: Pequenas funções
   @action
   Future<List<CutModel>?> cutVideo() async {
     statusPage = Status.loading;
@@ -44,16 +44,21 @@ abstract class HomeControllerBase with Store {
 
     message = 'Criando Thumbnails...';
     final thumbnails = await _core.getThumbnails(paths);
+    List<CutModel> cuts = _generateListOfCuts(paths, thumbnails);
 
+    statusPage = Status.normal;
+    message = '';
+
+    return cuts;
+  }
+
+  List<CutModel> _generateListOfCuts(
+      List<String> paths, List<Uint8List> thumbnails) {
     List<CutModel> cuts = [];
     for (int i = 0; i < paths.length; i++) {
       final cut = CutModel(paths[i], thumbnails[i]);
       cuts.add(cut);
     }
-
-    statusPage = Status.normal;
-    message = '';
-
     return cuts;
   }
 }
