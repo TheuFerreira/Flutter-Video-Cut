@@ -38,6 +38,7 @@ dependencies:
   ffmpeg_kit_flutter_min: 4.5.1-LTS
   video_thumbnail: ^0.4.3
   video_player: ^2.2.10
+  fluttertoast: ^8.0.8
 
 dev_dependencies:
   flutter_test:

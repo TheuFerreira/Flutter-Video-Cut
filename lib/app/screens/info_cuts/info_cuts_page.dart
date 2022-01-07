@@ -5,6 +5,8 @@ import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_contr
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
 import 'package:flutter_video_cut/app/shared/controllers/progress_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
 
@@ -30,12 +32,6 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
     player = PlayerController();
 
     _loadClip();
-  }
-
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
   }
 
   @override
@@ -129,7 +125,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              height: 150,
+              height: 140,
               child: Column(
                 children: [
                   Expanded(
@@ -148,8 +144,18 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                     ),
                   ),
                   Row(
-                    children: const [],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: _delClip,
+                        icon: const FaIcon(
+                          FontAwesomeIcons.trashAlt,
+                          color: Colors.white38,
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 8.0),
                 ],
               ),
             ),
@@ -161,8 +167,6 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
 
   _shareCuts() async {
     await controller.shareCuts();
-
-    Navigator.pop(context);
   }
 
   _onTapVideo() {
@@ -179,5 +183,30 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
   _loadClip() async {
     final clipPath = controller.pathSelectedCut;
     await player.loadClip(clipPath);
+  }
+
+  _delClip() async {
+    final clipSelected = controller.selected + 1;
+    final result = await DialogService.showConfirmationDialog(
+      context,
+      'Tem certeza de que deseja excluir o Clip $clipSelected? Esta ação não poderá ser desfeita!',
+    );
+
+    if (result == false) {
+      return;
+    }
+
+    // TODO: Delete vídeo
+
+    Fluttertoast.showToast(
+      msg: 'Clip $clipSelected deletado com sucesso',
+      toastLength: Toast.LENGTH_SHORT,
+    );
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 }

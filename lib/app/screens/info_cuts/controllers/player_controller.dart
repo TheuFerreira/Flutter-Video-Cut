@@ -20,7 +20,6 @@ abstract class _PlayerControllerBase with Store {
   bool showControllers = false;
 
   late VideoPlayerController? controller;
-  late Timer timer;
 
   @action
   Future<void> loadClip(String clipPath) async {
@@ -53,13 +52,7 @@ abstract class _PlayerControllerBase with Store {
     showControllers = !showControllers;
     if (showControllers == false) {
       return;
-    } else {
-      timer.cancel();
     }
-
-    timer = Timer(const Duration(seconds: 2), () {
-      showControllers = false;
-    });
   }
 
   Future dispose() async {
