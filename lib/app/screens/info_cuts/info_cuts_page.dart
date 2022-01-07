@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
+import 'package:flutter_video_cut/app/shared/controllers/progress_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:video_player/video_player.dart';
 
 import 'components/clip_thumbnail_widget.dart';
 
@@ -16,12 +20,22 @@ class InfoCutsPage extends StatefulWidget {
 
 class _InfoCutsPageState extends State<InfoCutsPage> {
   late InfoCutsController controller;
+  late PlayerController player;
 
   @override
   void initState() {
     super.initState();
 
     controller = InfoCutsController(widget.cuts);
+    player = PlayerController();
+
+    _loadClip();
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,9 +71,63 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Column(
           children: [
-            Flexible(
-              child: Container(),
+            Observer(
+              builder: (context) => Expanded(
+                child: player.state == PlayerState.initialized
+                    ? Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: [
+                          AspectRatio(
+                            aspectRatio: player.controller!.value.aspectRatio,
+                            child: GestureDetector(
+                              onTap: _onTapVideo,
+                              child: VideoPlayer(player.controller!),
+                            ),
+                          ),
+                          Observer(
+                            builder: (context) => GestureDetector(
+                              child: AnimatedScale(
+                                duration: const Duration(milliseconds: 100),
+                                scale: player.showControllers ? 1 : 0,
+                                child: Container(
+                                  height: 70,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(70, 0, 0, 0),
+                                    borderRadius: BorderRadius.circular(35),
+                                  ),
+                                  child: Observer(
+                                    builder: (context) => Icon(
+                                      player.isPlaying
+                                          ? FontAwesomeIcons.pause
+                                          : FontAwesomeIcons.play,
+                                      color: Colors.amber,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTap: player.playPause,
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: VideoProgressIndicator(
+                              player.controller!,
+                              allowScrubbing: true,
+                              colors: const VideoProgressColors(
+                                playedColor: Colors.amber,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : const ProgressWidget('Carregando'),
+              ),
             ),
+            const SizedBox(height: 16.0),
             SizedBox(
               height: 150,
               child: Column(
@@ -69,16 +137,14 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       itemCount: widget.cuts.length,
-                      itemBuilder: (builder, i) {
-                        return Observer(
-                          builder: (context) => ClipThumbnailWidget(
-                            i,
-                            widget.cuts[i],
-                            isSelected: controller.selected == i,
-                            onTap: controller.selectClip,
-                          ),
-                        );
-                      },
+                      itemBuilder: (builder, i) => Observer(
+                        builder: (context) => ClipThumbnailWidget(
+                          i,
+                          widget.cuts[i],
+                          isSelected: controller.selected == i,
+                          onTap: _onTapClipThumbnail,
+                        ),
+                      ),
                     ),
                   ),
                   Row(
@@ -97,5 +163,21 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
     await controller.shareCuts();
 
     Navigator.pop(context);
+  }
+
+  _onTapVideo() {
+    player.updateControllers();
+  }
+
+  _onTapClipThumbnail(int index) async {
+    controller.selectClip(index);
+
+    await player.dispose();
+    await _loadClip();
+  }
+
+  _loadClip() async {
+    final clipPath = controller.pathSelectedCut;
+    await player.loadClip(clipPath);
   }
 }

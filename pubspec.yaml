@@ -37,6 +37,7 @@ dependencies:
   flutter_mobx: ^2.0.3+2
   ffmpeg_kit_flutter_min: 4.5.1-LTS
   video_thumbnail: ^0.4.3
+  video_player: ^2.2.10
 
 dev_dependencies:
   flutter_test:

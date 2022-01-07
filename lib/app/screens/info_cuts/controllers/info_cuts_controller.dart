@@ -13,6 +13,9 @@ abstract class _InfoCutsControllerBase with Store {
   @observable
   int selected = 0;
 
+  @computed
+  String get pathSelectedCut => cuts[selected].path;
+
   _InfoCutsControllerBase(this.cuts);
 
   @action
