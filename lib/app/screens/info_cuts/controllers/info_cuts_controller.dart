@@ -1,4 +1,5 @@
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:mobx/mobx.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -12,6 +13,9 @@ abstract class _InfoCutsControllerBase with Store {
 
   @observable
   int selected = 0;
+
+  @observable
+  bool deleted = false;
 
   @computed
   String get pathSelectedCut => cuts[selected].path;
@@ -35,5 +39,26 @@ abstract class _InfoCutsControllerBase with Store {
   @action
   void selectClip(int index) {
     selected = index;
+  }
+
+  @action
+  Future deleteClip(int index) async {
+    deleted = true;
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    await _deleteSelectedCut();
+    deleted = false;
+
+    if (cuts.isEmpty) {
+      return -1;
+    }
+
+    return index == 0 ? index : index - 1;
+  }
+
+  _deleteSelectedCut() async {
+    await FileService().deleteIfExists(pathSelectedCut);
+    cuts.removeAt(selected);
   }
 }

@@ -23,6 +23,7 @@ class InfoCutsPage extends StatefulWidget {
 class _InfoCutsPageState extends State<InfoCutsPage> {
   late InfoCutsController controller;
   late PlayerController player;
+  final _scrollClips = ScrollController();
 
   @override
   void initState() {
@@ -70,55 +71,63 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
             Observer(
               builder: (context) => Expanded(
                 child: player.state == PlayerState.initialized
-                    ? Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: player.controller!.value.aspectRatio,
-                            child: GestureDetector(
-                              onTap: _onTapVideo,
-                              child: VideoPlayer(player.controller!),
-                            ),
+                    ? Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 20, 20, 20),
+                            width: 4,
                           ),
-                          Observer(
-                            builder: (context) => GestureDetector(
-                              child: AnimatedScale(
-                                duration: const Duration(milliseconds: 100),
-                                scale: player.showControllers ? 1 : 0,
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(70, 0, 0, 0),
-                                    borderRadius: BorderRadius.circular(35),
-                                  ),
-                                  child: Observer(
-                                    builder: (context) => Icon(
-                                      player.isPlaying
-                                          ? FontAwesomeIcons.pause
-                                          : FontAwesomeIcons.play,
-                                      color: Colors.amber,
-                                      size: 28,
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: player.controller!.value.aspectRatio,
+                              child: GestureDetector(
+                                onTap: _onTapVideo,
+                                child: VideoPlayer(player.controller!),
+                              ),
+                            ),
+                            Observer(
+                              builder: (context) => GestureDetector(
+                                child: AnimatedScale(
+                                  duration: const Duration(milliseconds: 100),
+                                  scale: player.showControllers ? 1 : 0,
+                                  child: Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(70, 0, 0, 0),
+                                      borderRadius: BorderRadius.circular(35),
+                                    ),
+                                    child: Observer(
+                                      builder: (context) => Icon(
+                                        player.isPlaying
+                                            ? FontAwesomeIcons.pause
+                                            : FontAwesomeIcons.play,
+                                        color: Colors.amber,
+                                        size: 28,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              onTap: player.playPause,
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: VideoProgressIndicator(
-                              player.controller!,
-                              allowScrubbing: true,
-                              colors: const VideoProgressColors(
-                                playedColor: Colors.amber,
+                                onTap: player.playPause,
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: VideoProgressIndicator(
+                                player.controller!,
+                                allowScrubbing: true,
+                                colors: const VideoProgressColors(
+                                  playedColor: Colors.amber,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     : const ProgressWidget('Carregando'),
               ),
@@ -129,18 +138,27 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.cuts.length,
-                      itemBuilder: (builder, i) => Observer(
-                        builder: (context) => ClipThumbnailWidget(
-                          i,
-                          widget.cuts[i],
-                          isSelected: controller.selected == i,
-                          onTap: _onTapClipThumbnail,
-                        ),
-                      ),
+                    child: Observer(
+                      builder: (context) {
+                        bool isDeleting = controller.deleted;
+                        if (isDeleting) {
+                          return Container();
+                        }
+                        return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          controller: _scrollClips,
+                          itemCount: controller.cuts.length,
+                          itemBuilder: (builder, i) => Observer(
+                            builder: (ctx) => ClipThumbnailWidget(
+                              i,
+                              controller.cuts[i],
+                              isSelected: controller.selected == i,
+                              onTap: _onTapClipThumbnail,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Row(
@@ -196,12 +214,18 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
       return;
     }
 
-    // TODO: Delete vídeo
+    final nextIndex = await controller.deleteClip(controller.selected);
 
     Fluttertoast.showToast(
       msg: 'Clip $clipSelected deletado com sucesso',
       toastLength: Toast.LENGTH_SHORT,
     );
+
+    if (nextIndex == -1) {
+      Navigator.pop(context);
+    } else {
+      await _onTapClipThumbnail(nextIndex);
+    }
   }
 
   @override

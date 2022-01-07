@@ -47,12 +47,35 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
     });
   }
 
+  final _$deletedAtom = Atom(name: '_InfoCutsControllerBase.deleted');
+
+  @override
+  bool get deleted {
+    _$deletedAtom.reportRead();
+    return super.deleted;
+  }
+
+  @override
+  set deleted(bool value) {
+    _$deletedAtom.reportWrite(value, super.deleted, () {
+      super.deleted = value;
+    });
+  }
+
   final _$shareCutsAsyncAction =
       AsyncAction('_InfoCutsControllerBase.shareCuts');
 
   @override
   Future<dynamic> shareCuts() {
     return _$shareCutsAsyncAction.run(() => super.shareCuts());
+  }
+
+  final _$deleteClipAsyncAction =
+      AsyncAction('_InfoCutsControllerBase.deleteClip');
+
+  @override
+  Future<dynamic> deleteClip(int index) {
+    return _$deleteClipAsyncAction.run(() => super.deleteClip(index));
   }
 
   final _$_InfoCutsControllerBaseActionController =
@@ -74,6 +97,7 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
     return '''
 cuts: ${cuts},
 selected: ${selected},
+deleted: ${deleted},
 pathSelectedCut: ${pathSelectedCut}
     ''';
   }
