@@ -62,7 +62,7 @@ class VideoCore {
     await FileService().deleteIfExists(newFile);
 
     final command =
-        "-ss $secondsToStart -i $path -t $maxSecondsByClip -c copy $newFile";
+        "-ss $secondsToStart -i $path -t $maxSecondsByClip -c copy -avoid_negative_ts 1 $newFile";
 
     final result = await FFmpegKit.execute(command);
     final returnCode = await result.getReturnCode();
