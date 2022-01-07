@@ -1,6 +1,12 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:external_path/external_path.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
 part 'info_cuts_controller.g.dart';
@@ -24,8 +30,32 @@ abstract class _InfoCutsControllerBase with Store {
 
   @action
   Future shareCuts() async {
+    // TODO: Clean Code
+    if (await Permission.storage.isDenied) {
+      await Permission.storage.request();
+    }
+    if (await Permission.accessMediaLocation.isDenied) {
+      await Permission.accessMediaLocation.request();
+    }
+    if (await Permission.manageExternalStorage.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
     List<String> paths = _getPaths();
-    await Share.shareFiles(paths);
+
+    String path = await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DCIM) +
+        '/Video Cut';
+    Directory videoCutDirectory = Directory(path);
+    final directoryExists = await videoCutDirectory.exists();
+    if (directoryExists == false) {
+      await videoCutDirectory.create();
+    }
+    log(path);
+
+    await XFile(paths[0]).saveTo(videoCutDirectory.path + '/teste.mp4');
+    return;
+    // TODO: Share Files
+    //await Share.shareFiles(paths);
   }
 
   List<String> _getPaths() {

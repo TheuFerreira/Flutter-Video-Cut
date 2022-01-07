@@ -39,6 +39,8 @@ dependencies:
   video_thumbnail: ^0.4.3
   video_player: ^2.2.10
   fluttertoast: ^8.0.8
+  external_path: ^1.0.1
+  permission_handler: ^8.3.0
 
 dev_dependencies:
   flutter_test:
