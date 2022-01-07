@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/home/controllers/home_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
+import 'package:flutter_video_cut/app/shared/controllers/progress_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,16 +46,7 @@ class _HomePageState extends State<HomePage> {
                 final message = _controller.message;
 
                 if (statusPage == Status.loading) {
-                  return Column(
-                    children: [
-                      const CircularProgressIndicator(),
-                      const SizedBox(height: 12),
-                      Text(
-                        message,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  );
+                  return ProgressWidget(message);
                 }
 
                 return Column(
