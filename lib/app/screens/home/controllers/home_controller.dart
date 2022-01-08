@@ -63,10 +63,17 @@ abstract class HomeControllerBase with Store {
     return cuts;
   }
 
+  @action
   Future disposeCuts(List<CutModel> cuts) async {
+    statusPage = Status.loading;
+    message = 'Limpando cache';
+
     for (CutModel cut in cuts) {
       await FileService().deleteIfExists(cut.path);
     }
     cuts.clear();
+
+    message = '';
+    statusPage = Status.normal;
   }
 }

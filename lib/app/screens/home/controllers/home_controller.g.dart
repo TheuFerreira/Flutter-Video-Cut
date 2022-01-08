@@ -46,6 +46,14 @@ mixin _$HomeController on HomeControllerBase, Store {
     return _$cutVideoAsyncAction.run(() => super.cutVideo());
   }
 
+  final _$disposeCutsAsyncAction =
+      AsyncAction('HomeControllerBase.disposeCuts');
+
+  @override
+  Future<dynamic> disposeCuts(List<CutModel> cuts) {
+    return _$disposeCutsAsyncAction.run(() => super.disposeCuts(cuts));
+  }
+
   @override
   String toString() {
     return '''

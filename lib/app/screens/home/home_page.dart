@@ -36,50 +36,63 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Observer(
-              builder: (builder) {
-                final statusPage = _controller.statusPage;
-                final message = _controller.message;
+      body: Stack(
+        alignment: Alignment.center,
+        fit: StackFit.expand,
+        children: [
+          Observer(
+            builder: (builder) {
+              final statusPage = _controller.statusPage;
+              final message = _controller.message;
 
-                if (statusPage == Status.loading) {
-                  return ProgressWidget(message);
-                }
+              if (statusPage == Status.loading) {
+                return ProgressWidget(message);
+              }
 
-                return Column(
-                  children: [
-                    Image.asset('assets/images/cut.png', height: 80),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      icon: const FaIcon(FontAwesomeIcons.video),
-                      label: const Text(
-                        'Buscar Vídeo',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      onPressed: () async {
-                        final cuts = await _controller.cutVideo();
-                        if (cuts == null || cuts.isEmpty) {
-                          return;
-                        }
-
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => InfoCutsPage(cuts),
-                          ),
-                        );
-
-                        await _controller.disposeCuts(cuts);
-                      },
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/cut.png', height: 80),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: const FaIcon(FontAwesomeIcons.video),
+                    label: const Text(
+                      'Buscar Vídeo',
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ],
-                );
-              },
+                    onPressed: () async {
+                      final cuts = await _controller.cutVideo();
+                      if (cuts == null || cuts.isEmpty) {
+                        return;
+                      }
+
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => InfoCutsPage(cuts),
+                        ),
+                      );
+
+                      await _controller.disposeCuts(cuts);
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          Positioned(
+            bottom: 0,
+            child: TextButton.icon(
+              onPressed: () => showLicensePage(context: context),
+              icon: const FaIcon(Icons.privacy_tip),
+              label: const Text(
+                'Política de Privacidade e Licenças',
+              ),
+              style: TextButton.styleFrom(
+                primary: Colors.white38,
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
