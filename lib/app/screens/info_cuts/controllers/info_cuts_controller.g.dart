@@ -66,7 +66,7 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
       AsyncAction('_InfoCutsControllerBase.shareCuts');
 
   @override
-  Future<dynamic> shareCuts() {
+  Future<bool> shareCuts() {
     return _$shareCutsAsyncAction.run(() => super.shareCuts());
   }
 

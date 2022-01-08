@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:external_path/external_path.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
+import 'package:flutter_video_cut/app/shared/services/permission_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
 part 'info_cuts_controller.g.dart';
@@ -29,18 +29,14 @@ abstract class _InfoCutsControllerBase with Store {
   _InfoCutsControllerBase(this.cuts);
 
   @action
-  Future shareCuts() async {
+  Future<bool> shareCuts() async {
     // TODO: Clean Code
-    if (await Permission.storage.isDenied) {
-      await Permission.storage.request();
+
+    if (await PermissionService().hasExternalStorage() == false) {
+      return false;
     }
-    if (await Permission.accessMediaLocation.isDenied) {
-      await Permission.accessMediaLocation.request();
-    }
-    if (await Permission.manageExternalStorage.isDenied) {
-      await Permission.manageExternalStorage.request();
-    }
-    List<String> paths = _getPaths();
+
+    /*List<String> paths = _getPaths();
 
     String path = await ExternalPath.getExternalStoragePublicDirectory(
             ExternalPath.DIRECTORY_DCIM) +
@@ -52,8 +48,8 @@ abstract class _InfoCutsControllerBase with Store {
     }
     log(path);
 
-    await XFile(paths[0]).saveTo(videoCutDirectory.path + '/teste.mp4');
-    return;
+    await XFile(paths[0]).saveTo(videoCutDirectory.path + '/teste.mp4');*/
+    return true;
     // TODO: Share Files
     //await Share.shareFiles(paths);
   }
