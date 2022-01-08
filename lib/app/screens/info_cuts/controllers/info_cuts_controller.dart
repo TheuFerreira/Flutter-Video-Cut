@@ -4,8 +4,8 @@ import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/permission_service.dart';
+import 'package:flutter_video_cut/app/shared/services/share_service.dart';
 import 'package:mobx/mobx.dart';
-import 'package:share_plus/share_plus.dart';
 
 part 'info_cuts_controller.g.dart';
 
@@ -37,9 +37,8 @@ abstract class _InfoCutsControllerBase with Store {
 
     await FileService().saveListTo(cutsPath, appCutsPath);
 
+    await ShareService().shareFiles(appCutsPath);
     return true;
-    // TODO: Share Files
-    //await Share.shareFiles(paths);
   }
 
   List<String> _getCutsPaths() {
