@@ -4,7 +4,6 @@ import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/permission_service.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -33,21 +32,34 @@ abstract class _InfoCutsControllerBase with Store {
       return false;
     }
 
-    Directory appDirectory = await DirectoryService.getAppDirectory();
+    final cutsPath = _getCutsPaths();
+    final appCutsPath = await _setCutsPathInAppDirectory(cutsPath);
 
-    /*List<String> paths = _getPaths();
+    await FileService().saveListTo(cutsPath, appCutsPath);
 
-    await XFile(paths[0]).saveTo(videoCutDirectory.path + '/teste.mp4');*/
     return true;
     // TODO: Share Files
     //await Share.shareFiles(paths);
   }
 
-  List<String> _getPaths() {
+  List<String> _getCutsPaths() {
     List<String> paths = [];
     for (var element in cuts) {
       paths.add(element.path);
     }
+
+    return paths;
+  }
+
+  Future<List<String>> _setCutsPathInAppDirectory(List<String> cutsPath) async {
+    Directory appDirectory = await DirectoryService.getAppDirectory();
+    List<String> paths = [];
+
+    for (String cutPath in cutsPath) {
+      String fileName = FileService.getFileName(cutPath);
+      paths.add(appDirectory.path + '/' + fileName);
+    }
+
     return paths;
   }
 
