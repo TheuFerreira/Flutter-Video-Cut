@@ -84,12 +84,7 @@ class _HomePageState extends State<HomePage> {
             child: TextButton.icon(
               onPressed: () => showLicensePage(context: context),
               icon: const FaIcon(Icons.privacy_tip),
-              label: const Text(
-                'Política de Privacidade e Licenças',
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.white38,
-              ),
+              label: const Text('Licenças'),
             ),
           ),
         ],

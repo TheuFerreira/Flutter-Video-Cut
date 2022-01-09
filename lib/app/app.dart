@@ -18,6 +18,14 @@ class App extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.white38,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            primary: Colors.white38,
+          ),
+        ),
       ),
       home: const HomePage(),
     );
