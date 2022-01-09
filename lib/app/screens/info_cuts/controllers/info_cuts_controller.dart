@@ -18,9 +18,6 @@ abstract class _InfoCutsControllerBase with Store {
   @observable
   int selected = 0;
 
-  @observable
-  bool deleted = false;
-
   @computed
   String get pathSelectedCut => cuts[selected].path;
 
@@ -69,12 +66,9 @@ abstract class _InfoCutsControllerBase with Store {
 
   @action
   Future deleteClip(int index) async {
-    deleted = true;
-
     await Future.delayed(const Duration(milliseconds: 100));
 
     await _deleteSelectedCut();
-    deleted = false;
 
     if (cuts.isEmpty) {
       return -1;

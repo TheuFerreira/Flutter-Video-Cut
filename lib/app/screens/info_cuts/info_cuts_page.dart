@@ -24,6 +24,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
   late InfoCutsController controller;
   late PlayerController player;
   final _scrollClips = ScrollController();
+  final listKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
@@ -139,26 +140,21 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                 children: [
                   Expanded(
                     child: Observer(
-                      builder: (context) {
-                        bool isDeleting = controller.deleted;
-                        if (isDeleting) {
-                          return Container();
-                        }
-                        return ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          controller: _scrollClips,
-                          itemCount: controller.cuts.length,
-                          itemBuilder: (builder, i) => Observer(
-                            builder: (ctx) => ClipThumbnailWidget(
-                              i,
-                              controller.cuts[i],
-                              isSelected: controller.selected == i,
-                              onTap: _onTapClipThumbnail,
-                            ),
+                      builder: (context) => AnimatedList(
+                        key: listKey,
+                        controller: _scrollClips,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        initialItemCount: controller.cuts.length,
+                        itemBuilder: (builder, index, animation) => Observer(
+                          builder: (context) => ClipThumbnailWidget(
+                            index,
+                            controller.cuts[index],
+                            isSelected: controller.selected == index,
+                            onTap: _onTapClipThumbnail,
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                   Row(
@@ -214,6 +210,22 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
       return;
     }
 
+    listKey.currentState!.removeItem(
+      controller.selected,
+      (context, animation) {
+        return SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          axis: Axis.horizontal,
+          child: ClipThumbnailWidget(
+            controller.selected,
+            controller.cuts[controller.selected],
+          ),
+        );
+      },
+    );
     final nextIndex = await controller.deleteClip(controller.selected);
 
     Fluttertoast.showToast(
