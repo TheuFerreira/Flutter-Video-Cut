@@ -55,6 +55,36 @@ mixin _$PlayerController on _PlayerControllerBase, Store {
     });
   }
 
+  final _$maxSecondsAtom = Atom(name: '_PlayerControllerBase.maxSeconds');
+
+  @override
+  double get maxSeconds {
+    _$maxSecondsAtom.reportRead();
+    return super.maxSeconds;
+  }
+
+  @override
+  set maxSeconds(double value) {
+    _$maxSecondsAtom.reportWrite(value, super.maxSeconds, () {
+      super.maxSeconds = value;
+    });
+  }
+
+  final _$currentTimeAtom = Atom(name: '_PlayerControllerBase.currentTime');
+
+  @override
+  double get currentTime {
+    _$currentTimeAtom.reportRead();
+    return super.currentTime;
+  }
+
+  @override
+  set currentTime(double value) {
+    _$currentTimeAtom.reportWrite(value, super.currentTime, () {
+      super.currentTime = value;
+    });
+  }
+
   final _$loadClipAsyncAction = AsyncAction('_PlayerControllerBase.loadClip');
 
   @override
@@ -67,6 +97,13 @@ mixin _$PlayerController on _PlayerControllerBase, Store {
   @override
   Future<dynamic> playPause() {
     return _$playPauseAsyncAction.run(() => super.playPause());
+  }
+
+  final _$moveClipAsyncAction = AsyncAction('_PlayerControllerBase.moveClip');
+
+  @override
+  Future<dynamic> moveClip(double value) {
+    return _$moveClipAsyncAction.run(() => super.moveClip(value));
   }
 
   final _$_PlayerControllerBaseActionController =
@@ -88,7 +125,9 @@ mixin _$PlayerController on _PlayerControllerBase, Store {
     return '''
 state: ${state},
 isPlaying: ${isPlaying},
-showControllers: ${showControllers}
+showControllers: ${showControllers},
+maxSeconds: ${maxSeconds},
+currentTime: ${currentTime}
     ''';
   }
 }

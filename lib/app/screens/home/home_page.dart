@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/home/controllers/home_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
-import 'package:flutter_video_cut/app/shared/controllers/progress_widget.dart';
+import 'package:flutter_video_cut/app/shared/components/progress_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -81,10 +81,18 @@ class _HomePageState extends State<HomePage> {
           ),
           Positioned(
             bottom: 0,
-            child: TextButton.icon(
-              onPressed: () => showLicensePage(context: context),
-              icon: const FaIcon(Icons.privacy_tip),
-              label: const Text('Licenças'),
+            child: Observer(
+              builder: (context) {
+                final statusPage = _controller.statusPage;
+
+                return TextButton.icon(
+                  onPressed: statusPage == Status.loading
+                      ? null
+                      : () => showLicensePage(context: context),
+                  icon: const FaIcon(Icons.privacy_tip),
+                  label: const Text('Licenças'),
+                );
+              },
             ),
           ),
         ],

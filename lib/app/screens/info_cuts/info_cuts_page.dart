@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
-import 'package:flutter_video_cut/app/shared/controllers/progress_widget.dart';
+import 'package:flutter_video_cut/app/shared/components/progress_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -119,12 +119,16 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                               left: 0,
                               right: 0,
                               bottom: 0,
-                              child: VideoProgressIndicator(
-                                player.controller!,
-                                allowScrubbing: true,
-                                colors: const VideoProgressColors(
-                                  playedColor: Colors.amber,
-                                ),
+                              child: Observer(
+                                builder: (context) {
+                                  final max = player.maxSeconds;
+                                  final value = player.currentTime;
+                                  return Slider(
+                                    value: value,
+                                    onChanged: player.moveClip,
+                                    max: max,
+                                  );
+                                },
                               ),
                             ),
                           ],
@@ -246,3 +250,5 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
     super.dispose();
   }
 }
+
+// TODO: Playback speed

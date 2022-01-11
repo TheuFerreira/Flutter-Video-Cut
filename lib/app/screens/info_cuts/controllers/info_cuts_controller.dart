@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
@@ -82,3 +83,5 @@ abstract class _InfoCutsControllerBase with Store {
     cuts.removeAt(selected);
   }
 }
+
+// TODO: Block buttons on delete and share files

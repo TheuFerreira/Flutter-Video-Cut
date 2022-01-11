@@ -8,8 +8,8 @@ part of 'home_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$HomeController on HomeControllerBase, Store {
-  final _$statusPageAtom = Atom(name: 'HomeControllerBase.statusPage');
+mixin _$HomeController on _HomeControllerBase, Store {
+  final _$statusPageAtom = Atom(name: '_HomeControllerBase.statusPage');
 
   @override
   Status get statusPage {
@@ -24,7 +24,7 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
-  final _$messageAtom = Atom(name: 'HomeControllerBase.message');
+  final _$messageAtom = Atom(name: '_HomeControllerBase.message');
 
   @override
   String get message {
@@ -39,7 +39,7 @@ mixin _$HomeController on HomeControllerBase, Store {
     });
   }
 
-  final _$cutVideoAsyncAction = AsyncAction('HomeControllerBase.cutVideo');
+  final _$cutVideoAsyncAction = AsyncAction('_HomeControllerBase.cutVideo');
 
   @override
   Future<List<CutModel>?> cutVideo() {
@@ -47,7 +47,7 @@ mixin _$HomeController on HomeControllerBase, Store {
   }
 
   final _$disposeCutsAsyncAction =
-      AsyncAction('HomeControllerBase.disposeCuts');
+      AsyncAction('_HomeControllerBase.disposeCuts');
 
   @override
   Future<dynamic> disposeCuts(List<CutModel> cuts) {

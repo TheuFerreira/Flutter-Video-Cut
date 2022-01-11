@@ -12,9 +12,9 @@ enum Status {
   loading,
 }
 
-class HomeController = HomeControllerBase with _$HomeController;
+class HomeController = _HomeControllerBase with _$HomeController;
 
-abstract class HomeControllerBase with Store {
+abstract class _HomeControllerBase with Store {
   @observable
   Status statusPage = Status.normal;
 
@@ -66,7 +66,7 @@ abstract class HomeControllerBase with Store {
   @action
   Future disposeCuts(List<CutModel> cuts) async {
     statusPage = Status.loading;
-    message = 'Limpando cache';
+    message = 'Limpando dados antigos...';
 
     for (CutModel cut in cuts) {
       await FileService().deleteIfExists(cut.path);
