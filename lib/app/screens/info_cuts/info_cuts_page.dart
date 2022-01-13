@@ -171,6 +171,17 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                           color: Colors.white38,
                         ),
                       ),
+                      Observer(
+                        builder: (context) => TextButton(
+                          onPressed: player.nextPlaybackSpeed,
+                          child: Text(
+                            player.speeds[player.selectedSpeed].text,
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8.0),

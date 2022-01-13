@@ -85,11 +85,34 @@ mixin _$PlayerController on _PlayerControllerBase, Store {
     });
   }
 
+  final _$selectedSpeedAtom = Atom(name: '_PlayerControllerBase.selectedSpeed');
+
+  @override
+  int get selectedSpeed {
+    _$selectedSpeedAtom.reportRead();
+    return super.selectedSpeed;
+  }
+
+  @override
+  set selectedSpeed(int value) {
+    _$selectedSpeedAtom.reportWrite(value, super.selectedSpeed, () {
+      super.selectedSpeed = value;
+    });
+  }
+
   final _$loadClipAsyncAction = AsyncAction('_PlayerControllerBase.loadClip');
 
   @override
   Future<void> loadClip(String clipPath) {
     return _$loadClipAsyncAction.run(() => super.loadClip(clipPath));
+  }
+
+  final _$nextPlaybackSpeedAsyncAction =
+      AsyncAction('_PlayerControllerBase.nextPlaybackSpeed');
+
+  @override
+  Future<dynamic> nextPlaybackSpeed() {
+    return _$nextPlaybackSpeedAsyncAction.run(() => super.nextPlaybackSpeed());
   }
 
   final _$playPauseAsyncAction = AsyncAction('_PlayerControllerBase.playPause');
@@ -127,7 +150,8 @@ state: ${state},
 isPlaying: ${isPlaying},
 showControllers: ${showControllers},
 maxSeconds: ${maxSeconds},
-currentTime: ${currentTime}
+currentTime: ${currentTime},
+selectedSpeed: ${selectedSpeed}
     ''';
   }
 }

@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/models/playback_speed.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -26,18 +26,30 @@ abstract class _PlayerControllerBase with Store {
   @observable
   double currentTime = 0;
 
+  @observable
+  int selectedSpeed = 0;
+
+  List<PlaybackSpeed> speeds = ObservableList.of(const [
+    PlaybackSpeed('1x', 1),
+    PlaybackSpeed('1.5x', 1.5),
+    PlaybackSpeed('2x', 2),
+  ]);
+
   late VideoPlayerController? controller;
   Timer? timer;
 
   @action
   Future<void> loadClip(String clipPath) async {
     state = PlayerState.loading;
-    if (timer != null) timer!.cancel();
+
+    _cancelTimer();
+
     final file = File(clipPath);
 
     controller = VideoPlayerController.file(file);
     await controller!.setLooping(true);
     await controller!.initialize();
+    await _setPlaybackSpeed();
 
     maxSeconds = controller!.value.duration.inSeconds.toDouble();
     currentTime = 0;
@@ -48,14 +60,28 @@ abstract class _PlayerControllerBase with Store {
   }
 
   @action
+  Future nextPlaybackSpeed() async {
+    selectedSpeed++;
+    if (selectedSpeed == speeds.length) {
+      selectedSpeed = 0;
+    }
+
+    await _setPlaybackSpeed();
+  }
+
+  Future _setPlaybackSpeed() async {
+    await controller!.setPlaybackSpeed(speeds[selectedSpeed].value);
+  }
+
+  @action
   Future playPause() async {
     final playing = controller!.value.isPlaying;
     if (playing) {
       await controller!.pause();
-      if (timer != null) timer!.cancel();
+      _cancelTimer();
     } else {
       await controller!.play();
-      startTimer();
+      _startTimer();
     }
 
     isPlaying = !playing;
@@ -64,17 +90,19 @@ abstract class _PlayerControllerBase with Store {
   @action
   Future moveClip(double value) async {
     await controller!.seekTo(Duration(seconds: value.toInt()));
-    currentTime = (await controller!.position)!.inSeconds.toDouble();
+    await _updateCurrentTime();
   }
 
-  void startTimer() {
+  void _startTimer() {
     timer = Timer.periodic(
       const Duration(milliseconds: 500),
-      (timer) async {
-        currentTime = (await controller!.position)!.inSeconds.toDouble();
-        log(currentTime.toString());
-      },
+      (timer) async => await _updateCurrentTime(),
     );
+  }
+
+  Future _updateCurrentTime() async {
+    final duration = await controller!.position;
+    currentTime = duration!.inSeconds.toDouble();
   }
 
   @action
@@ -86,9 +114,13 @@ abstract class _PlayerControllerBase with Store {
   }
 
   Future dispose() async {
-    if (timer != null) timer!.cancel();
+    _cancelTimer();
     await controller!.dispose();
   }
-}
 
-// TODO: Clean Code
+  void _cancelTimer() {
+    if (timer == null) return;
+
+    timer!.cancel();
+  }
+}
