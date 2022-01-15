@@ -12,6 +12,9 @@ class LoadingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 24.0),
         child: Column(
