@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
-import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
-import 'package:flutter_video_cut/app/shared/services/permission_service.dart';
 import 'package:flutter_video_cut/app/shared/services/share_service.dart';
 import 'package:mobx/mobx.dart';
 
@@ -26,16 +23,9 @@ abstract class _InfoCutsControllerBase with Store {
 
   @action
   Future<bool> shareCuts() async {
-    if (await PermissionService().hasExternalStorage() == false) {
-      return false;
-    }
-
     final cutsPath = _getCutsPaths();
-    final appCutsPath = await _setCutsPathInAppDirectory(cutsPath);
 
-    await FileService().saveListTo(cutsPath, appCutsPath);
-
-    await ShareService().shareFiles(appCutsPath);
+    await ShareService().shareFiles(cutsPath);
     return true;
   }
 
@@ -43,18 +33,6 @@ abstract class _InfoCutsControllerBase with Store {
     List<String> paths = [];
     for (var element in cuts) {
       paths.add(element.path);
-    }
-
-    return paths;
-  }
-
-  Future<List<String>> _setCutsPathInAppDirectory(List<String> cutsPath) async {
-    Directory appDirectory = await DirectoryService.getAppDirectory();
-    List<String> paths = [];
-
-    for (String cutPath in cutsPath) {
-      String fileName = FileService.getFileName(cutPath);
-      paths.add(appDirectory.path + '/' + fileName);
     }
 
     return paths;
@@ -82,6 +60,5 @@ abstract class _InfoCutsControllerBase with Store {
     await FileService().deleteIfExists(pathSelectedCut);
     cuts.removeAt(selected);
   }
-}
-
 // TODO: Block buttons on delete and share files
+}

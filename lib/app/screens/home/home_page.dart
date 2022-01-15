@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/home/controllers/home_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
-import 'package:flutter_video_cut/app/shared/components/progress_widget.dart';
+import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,63 +39,54 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.center,
         fit: StackFit.expand,
         children: [
-          Observer(
-            builder: (builder) {
-              final statusPage = _controller.statusPage;
-              final message = _controller.message;
-
-              if (statusPage == Status.loading) {
-                return ProgressWidget(message);
-              }
-
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/cut.png', height: 80),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    icon: const FaIcon(FontAwesomeIcons.video),
-                    label: const Text(
-                      'Buscar Vídeo',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    onPressed: () async {
-                      final cuts = await _controller.cutVideo();
-                      if (cuts == null || cuts.isEmpty) {
-                        return;
-                      }
-
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctx) => InfoCutsPage(cuts),
-                        ),
-                      );
-
-                      await _controller.disposeCuts(cuts);
-                    },
-                  ),
-                ],
-              );
-            },
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/cut.png', height: 80),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                icon: const FaIcon(FontAwesomeIcons.video),
+                label: const Text(
+                  'Buscar Vídeo',
+                  style: TextStyle(fontSize: 16),
+                ),
+                onPressed: _searchVideo,
+              ),
+            ],
           ),
           Positioned(
             bottom: 0,
-            child: Observer(
-              builder: (context) {
-                final statusPage = _controller.statusPage;
-
-                return TextButton.icon(
-                  onPressed: statusPage == Status.loading
-                      ? null
-                      : () => showLicensePage(context: context),
-                  icon: const FaIcon(Icons.privacy_tip),
-                  label: const Text('Licenças'),
-                );
-              },
+            child: TextButton.icon(
+              onPressed: () => showLicensePage(context: context),
+              icon: const FaIcon(Icons.privacy_tip),
+              label: const Text('Licenças'),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _searchVideo() async {
+    final ds = DialogService(context);
+    ds.showLoading(
+      'Aguarde um pouco!!!',
+      'Estamos cortando seu vídeo em pedacinhos...',
+    );
+
+    final cuts = await _controller.cutVideo();
+    if (cuts == null || cuts.isEmpty) {
+      return;
+    }
+
+    ds.closeLoading();
+
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => InfoCutsPage(cuts),
+      ),
+    );
+
+    await _controller.disposeCuts(cuts);
   }
 }
