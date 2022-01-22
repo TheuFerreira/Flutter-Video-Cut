@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
-import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:flutter_video_cut/core/video_core.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
@@ -11,15 +11,10 @@ class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
   @action
-  Future<List<CutModel>?> cutVideo() async {
-    final video = await StorageService().getVideo();
-    if (video == null) {
-      return null;
-    }
-
+  Future<List<CutModel>?> cutVideo(XFile video, int secondsByClip) async {
     String originalVideo = video.path;
     final _core = VideoCore(originalVideo);
-    final paths = await _core.cutInClips();
+    final paths = await _core.cutInClips(maxSecondsByClip: secondsByClip);
     if (paths == null || paths.isEmpty) {
       return null;
     }

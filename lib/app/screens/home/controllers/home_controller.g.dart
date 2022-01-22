@@ -12,8 +12,9 @@ mixin _$HomeController on _HomeControllerBase, Store {
   final _$cutVideoAsyncAction = AsyncAction('_HomeControllerBase.cutVideo');
 
   @override
-  Future<List<CutModel>?> cutVideo() {
-    return _$cutVideoAsyncAction.run(() => super.cutVideo());
+  Future<List<CutModel>?> cutVideo(XFile video, int secondsByClip) {
+    return _$cutVideoAsyncAction
+        .run(() => super.cutVideo(video, secondsByClip));
   }
 
   final _$disposeCutsAsyncAction =

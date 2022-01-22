@@ -60,5 +60,4 @@ abstract class _InfoCutsControllerBase with Store {
     await FileService().deleteIfExists(pathSelectedCut);
     cuts.removeAt(selected);
   }
-// TODO: Block buttons on delete and share files
 }
