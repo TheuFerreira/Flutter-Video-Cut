@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/screens/credits/credits_page.dart';
 import 'package:flutter_video_cut/app/screens/home/controllers/home_controller.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
+import 'package:flutter_video_cut/app/shared/components/logo_widget.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,23 +21,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            FaIcon(
-              FontAwesomeIcons.cut,
-              color: Colors.amber,
-            ),
-            SizedBox(width: 8.0),
-            Text(
-              'Video Cut',
-              style: TextStyle(
-                fontSize: 22,
-                color: Colors.amber,
-              ),
-            ),
-          ],
-        ),
+        title: const LogoWidget(),
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -59,9 +45,9 @@ class _HomePageState extends State<HomePage> {
           Positioned(
             bottom: 0,
             child: TextButton.icon(
-              onPressed: () => showLicensePage(context: context),
+              onPressed: _showCreditsPage,
               icon: const FaIcon(Icons.privacy_tip),
-              label: const Text('Licenças'),
+              label: const Text('Créditos'),
             ),
           ),
         ],
@@ -103,5 +89,13 @@ class _HomePageState extends State<HomePage> {
     );
 
     await _controller.disposeCuts(cuts);
+  }
+
+  void _showCreditsPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => const CreditsPage(),
+      ),
+    );
   }
 }
