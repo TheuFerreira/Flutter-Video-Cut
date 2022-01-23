@@ -33,10 +33,10 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
             child: Column(
               children: [
                 const SizedBox(height: 8.0),
-                FaIcon(
+                const FaIcon(
                   FontAwesomeIcons.info,
                   size: 56,
-                  color: Colors.red[700]!,
+                  color: Colors.white,
                 ),
                 const SizedBox(height: 16.0),
                 const Text(
@@ -52,22 +52,23 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  width: 100,
+                  width: 50,
                   child: Form(
                     key: formKey,
                     child: TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       keyboardType: const TextInputType.numberWithOptions(),
+                      textAlign: TextAlign.center,
+                      controller: secondsController,
+                      validator: validateSeconds,
+                      decoration: const InputDecoration(
+                        hintText: '29',
+                      ),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                           RegExp(r'^([1-9]|[1-9][0-9]|99)$'),
                         ),
                       ],
-                      controller: secondsController,
-                      decoration: const InputDecoration(
-                        hintText: '29',
-                      ),
-                      validator: validateSeconds,
                     ),
                   ),
                 ),
