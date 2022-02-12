@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/app/screens/credits/credits_page.dart';
 import 'package:flutter_video_cut/app/screens/home/controllers/home_controller.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
@@ -7,6 +10,7 @@ import 'package:flutter_video_cut/app/shared/components/logo_widget.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,6 +21,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _controller = HomeController();
+  String values = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getVideoFromShared();
+  }
+
+  void _getVideoFromShared() async {
+    final result =
+        await const MethodChannel("com.example.flutter_video_cut.path")
+            .invokeMethod<String>('getSharedData');
+    if (result == '' || result == null) {
+      return;
+    }
+
+    log(result);
+
+    XFile video = XFile(result);
+    await _processVideo(video);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +88,10 @@ class _HomePageState extends State<HomePage> {
       return null;
     }
 
+    await _processVideo(video);
+  }
+
+  Future _processVideo(XFile video) async {
     final secondsByClip = await showDialog<int?>(
       context: context,
       builder: (ctx) => const TextTimeDialog(),
