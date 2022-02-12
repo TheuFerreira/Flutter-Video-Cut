@@ -9,13 +9,18 @@ abstract class IVideoService {
 }
 
 class VideoService implements IVideoService {
+  final IDirectoryService _directoryService;
+  final IFileService _fileService;
+
+  VideoService(this._directoryService, this._fileService);
+
   @override
   Future<List<String>?> cutInClips(String path, {int maxSecondsByClip = 29, String prefixFileName = 'file'}) async {
     int seconds = await _getTotalSecondsOfVideo(path);
 
     List<String>? paths = [];
     final clips = (seconds / maxSecondsByClip).ceil();
-    final directoryPath = await DirectoryService.getTemporaryDirectoryPath();
+    final directoryPath = await _directoryService.getTemporaryPath();
 
     for (int i = 0; i < clips; i++) {
       String? newFilePath = await _generateClip(
@@ -57,7 +62,7 @@ class VideoService implements IVideoService {
     int maxSecondsByClip,
   ) async {
     String newFile = _generateNewFilePath(prefixFileName, i, directoryPath);
-    await FileService().deleteIfExists(newFile);
+    await _fileService.deleteIfExists(newFile);
 
     final command = "-ss $secondsToStart -i $path -t $maxSecondsByClip -c copy -avoid_negative_ts 1 $newFile";
 

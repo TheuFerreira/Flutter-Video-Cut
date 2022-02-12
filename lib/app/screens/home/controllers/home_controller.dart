@@ -8,6 +8,7 @@ import 'package:flutter_video_cut/app/screens/home/dialog/loading_dialog.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:flutter_video_cut/app/shared/services/thumbnail_service.dart';
@@ -21,7 +22,13 @@ class HomeController = _HomeControllerBase with _$HomeController;
 abstract class _HomeControllerBase with Store {
   final IStorageService _storageService = StorageService();
   final IThumbnailService _iThumbnailService = ThumbnailService();
-  final IVideoService _videoService = VideoService();
+  final IFileService _fileService = FileService();
+  late IVideoService _videoService;
+
+  _HomeControllerBase() {
+    IDirectoryService _directoryService = DirectoryService();
+    _videoService = VideoService(_directoryService, _fileService);
+  }
 
   Future getVideoFromShared(BuildContext context) async {
     MethodChannel methodChannel = const MethodChannel("com.example.flutter_video_cut.path");
@@ -126,7 +133,7 @@ abstract class _HomeControllerBase with Store {
 
   Future _disposeCuts(List<CutModel> cuts) async {
     for (CutModel cut in cuts) {
-      await FileService().deleteIfExists(cut.path);
+      await _fileService.deleteIfExists(cut.path);
     }
     cuts.clear();
   }

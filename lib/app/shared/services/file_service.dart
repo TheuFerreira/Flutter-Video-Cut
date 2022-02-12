@@ -1,6 +1,11 @@
 import 'dart:io';
 
-class FileService {
+abstract class IFileService {
+  Future deleteIfExists(String path);
+}
+
+class FileService implements IFileService {
+  @override
   Future deleteIfExists(String path) async {
     final file = File(path);
 
@@ -8,10 +13,5 @@ class FileService {
     if (exist == false) return;
 
     await file.delete();
-  }
-
-  static String getFileName(String path) {
-    String directory = File(path).parent.path + '/';
-    return path.substring(directory.length);
   }
 }
