@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "223042123699",
+    "project_id": "video-cut-7e996",
+    "storage_bucket": "video-cut-7e996.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223042123699:android:c18585ebccbd817a287dc6",
+        "android_client_info": {
+          "package_name": "com.ferreira.video_cut"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "223042123699-t8d81q0nc6kan1vbncsjvklr09p2n4p3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB98wsI2R3Q7KmxGhOF9Cd2uT_Pb3SB2cI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "223042123699-t8d81q0nc6kan1vbncsjvklr09p2n4p3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
