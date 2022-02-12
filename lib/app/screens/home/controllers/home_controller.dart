@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_video_cut/app/screens/home/dialog/error_video_dialog.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/loading_dialog.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
@@ -29,7 +30,15 @@ abstract class _HomeControllerBase with Store {
       return;
     }
 
-    // TODO: Valid if video exists
+    final exists = await File(result).exists();
+    if (!exists) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => const ErrorVideoDialog(),
+      );
+
+      return;
+    }
 
     final video = File(result);
 
