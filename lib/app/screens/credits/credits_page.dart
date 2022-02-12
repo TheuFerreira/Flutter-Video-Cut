@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/screens/credits/controllers/credits_controller.dart';
 import 'package:flutter_video_cut/app/shared/components/logo_widget.dart';
-import 'package:flutter_video_cut/app/shared/services/url_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CreditsPage extends StatefulWidget {
@@ -11,6 +11,8 @@ class CreditsPage extends StatefulWidget {
 }
 
 class _CreditsPageState extends State<CreditsPage> {
+  final CreditsController _controller = CreditsController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,8 +34,7 @@ class _CreditsPageState extends State<CreditsPage> {
             trailing: IconButton(
               color: Colors.white,
               icon: const FaIcon(FontAwesomeIcons.linkedinIn),
-              onPressed: () =>
-                  UrlService.open('https://www.linkedin.com/in/theu-ferreira/'),
+              onPressed: () => _controller.open('https://www.linkedin.com/in/theu-ferreira/'),
             ),
           ),
           ListTile(
@@ -43,8 +44,7 @@ class _CreditsPageState extends State<CreditsPage> {
             trailing: IconButton(
               color: Colors.white,
               icon: const FaIcon(FontAwesomeIcons.linkedinIn),
-              onPressed: () => UrlService.open(
-                  'https://www.linkedin.com/in/paulo-fernando-071bb31a9/'),
+              onPressed: () => _controller.open('https://www.linkedin.com/in/paulo-fernando-071bb31a9/'),
             ),
           ),
           TextButton.icon(
