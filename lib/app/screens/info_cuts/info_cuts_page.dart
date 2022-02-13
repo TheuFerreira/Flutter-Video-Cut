@@ -67,70 +67,76 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
         child: Column(
           children: [
             Observer(
-              builder: (context) => Expanded(
-                child: _player.state == PlayerState.initialized
-                    ? Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 20, 20, 20),
-                            width: 4,
+              builder: (context) {
+                final isInitialized = _player.state == PlayerState.initialized;
+                if (!isInitialized) {
+                  const Expanded(
+                    child: ProgressWidget('Carregando'),
+                  );
+                }
+                return Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 20, 20, 20),
+                        width: 4,
+                      ),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        AspectRatio(
+                          aspectRatio: _player.controller!.value.aspectRatio,
+                          child: GestureDetector(
+                            onTap: _player.updateControllers,
+                            child: VideoPlayer(_player.controller!),
                           ),
                         ),
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: _player.controller!.value.aspectRatio,
-                              child: GestureDetector(
-                                onTap: _player.updateControllers,
-                                child: VideoPlayer(_player.controller!),
-                              ),
-                            ),
-                            Observer(
-                              builder: (context) => GestureDetector(
-                                child: AnimatedScale(
-                                  duration: const Duration(milliseconds: 100),
-                                  scale: _player.showControllers ? 1 : 0,
-                                  child: Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(70, 0, 0, 0),
-                                      borderRadius: BorderRadius.circular(35),
-                                    ),
-                                    child: Observer(
-                                      builder: (context) => Icon(
-                                        _player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                                        color: Colors.amber,
-                                        size: 28,
-                                      ),
-                                    ),
+                        Observer(
+                          builder: (context) => GestureDetector(
+                            child: AnimatedScale(
+                              duration: const Duration(milliseconds: 100),
+                              scale: _player.showControllers ? 1 : 0,
+                              child: Container(
+                                height: 70,
+                                width: 70,
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(70, 0, 0, 0),
+                                  borderRadius: BorderRadius.circular(35),
+                                ),
+                                child: Observer(
+                                  builder: (context) => Icon(
+                                    _player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
+                                    color: Colors.amber,
+                                    size: 28,
                                   ),
                                 ),
-                                onTap: _player.playPause,
                               ),
                             ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: Observer(
-                                builder: (context) {
-                                  final max = _player.maxSeconds;
-                                  final value = _player.currentTime;
-                                  return Slider(
-                                    value: value,
-                                    onChanged: _player.moveClip,
-                                    max: max,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                            onTap: _player.playPause,
+                          ),
                         ),
-                      )
-                    : const ProgressWidget('Carregando'),
-              ),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Observer(
+                            builder: (context) {
+                              final max = _player.maxSeconds;
+                              final value = _player.currentTime;
+                              return Slider(
+                                value: value,
+                                onChanged: _player.moveClip,
+                                max: max,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16.0),
             SizedBox(
