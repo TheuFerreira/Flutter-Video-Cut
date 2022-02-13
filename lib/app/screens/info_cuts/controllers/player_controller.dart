@@ -27,13 +27,14 @@ abstract class _PlayerControllerBase with Store {
 
   double _selectedSpeed = 1;
   late VideoPlayerController? controller;
-  Timer? timer;
+  Timer? timerCurrentTime;
+  Timer? timerShowControllers;
 
   @action
   Future<void> loadClip(String clipPath) async {
     state = PlayerState.loading;
 
-    _cancelTimer();
+    _cancelTimerCurrentTime();
 
     final file = File(clipPath);
 
@@ -48,6 +49,7 @@ abstract class _PlayerControllerBase with Store {
     state = PlayerState.initialized;
     isPlaying = false;
     showControllers = false;
+    _cancelTimerShowControllers();
   }
 
   Future setPlaybackSpeed(double value) async {
@@ -64,10 +66,12 @@ abstract class _PlayerControllerBase with Store {
     final playing = controller!.value.isPlaying;
     if (playing) {
       await controller!.pause();
-      _cancelTimer();
+      _cancelTimerCurrentTime();
+      _cancelTimerShowControllers();
     } else {
       await controller!.play();
-      _startTimer();
+      _startTimerCurrentTime();
+      _startTimerShowControllers();
     }
 
     isPlaying = !playing;
@@ -79,8 +83,8 @@ abstract class _PlayerControllerBase with Store {
     await _updateCurrentTime();
   }
 
-  void _startTimer() {
-    timer = Timer.periodic(
+  void _startTimerCurrentTime() {
+    timerCurrentTime = Timer.periodic(
       const Duration(milliseconds: 500),
       (timer) async => await _updateCurrentTime(),
     );
@@ -94,19 +98,42 @@ abstract class _PlayerControllerBase with Store {
   @action
   void updateControllers() {
     showControllers = !showControllers;
-    if (showControllers == false) {
-      return;
+
+    if (showControllers) {
+      _startTimerShowControllers();
+    } else {
+      _cancelTimerShowControllers();
     }
   }
 
+  void _startTimerShowControllers() {
+    timerShowControllers = Timer.periodic(
+      const Duration(seconds: 2),
+      (timer) {
+        if (isPlaying) {
+          showControllers = false;
+          timerShowControllers!.cancel();
+        }
+      },
+    );
+  }
+
   Future dispose() async {
-    _cancelTimer();
+    _cancelTimerCurrentTime();
+    _cancelTimerShowControllers();
+
     await controller!.dispose();
   }
 
-  void _cancelTimer() {
-    if (timer == null) return;
+  void _cancelTimerCurrentTime() {
+    if (timerCurrentTime != null) {
+      timerCurrentTime!.cancel();
+    }
+  }
 
-    timer!.cancel();
+  void _cancelTimerShowControllers() {
+    if (timerShowControllers != null) {
+      timerShowControllers!.cancel();
+    }
   }
 }

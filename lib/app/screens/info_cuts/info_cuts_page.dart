@@ -70,7 +70,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
               builder: (context) {
                 final isInitialized = _player.state == PlayerState.initialized;
                 if (!isInitialized) {
-                  const Expanded(
+                  return const Expanded(
                     child: ProgressWidget('Carregando'),
                   );
                 }
