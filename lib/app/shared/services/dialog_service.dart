@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/shared/dialogs/question_dialog.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DialogService {
@@ -19,5 +20,12 @@ class DialogService {
 
     if (result == null) return false;
     return result as bool;
+  }
+
+  static void showMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+    );
   }
 }

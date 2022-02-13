@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/components/clip_thumbnail_widget.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/share_service.dart';
 import 'package:mobx/mobx.dart';
@@ -10,6 +14,8 @@ part 'info_cuts_controller.g.dart';
 class InfoCutsController = _InfoCutsControllerBase with _$InfoCutsController;
 
 abstract class _InfoCutsControllerBase with Store {
+  final listKey = GlobalKey<AnimatedListState>();
+
   @observable
   List<CutModel> cuts = ObservableList<CutModel>();
 
@@ -19,45 +25,69 @@ abstract class _InfoCutsControllerBase with Store {
   @computed
   String get pathSelectedCut => cuts[selected].path;
 
-  _InfoCutsControllerBase(this.cuts);
+  final PlayerController _player;
+  final IFileService _fileService = FileService();
+  final IShareService _shareService = ShareService();
 
-  @action
-  Future<bool> shareCuts() async {
-    final cutsPath = _getCutsPaths();
-
-    await ShareService().shareFiles(cutsPath);
-    return true;
+  _InfoCutsControllerBase(this.cuts, this._player) {
+    _loadClip();
   }
 
-  List<String> _getCutsPaths() {
+  @action
+  Future deleteClip(BuildContext context) async {
+    listKey.currentState!.removeItem(
+      selected,
+      (context, animation) {
+        return SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          axis: Axis.horizontal,
+          child: ClipThumbnailWidget(
+            selected,
+            cuts[selected],
+          ),
+        );
+      },
+    );
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    await _fileService.deleteIfExists(pathSelectedCut);
+    cuts.removeAt(selected);
+
+    if (cuts.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+
+    final clipSelected = selected + 1;
+    DialogService.showMessage('Clip $clipSelected deletado com sucesso');
+
+    final nextIndex = selected == 0 ? selected : selected - 1;
+    await selectClip(nextIndex);
+  }
+
+  @action
+  Future selectClip(int index) async {
+    selected = index;
+
+    await _player.dispose();
+    await _loadClip();
+  }
+
+  Future _loadClip() async {
+    final clipPath = pathSelectedCut;
+    await _player.loadClip(clipPath);
+  }
+
+  void shareCuts() {
     List<String> paths = [];
     for (var element in cuts) {
       paths.add(element.path);
     }
 
-    return paths;
-  }
-
-  @action
-  void selectClip(int index) {
-    selected = index;
-  }
-
-  @action
-  Future deleteClip(int index) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    await _deleteSelectedCut();
-
-    if (cuts.isEmpty) {
-      return -1;
-    }
-
-    return index == 0 ? index : index - 1;
-  }
-
-  _deleteSelectedCut() async {
-    await FileService().deleteIfExists(pathSelectedCut);
-    cuts.removeAt(selected);
+    _shareService.files(paths);
   }
 }

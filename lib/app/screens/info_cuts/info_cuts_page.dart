@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/controllers/options_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
 import 'package:flutter_video_cut/app/shared/components/progress_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
-import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
 
@@ -21,19 +20,17 @@ class InfoCutsPage extends StatefulWidget {
 }
 
 class _InfoCutsPageState extends State<InfoCutsPage> {
-  late InfoCutsController controller;
-  late PlayerController player;
+  late InfoCutsController _controller;
+  final PlayerController _player = PlayerController();
+  late OptionsController _options;
   final _scrollClips = ScrollController();
-  final listKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
     super.initState();
 
-    controller = InfoCutsController(widget.cuts);
-    player = PlayerController();
-
-    _loadClip();
+    _controller = InfoCutsController(widget.cuts, _player);
+    _options = OptionsController(_controller, _player);
   }
 
   @override
@@ -61,7 +58,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: _shareCuts,
+            onPressed: _controller.shareCuts,
           ),
         ],
       ),
@@ -71,7 +68,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
           children: [
             Observer(
               builder: (context) => Expanded(
-                child: player.state == PlayerState.initialized
+                child: _player.state == PlayerState.initialized
                     ? Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -83,17 +80,17 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                           alignment: AlignmentDirectional.center,
                           children: [
                             AspectRatio(
-                              aspectRatio: player.controller!.value.aspectRatio,
+                              aspectRatio: _player.controller!.value.aspectRatio,
                               child: GestureDetector(
-                                onTap: _onTapVideo,
-                                child: VideoPlayer(player.controller!),
+                                onTap: _player.updateControllers,
+                                child: VideoPlayer(_player.controller!),
                               ),
                             ),
                             Observer(
                               builder: (context) => GestureDetector(
                                 child: AnimatedScale(
                                   duration: const Duration(milliseconds: 100),
-                                  scale: player.showControllers ? 1 : 0,
+                                  scale: _player.showControllers ? 1 : 0,
                                   child: Container(
                                     height: 70,
                                     width: 70,
@@ -103,16 +100,14 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                                     ),
                                     child: Observer(
                                       builder: (context) => Icon(
-                                        player.isPlaying
-                                            ? FontAwesomeIcons.pause
-                                            : FontAwesomeIcons.play,
+                                        _player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
                                         color: Colors.amber,
                                         size: 28,
                                       ),
                                     ),
                                   ),
                                 ),
-                                onTap: player.playPause,
+                                onTap: _player.playPause,
                               ),
                             ),
                             Positioned(
@@ -121,11 +116,11 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                               bottom: 0,
                               child: Observer(
                                 builder: (context) {
-                                  final max = player.maxSeconds;
-                                  final value = player.currentTime;
+                                  final max = _player.maxSeconds;
+                                  final value = _player.currentTime;
                                   return Slider(
                                     value: value,
-                                    onChanged: player.moveClip,
+                                    onChanged: _player.moveClip,
                                     max: max,
                                   );
                                 },
@@ -145,17 +140,17 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                   Expanded(
                     child: Observer(
                       builder: (context) => AnimatedList(
-                        key: listKey,
+                        key: _controller.listKey,
                         controller: _scrollClips,
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        initialItemCount: controller.cuts.length,
+                        initialItemCount: _controller.cuts.length,
                         itemBuilder: (builder, index, animation) => Observer(
                           builder: (context) => ClipThumbnailWidget(
                             index,
-                            controller.cuts[index],
-                            isSelected: controller.selected == index,
-                            onTap: _onTapClipThumbnail,
+                            _controller.cuts[index],
+                            isSelected: _controller.selected == index,
+                            onTap: _controller.selectClip,
                           ),
                         ),
                       ),
@@ -165,22 +160,25 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        onPressed: _delClip,
+                        onPressed: () => _options.deleteButton(context),
                         icon: const FaIcon(
                           FontAwesomeIcons.trashAlt,
                           color: Colors.white38,
                         ),
                       ),
                       Observer(
-                        builder: (context) => TextButton(
-                          onPressed: player.nextPlaybackSpeed,
-                          child: Text(
-                            player.speeds[player.selectedSpeed].text,
-                            style: const TextStyle(
-                              fontSize: 24.0,
+                        builder: (context) {
+                          final playbackSpeed = _options.playbackSpeed;
+                          return TextButton(
+                            onPressed: _options.nextPlaybackSpeed,
+                            child: Text(
+                              playbackSpeed != null ? playbackSpeed.text : '',
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -194,70 +192,9 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
     );
   }
 
-  _shareCuts() async {
-    await controller.shareCuts();
-  }
-
-  _onTapVideo() {
-    player.updateControllers();
-  }
-
-  _onTapClipThumbnail(int index) async {
-    controller.selectClip(index);
-
-    await player.dispose();
-    await _loadClip();
-  }
-
-  _loadClip() async {
-    final clipPath = controller.pathSelectedCut;
-    await player.loadClip(clipPath);
-  }
-
-  _delClip() async {
-    final clipSelected = controller.selected + 1;
-    final result = await DialogService.showConfirmationDialog(
-      context,
-      'Tem certeza de que deseja excluir o Clip $clipSelected? Esta ação não poderá ser desfeita!',
-    );
-
-    if (result == false) {
-      return;
-    }
-
-    listKey.currentState!.removeItem(
-      controller.selected,
-      (context, animation) {
-        return SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          ),
-          axis: Axis.horizontal,
-          child: ClipThumbnailWidget(
-            controller.selected,
-            controller.cuts[controller.selected],
-          ),
-        );
-      },
-    );
-    final nextIndex = await controller.deleteClip(controller.selected);
-
-    Fluttertoast.showToast(
-      msg: 'Clip $clipSelected deletado com sucesso',
-      toastLength: Toast.LENGTH_SHORT,
-    );
-
-    if (nextIndex == -1) {
-      Navigator.pop(context);
-    } else {
-      await _onTapClipThumbnail(nextIndex);
-    }
-  }
-
   @override
   void dispose() {
-    player.dispose();
+    _player.dispose();
     super.dispose();
   }
 }

@@ -1,7 +1,12 @@
 import 'package:share_plus/share_plus.dart';
 
-class ShareService {
-  Future shareFiles(List<String> paths) async {
+abstract class IShareService {
+  void files(List<String> files);
+}
+
+class ShareService implements IShareService {
+  @override
+  void files(List<String> paths) async {
     await Share.shareFiles(paths);
   }
 }

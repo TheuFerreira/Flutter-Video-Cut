@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
-import 'package:flutter_video_cut/app/screens/info_cuts/models/playback_speed.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -26,15 +25,7 @@ abstract class _PlayerControllerBase with Store {
   @observable
   double currentTime = 0;
 
-  @observable
-  int selectedSpeed = 0;
-
-  List<PlaybackSpeed> speeds = ObservableList.of(const [
-    PlaybackSpeed('1x', 1),
-    PlaybackSpeed('1.5x', 1.5),
-    PlaybackSpeed('2x', 2),
-  ]);
-
+  double _selectedSpeed = 1;
   late VideoPlayerController? controller;
   Timer? timer;
 
@@ -59,18 +50,13 @@ abstract class _PlayerControllerBase with Store {
     showControllers = false;
   }
 
-  @action
-  Future nextPlaybackSpeed() async {
-    selectedSpeed++;
-    if (selectedSpeed == speeds.length) {
-      selectedSpeed = 0;
-    }
-
+  Future setPlaybackSpeed(double value) async {
+    _selectedSpeed = value;
     await _setPlaybackSpeed();
   }
 
   Future _setPlaybackSpeed() async {
-    await controller!.setPlaybackSpeed(speeds[selectedSpeed].value);
+    await controller!.setPlaybackSpeed(_selectedSpeed);
   }
 
   @action

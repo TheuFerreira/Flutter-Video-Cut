@@ -47,34 +47,20 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
     });
   }
 
-  final _$shareCutsAsyncAction =
-      AsyncAction('_InfoCutsControllerBase.shareCuts');
-
-  @override
-  Future<bool> shareCuts() {
-    return _$shareCutsAsyncAction.run(() => super.shareCuts());
-  }
-
   final _$deleteClipAsyncAction =
       AsyncAction('_InfoCutsControllerBase.deleteClip');
 
   @override
-  Future<dynamic> deleteClip(int index) {
-    return _$deleteClipAsyncAction.run(() => super.deleteClip(index));
+  Future<dynamic> deleteClip(BuildContext context) {
+    return _$deleteClipAsyncAction.run(() => super.deleteClip(context));
   }
 
-  final _$_InfoCutsControllerBaseActionController =
-      ActionController(name: '_InfoCutsControllerBase');
+  final _$selectClipAsyncAction =
+      AsyncAction('_InfoCutsControllerBase.selectClip');
 
   @override
-  void selectClip(int index) {
-    final _$actionInfo = _$_InfoCutsControllerBaseActionController.startAction(
-        name: '_InfoCutsControllerBase.selectClip');
-    try {
-      return super.selectClip(index);
-    } finally {
-      _$_InfoCutsControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<dynamic> selectClip(int index) {
+    return _$selectClipAsyncAction.run(() => super.selectClip(index));
   }
 
   @override
