@@ -55,6 +55,23 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
     return _$deleteClipAsyncAction.run(() => super.deleteClip(context));
   }
 
+  final _$selectPreviousClipAsyncAction =
+      AsyncAction('_InfoCutsControllerBase.selectPreviousClip');
+
+  @override
+  Future<dynamic> selectPreviousClip() {
+    return _$selectPreviousClipAsyncAction
+        .run(() => super.selectPreviousClip());
+  }
+
+  final _$selectNextClipAsyncAction =
+      AsyncAction('_InfoCutsControllerBase.selectNextClip');
+
+  @override
+  Future<dynamic> selectNextClip() {
+    return _$selectNextClipAsyncAction.run(() => super.selectNextClip());
+  }
+
   final _$selectClipAsyncAction =
       AsyncAction('_InfoCutsControllerBase.selectClip');
 

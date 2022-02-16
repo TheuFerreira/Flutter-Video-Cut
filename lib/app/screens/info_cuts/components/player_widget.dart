@@ -6,10 +6,14 @@ import 'package:video_player/video_player.dart';
 
 class PlayerWidget extends StatefulWidget {
   final PlayerController player;
+  final Function() onPrevious;
+  final Function() onNext;
 
   const PlayerWidget(
     this.player, {
     Key? key,
+    required this.onPrevious,
+    required this.onNext,
   }) : super(key: key);
 
   @override
@@ -50,24 +54,35 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // TODO: Previous
                     Observer(
-                      builder: (context) => Opacity(
-                        opacity: widget.player.showPrevious ? 1 : 0,
-                        child: Container(
-                          height: 55,
-                          width: 55,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(70, 0, 0, 0),
-                            borderRadius: BorderRadius.circular(30),
+                      builder: (context) {
+                        final showPrevious = widget.player.showPrevious;
+                        return Opacity(
+                          opacity: showPrevious ? 1 : 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!showPrevious) {
+                                return;
+                              }
+
+                              widget.onPrevious!();
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 55,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(70, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Icon(
+                                FontAwesomeIcons.stepBackward,
+                                color: Colors.amber,
+                                size: 26,
+                              ),
+                            ),
                           ),
-                          child: const Icon(
-                            FontAwesomeIcons.stepBackward,
-                            color: Colors.amber,
-                            size: 26,
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     GestureDetector(
                       onTap: widget.player.playPause,
@@ -87,24 +102,35 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                         ),
                       ),
                     ),
-                    // TODO: Next
                     Observer(
-                      builder: (context) => Opacity(
-                        opacity: widget.player.showNext ? 1 : 0,
-                        child: Container(
-                          height: 55,
-                          width: 55,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(70, 0, 0, 0),
-                            borderRadius: BorderRadius.circular(30),
+                      builder: (context) {
+                        final showNext = widget.player.showNext;
+                        return Opacity(
+                          opacity: showNext ? 1 : 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!showNext) {
+                                return;
+                              }
+
+                              widget.onNext!();
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 55,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(70, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Icon(
+                                FontAwesomeIcons.stepForward,
+                                color: Colors.amber,
+                                size: 26,
+                              ),
+                            ),
                           ),
-                          child: const Icon(
-                            FontAwesomeIcons.stepForward,
-                            color: Colors.amber,
-                            size: 26,
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ],
                 ),

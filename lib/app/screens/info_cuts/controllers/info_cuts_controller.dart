@@ -70,6 +70,16 @@ abstract class _InfoCutsControllerBase with Store {
   }
 
   @action
+  Future selectPreviousClip() async {
+    await selectClip(selected - 1);
+  }
+
+  @action
+  Future selectNextClip() async {
+    await selectClip(selected + 1);
+  }
+
+  @action
   Future selectClip(int index) async {
     selected = index;
 

@@ -75,7 +75,11 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                   );
                 }
                 return Expanded(
-                  child: PlayerWidget(_player),
+                  child: PlayerWidget(
+                    _player,
+                    onPrevious: () => _controller.selectPreviousClip(),
+                    onNext: () => _controller.selectNextClip(),
+                  ),
                 );
               },
             ),
