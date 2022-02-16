@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/components/player_widget.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/options_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart'
 import 'package:flutter_video_cut/app/shared/components/progress_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:video_player/video_player.dart';
 
 import 'components/clip_thumbnail_widget.dart';
 
@@ -75,66 +75,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                   );
                 }
                 return Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 20, 20, 20),
-                        width: 4,
-                      ),
-                    ),
-                    child: Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: [
-                        AspectRatio(
-                          aspectRatio: _player.controller!.value.aspectRatio,
-                          child: GestureDetector(
-                            onTap: _player.updateControllers,
-                            child: VideoPlayer(_player.controller!),
-                          ),
-                        ),
-                        Observer(
-                          builder: (context) => GestureDetector(
-                            child: AnimatedScale(
-                              duration: const Duration(milliseconds: 100),
-                              scale: _player.showControllers ? 1 : 0,
-                              child: Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(70, 0, 0, 0),
-                                  borderRadius: BorderRadius.circular(35),
-                                ),
-                                child: Observer(
-                                  builder: (context) => Icon(
-                                    _player.isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                                    color: Colors.amber,
-                                    size: 28,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: _player.playPause,
-                          ),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Observer(
-                            builder: (context) {
-                              final max = _player.maxSeconds;
-                              final value = _player.currentTime;
-                              return Slider(
-                                value: value,
-                                onChanged: _player.moveClip,
-                                max: max,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: PlayerWidget(_player),
                 );
               },
             ),

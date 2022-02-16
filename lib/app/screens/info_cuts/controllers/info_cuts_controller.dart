@@ -80,6 +80,9 @@ abstract class _InfoCutsControllerBase with Store {
   Future _loadClip() async {
     final clipPath = pathSelectedCut;
     await _player.loadClip(clipPath);
+
+    _player.showPrevious = cuts.indexWhere((element) => element.path == clipPath) > 0;
+    _player.showNext = cuts.indexWhere((element) => element.path == clipPath) != cuts.length - 1;
   }
 
   void shareCuts() {

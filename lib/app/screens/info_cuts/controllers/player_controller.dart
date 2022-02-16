@@ -25,6 +25,12 @@ abstract class _PlayerControllerBase with Store {
   @observable
   double currentTime = 0;
 
+  @observable
+  bool showPrevious = false;
+
+  @observable
+  bool showNext = true;
+
   double _selectedSpeed = 1;
   late VideoPlayerController? controller;
   Timer? timerCurrentTime;

@@ -85,6 +85,36 @@ mixin _$PlayerController on _PlayerControllerBase, Store {
     });
   }
 
+  final _$showPreviousAtom = Atom(name: '_PlayerControllerBase.showPrevious');
+
+  @override
+  bool get showPrevious {
+    _$showPreviousAtom.reportRead();
+    return super.showPrevious;
+  }
+
+  @override
+  set showPrevious(bool value) {
+    _$showPreviousAtom.reportWrite(value, super.showPrevious, () {
+      super.showPrevious = value;
+    });
+  }
+
+  final _$showNextAtom = Atom(name: '_PlayerControllerBase.showNext');
+
+  @override
+  bool get showNext {
+    _$showNextAtom.reportRead();
+    return super.showNext;
+  }
+
+  @override
+  set showNext(bool value) {
+    _$showNextAtom.reportWrite(value, super.showNext, () {
+      super.showNext = value;
+    });
+  }
+
   final _$loadClipAsyncAction = AsyncAction('_PlayerControllerBase.loadClip');
 
   @override
@@ -127,7 +157,9 @@ state: ${state},
 isPlaying: ${isPlaying},
 showControllers: ${showControllers},
 maxSeconds: ${maxSeconds},
-currentTime: ${currentTime}
+currentTime: ${currentTime},
+showPrevious: ${showPrevious},
+showNext: ${showNext}
     ''';
   }
 }
