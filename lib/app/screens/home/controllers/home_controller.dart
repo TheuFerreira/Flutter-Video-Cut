@@ -8,6 +8,7 @@ import 'package:flutter_video_cut/app/screens/home/dialog/error_video_dialog.dar
 import 'package:flutter_video_cut/app/screens/home/dialog/loading_dialog.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
+import 'package:flutter_video_cut/app/shared/ads/interstitial_manager.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
@@ -115,6 +116,8 @@ abstract class _HomeControllerBase with Store {
       barrierDismissible: false,
       builder: (ctx) => const LoadingDialog(),
     );
+
+    await InterstitialManager().loadAd();
 
     String originalVideo = video.path;
     final paths = await _videoService.cutInClips(originalVideo, maxSecondsByClip: secondsByClip);
