@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/components/clip_thumbnail_widget.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/enums/playback_type.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
@@ -21,6 +22,8 @@ abstract class _InfoCutsControllerBase with Store {
 
   @observable
   int selected = 0;
+
+  PlaybackType playbackType = PlaybackType.repeate;
 
   @computed
   String get pathSelectedCut => cuts[selected].path;
@@ -78,7 +81,10 @@ abstract class _InfoCutsControllerBase with Store {
 
   @action
   Future nextClip() async {
-    // TODO: Check is looping
+    if (playbackType != PlaybackType.loop) {
+      return;
+    }
+
     int nextClip = selected + 1;
     if (nextClip == cuts.length) {
       nextClip = 0;

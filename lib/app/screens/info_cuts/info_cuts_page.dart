@@ -134,6 +134,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                       ),
                       Observer(builder: (context) {
                         final type = _options.playbackType;
+                        _controller.playbackType = type;
                         IconData icon = Icons.repeat_one;
                         if (type == PlaybackType.loop) {
                           icon = Icons.loop;
