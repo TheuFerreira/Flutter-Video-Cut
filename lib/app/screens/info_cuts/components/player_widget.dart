@@ -65,7 +65,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                                 return;
                               }
 
-                              widget.onPrevious!();
+                              widget.onPrevious();
                             },
                             child: Container(
                               height: 55,
@@ -113,7 +113,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                                 return;
                               }
 
-                              widget.onNext!();
+                              widget.onNext();
                             },
                             child: Container(
                               height: 55,

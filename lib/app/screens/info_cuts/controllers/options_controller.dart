@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/enums/playback_type.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/models/playback_speed.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:mobx/mobx.dart';
@@ -13,6 +14,9 @@ abstract class _OptionsControllerBase with Store {
   @observable
   PlaybackSpeed? playbackSpeed;
   int _selectedSpeed = 0;
+
+  @observable
+  PlaybackType playbackType = PlaybackType.repeate;
 
   List<PlaybackSpeed> speeds = ObservableList<PlaybackSpeed>.of(const [
     PlaybackSpeed('1x', 1),
@@ -50,5 +54,16 @@ abstract class _OptionsControllerBase with Store {
 
     playbackSpeed = speeds[_selectedSpeed];
     await _playerController.setPlaybackSpeed(playbackSpeed!.value);
+  }
+
+  @action
+  void nextPlaybackType() {
+    if (playbackType == PlaybackType.normal) {
+      playbackType = PlaybackType.repeate;
+    } else if (playbackType == PlaybackType.repeate) {
+      playbackType = PlaybackType.loop;
+    } else if (playbackType == PlaybackType.loop) {
+      playbackType = PlaybackType.normal;
+    }
   }
 }

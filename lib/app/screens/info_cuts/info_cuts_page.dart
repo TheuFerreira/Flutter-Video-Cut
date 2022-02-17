@@ -4,6 +4,7 @@ import 'package:flutter_video_cut/app/screens/info_cuts/components/player_widget
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/options_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
+import 'package:flutter_video_cut/app/screens/info_cuts/enums/playback_type.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/player_state.dart';
 import 'package:flutter_video_cut/app/shared/components/progress_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
@@ -131,6 +132,23 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                           );
                         },
                       ),
+                      Observer(builder: (context) {
+                        final type = _options.playbackType;
+                        IconData icon = Icons.repeat_one;
+                        if (type == PlaybackType.loop) {
+                          icon = Icons.loop;
+                        } else if (type == PlaybackType.repeate) {
+                          icon = Icons.repeat;
+                        }
+                        return IconButton(
+                          onPressed: _options.nextPlaybackType,
+                          iconSize: 28.0,
+                          icon: Icon(
+                            icon,
+                            color: Colors.white38,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                   const SizedBox(height: 8.0),

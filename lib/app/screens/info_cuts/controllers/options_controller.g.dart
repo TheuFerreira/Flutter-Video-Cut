@@ -25,6 +25,21 @@ mixin _$OptionsController on _OptionsControllerBase, Store {
     });
   }
 
+  final _$playbackTypeAtom = Atom(name: '_OptionsControllerBase.playbackType');
+
+  @override
+  PlaybackType get playbackType {
+    _$playbackTypeAtom.reportRead();
+    return super.playbackType;
+  }
+
+  @override
+  set playbackType(PlaybackType value) {
+    _$playbackTypeAtom.reportWrite(value, super.playbackType, () {
+      super.playbackType = value;
+    });
+  }
+
   final _$nextPlaybackSpeedAsyncAction =
       AsyncAction('_OptionsControllerBase.nextPlaybackSpeed');
 
@@ -33,10 +48,25 @@ mixin _$OptionsController on _OptionsControllerBase, Store {
     return _$nextPlaybackSpeedAsyncAction.run(() => super.nextPlaybackSpeed());
   }
 
+  final _$_OptionsControllerBaseActionController =
+      ActionController(name: '_OptionsControllerBase');
+
+  @override
+  void nextPlaybackType() {
+    final _$actionInfo = _$_OptionsControllerBaseActionController.startAction(
+        name: '_OptionsControllerBase.nextPlaybackType');
+    try {
+      return super.nextPlaybackType();
+    } finally {
+      _$_OptionsControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-playbackSpeed: ${playbackSpeed}
+playbackSpeed: ${playbackSpeed},
+playbackType: ${playbackType}
     ''';
   }
 }
