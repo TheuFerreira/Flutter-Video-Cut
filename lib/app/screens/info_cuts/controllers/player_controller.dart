@@ -10,6 +10,8 @@ part 'player_controller.g.dart';
 class PlayerController = _PlayerControllerBase with _$PlayerController;
 
 abstract class _PlayerControllerBase with Store {
+  late Function() onEnded;
+
   @observable
   PlayerState state = PlayerState.loading;
 
@@ -150,6 +152,7 @@ abstract class _PlayerControllerBase with Store {
 
     if (isPlaying == true) {
       isPlaying = false;
+      onEnded();
     }
   }
 

@@ -64,6 +64,13 @@ mixin _$InfoCutsController on _InfoCutsControllerBase, Store {
         .run(() => super.selectPreviousClip());
   }
 
+  final _$nextClipAsyncAction = AsyncAction('_InfoCutsControllerBase.nextClip');
+
+  @override
+  Future<dynamic> nextClip() {
+    return _$nextClipAsyncAction.run(() => super.nextClip());
+  }
+
   final _$selectNextClipAsyncAction =
       AsyncAction('_InfoCutsControllerBase.selectNextClip');
 

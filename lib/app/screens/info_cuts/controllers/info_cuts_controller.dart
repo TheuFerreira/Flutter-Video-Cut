@@ -31,6 +31,8 @@ abstract class _InfoCutsControllerBase with Store {
 
   _InfoCutsControllerBase(this.cuts, this._player) {
     _loadClip();
+
+    _player.onEnded = nextClip;
   }
 
   @action
@@ -72,6 +74,17 @@ abstract class _InfoCutsControllerBase with Store {
   @action
   Future selectPreviousClip() async {
     await selectClip(selected - 1);
+  }
+
+  @action
+  Future nextClip() async {
+    // TODO: Check is looping
+    int nextClip = selected + 1;
+    if (nextClip == cuts.length) {
+      nextClip = 0;
+    }
+    await selectClip(nextClip);
+    await _player.playPause();
   }
 
   @action
