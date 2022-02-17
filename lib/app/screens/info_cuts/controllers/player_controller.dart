@@ -31,6 +31,8 @@ abstract class _PlayerControllerBase with Store {
   @observable
   bool showNext = true;
 
+  bool _isLooping = true;
+
   double _selectedSpeed = 1;
   late VideoPlayerController? controller;
   Timer? timerCurrentTime;
@@ -45,8 +47,9 @@ abstract class _PlayerControllerBase with Store {
     final file = File(clipPath);
 
     controller = VideoPlayerController.file(file);
-    await controller!.setLooping(true);
+    await controller!.setLooping(_isLooping);
     await controller!.initialize();
+    controller!.addListener(checkVideoIsEnded);
     await _setPlaybackSpeed();
 
     maxSeconds = controller!.value.duration.inSeconds.toDouble();
@@ -56,6 +59,14 @@ abstract class _PlayerControllerBase with Store {
     isPlaying = false;
     showControllers = false;
     _cancelTimerShowControllers();
+  }
+
+  Future setIsLooping(bool value) async {
+    _isLooping = value;
+
+    if (controller != null) {
+      await controller!.setLooping(_isLooping);
+    }
   }
 
   Future setPlaybackSpeed(double value) async {
@@ -128,7 +139,18 @@ abstract class _PlayerControllerBase with Store {
     _cancelTimerCurrentTime();
     _cancelTimerShowControllers();
 
+    controller!.removeListener(checkVideoIsEnded);
     await controller!.dispose();
+  }
+
+  void checkVideoIsEnded() {
+    if (controller!.value.duration != controller!.value.position) {
+      return;
+    }
+
+    if (isPlaying == true) {
+      isPlaying = false;
+    }
   }
 
   void _cancelTimerCurrentTime() {

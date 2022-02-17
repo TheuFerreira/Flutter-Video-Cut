@@ -65,5 +65,7 @@ abstract class _OptionsControllerBase with Store {
     } else if (playbackType == PlaybackType.loop) {
       playbackType = PlaybackType.normal;
     }
+
+    _playerController.setIsLooping(playbackType == PlaybackType.repeate);
   }
 }
