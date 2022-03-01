@@ -132,24 +132,33 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                           );
                         },
                       ),
-                      Observer(builder: (context) {
-                        final type = _options.playbackType;
-                        _controller.playbackType = type;
-                        IconData icon = Icons.repeat_one;
-                        if (type == PlaybackType.loop) {
-                          icon = Icons.loop;
-                        } else if (type == PlaybackType.repeate) {
-                          icon = Icons.repeat;
-                        }
-                        return IconButton(
-                          onPressed: _options.nextPlaybackType,
-                          iconSize: 28.0,
-                          icon: Icon(
-                            icon,
-                            color: Colors.white38,
-                          ),
-                        );
-                      }),
+                      Observer(
+                        builder: (context) {
+                          final type = _options.playbackType;
+                          _controller.playbackType = type;
+                          IconData icon = Icons.repeat_one;
+                          if (type == PlaybackType.loop) {
+                            icon = Icons.loop;
+                          } else if (type == PlaybackType.repeate) {
+                            icon = Icons.repeat;
+                          }
+                          return IconButton(
+                            onPressed: _options.nextPlaybackType,
+                            iconSize: 28.0,
+                            icon: Icon(
+                              icon,
+                              color: Colors.white38,
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        onPressed: () => _options.joinClips(context),
+                        icon: const Icon(
+                          FontAwesomeIcons.objectGroup,
+                          color: Colors.white38,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8.0),
@@ -168,5 +177,3 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
     super.dispose();
   }
 }
-
-// TODO: Playback speed

@@ -63,6 +63,17 @@ mixin _$OptionsController on _OptionsControllerBase, Store {
   }
 
   @override
+  void joinClips(BuildContext context) {
+    final _$actionInfo = _$_OptionsControllerBaseActionController.startAction(
+        name: '_OptionsControllerBase.joinClips');
+    try {
+      return super.joinClips(context);
+    } finally {
+      _$_OptionsControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 playbackSpeed: ${playbackSpeed},
