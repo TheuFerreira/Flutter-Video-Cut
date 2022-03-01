@@ -9,6 +9,7 @@ import 'package:flutter_video_cut/app/screens/home/dialog/loading_dialog.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
 import 'package:flutter_video_cut/app/shared/ads/interstitial_manager.dart';
+import 'package:flutter_video_cut/app/shared/erros/video_limit_exception.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
@@ -50,7 +51,10 @@ abstract class _HomeControllerBase with Store {
 
       await showDialog(
         context: context,
-        builder: (ctx) => const ErrorVideoDialog(),
+        builder: (ctx) => const ErrorVideoDialog(
+          title: 'Houve um problema',
+          description: 'O Video Cut não conseguiu localizar o vídeo escolhido.',
+        ),
       );
 
       return;
@@ -120,8 +124,22 @@ abstract class _HomeControllerBase with Store {
     await InterstitialManager().loadAd();
 
     String originalVideo = video.path;
-    final paths = await _videoService.cutInClips(originalVideo, maxSecondsByClip: secondsByClip);
+    List<String>? paths = [];
+    try {
+      paths = await _videoService.cutInClips(originalVideo, maxSecondsByClip: secondsByClip);
+    } on VideoLimitException {
+      Navigator.of(context).pop();
+      await showDialog(
+        context: context,
+        builder: (ctx) => const ErrorVideoDialog(
+          title: 'Limite máximo',
+          description: 'O Video Cut só aceita vídeos com no máximo 10 MINUTOS.',
+        ),
+      );
+      return null;
+    }
     if (paths == null || paths.isEmpty) {
+      Navigator.of(context).pop();
       return null;
     }
 

@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ErrorVideoDialog extends StatelessWidget {
-  const ErrorVideoDialog({Key? key}) : super(key: key);
+  final String title;
+  final String description;
+  const ErrorVideoDialog({
+    Key? key,
+    required this.title,
+    required this.description,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +30,15 @@ class ErrorVideoDialog extends StatelessWidget {
                   color: Colors.red[700]!,
                 ),
                 const SizedBox(height: 24.0),
-                const Text(
-                  'Houve um problema',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                  ),
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 22.0),
                 ),
                 const SizedBox(height: 8.0),
-                const Text(
-                  'O Video Cut não conseguiu localizar o vídeo escolhido.',
+                Text(
+                  description,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white60,
-                  ),
+                  style: const TextStyle(color: Colors.white60),
                 ),
               ],
             ),
@@ -57,9 +59,7 @@ class ErrorVideoDialog extends StatelessWidget {
                         padding: EdgeInsets.all(12.0),
                         child: Text(
                           'Continuar',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),

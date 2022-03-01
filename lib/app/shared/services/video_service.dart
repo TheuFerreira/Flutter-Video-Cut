@@ -1,6 +1,8 @@
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter_min/media_information.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
+import 'package:flutter_video_cut/app/shared/erros/video_limit_exception.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 
@@ -11,12 +13,16 @@ abstract class IVideoService {
 class VideoService implements IVideoService {
   final IDirectoryService _directoryService;
   final IFileService _fileService;
+  final int _maxTimeOfVideoInSeconds = 600;
 
   VideoService(this._directoryService, this._fileService);
 
   @override
   Future<List<String>?> cutInClips(String path, {int maxSecondsByClip = 29, String prefixFileName = 'file'}) async {
     int seconds = await _getTotalSecondsOfVideo(path);
+    if (seconds > _maxTimeOfVideoInSeconds) {
+      throw VideoLimitException(seconds.toString());
+    }
 
     List<String>? paths = [];
     final clips = (seconds / maxSecondsByClip).ceil();
@@ -50,7 +56,8 @@ class VideoService implements IVideoService {
 
   Future<String> _getDuration(String path) async {
     final videoInformation = await FFprobeKit.getMediaInformation(path);
-    return videoInformation.getMediaInformation()!.getDuration()!;
+    MediaInformation? mediaInformation = videoInformation.getMediaInformation();
+    return mediaInformation!.getDuration()!;
   }
 
   Future<String?> _generateClip(
