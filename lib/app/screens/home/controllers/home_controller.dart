@@ -61,25 +61,7 @@ abstract class _HomeControllerBase with Store {
     }
 
     final video = File(result);
-
-    final secondsOfVideo = await _videoService.getTotalSecondsOfVideo(video.path);
-    final secondsByClip = await _getSecondsByClip(context, secondsOfVideo);
-    if (secondsByClip == null) {
-      return;
-    }
-
-    final cuts = await _processVideo(context, video, secondsByClip);
-    if (cuts == null || cuts.isEmpty) {
-      return;
-    }
-
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => InfoCutsPage(cuts),
-      ),
-    );
-
-    await _disposeCuts(cuts);
+    await _initialize(context, video);
   }
 
   Future searchVideo(BuildContext context) async {
@@ -88,6 +70,10 @@ abstract class _HomeControllerBase with Store {
       return;
     }
 
+    await _initialize(context, video);
+  }
+
+  Future _initialize(BuildContext context, File video) async {
     final secondsOfVideo = await _videoService.getTotalSecondsOfVideo(video.path);
     final secondsByClip = await _getSecondsByClip(context, secondsOfVideo);
     if (secondsByClip == null) {
