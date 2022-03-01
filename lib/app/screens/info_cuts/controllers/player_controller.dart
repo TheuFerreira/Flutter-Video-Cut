@@ -108,7 +108,7 @@ abstract class _PlayerControllerBase with Store {
   Future _updateCurrentTime() async {
     final duration = await controller!.position;
     if (duration != null) {
-      currentTime = duration!.inSeconds.toDouble();
+      currentTime = duration.inSeconds.toDouble();
     }
   }
 
