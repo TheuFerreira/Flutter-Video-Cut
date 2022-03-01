@@ -60,10 +60,13 @@ abstract class _OptionsControllerBase with Store {
   void nextPlaybackType() {
     if (playbackType == PlaybackType.normal) {
       playbackType = PlaybackType.repeate;
+      DialogService.showMessage('Repetir clipe atual');
     } else if (playbackType == PlaybackType.repeate) {
       playbackType = PlaybackType.loop;
+      DialogService.showMessage('Repetir todos os clipes');
     } else if (playbackType == PlaybackType.loop) {
       playbackType = PlaybackType.normal;
+      DialogService.showMessage('Reproduzir uma única vez');
     }
 
     _playerController.setIsLooping(playbackType == PlaybackType.repeate);
