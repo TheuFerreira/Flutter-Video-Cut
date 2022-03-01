@@ -3,7 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TextTimeDialog extends StatefulWidget {
-  const TextTimeDialog({Key? key}) : super(key: key);
+  final int maxSeconds;
+  const TextTimeDialog({
+    Key? key,
+    required this.maxSeconds,
+  }) : super(key: key);
 
   @override
   _TextTimeDialogState createState() => _TextTimeDialogState();
@@ -51,7 +55,7 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  width: 120,
+                  width: 150,
                   child: Form(
                     key: formKey,
                     child: TextFormField(
@@ -127,6 +131,13 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
   String? validateSeconds(String? value) {
     if (value!.isEmpty) {
       return 'Insira um valor.';
+    }
+
+    final valueInt = int.parse(value);
+    if (valueInt < 10) {
+      return 'Mínimo de 10 segundos.';
+    } else if (valueInt > widget.maxSeconds) {
+      return 'Máximo de ${widget.maxSeconds} segundos';
     }
   }
 

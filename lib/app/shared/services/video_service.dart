@@ -8,6 +8,7 @@ import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 
 abstract class IVideoService {
   Future<List<String>?> cutInClips(String path, {int maxSecondsByClip = 29, String prefixFileName = 'file'});
+  Future<int> getTotalSecondsOfVideo(String path);
 }
 
 class VideoService implements IVideoService {
@@ -19,7 +20,7 @@ class VideoService implements IVideoService {
 
   @override
   Future<List<String>?> cutInClips(String path, {int maxSecondsByClip = 29, String prefixFileName = 'file'}) async {
-    int seconds = await _getTotalSecondsOfVideo(path);
+    int seconds = await getTotalSecondsOfVideo(path);
     if (seconds > _maxTimeOfVideoInSeconds) {
       throw VideoLimitException(seconds.toString());
     }
@@ -48,7 +49,8 @@ class VideoService implements IVideoService {
     return paths;
   }
 
-  Future<int> _getTotalSecondsOfVideo(String path) async {
+  @override
+  Future<int> getTotalSecondsOfVideo(String path) async {
     final duration = await _getDuration(path);
     String value = duration.split('.')[0];
     return int.parse(value);

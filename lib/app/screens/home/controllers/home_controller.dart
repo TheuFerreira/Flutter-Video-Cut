@@ -62,7 +62,8 @@ abstract class _HomeControllerBase with Store {
 
     final video = File(result);
 
-    final secondsByClip = await _getSecondsByClip(context);
+    final secondsOfVideo = await _videoService.getTotalSecondsOfVideo(video.path);
+    final secondsByClip = await _getSecondsByClip(context, secondsOfVideo);
     if (secondsByClip == null) {
       return;
     }
@@ -87,7 +88,8 @@ abstract class _HomeControllerBase with Store {
       return;
     }
 
-    final secondsByClip = await _getSecondsByClip(context);
+    final secondsOfVideo = await _videoService.getTotalSecondsOfVideo(video.path);
+    final secondsByClip = await _getSecondsByClip(context, secondsOfVideo);
     if (secondsByClip == null) {
       return;
     }
@@ -106,10 +108,10 @@ abstract class _HomeControllerBase with Store {
     await _disposeCuts(cuts);
   }
 
-  Future<int?> _getSecondsByClip(BuildContext context) async {
+  Future<int?> _getSecondsByClip(BuildContext context, int secondsOfVideo) async {
     final secondsByClip = await showDialog<int?>(
       context: context,
-      builder: (ctx) => const TextTimeDialog(),
+      builder: (ctx) => TextTimeDialog(maxSeconds: secondsOfVideo),
     );
     return secondsByClip;
   }
