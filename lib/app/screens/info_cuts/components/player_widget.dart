@@ -54,35 +54,28 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Observer(
-                      builder: (context) {
+                    GestureDetector(
+                      onTap: () {
                         final showPrevious = widget.player.showPrevious;
-                        return Opacity(
-                          opacity: showPrevious ? 1 : 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              if (!showPrevious) {
-                                return;
-                              }
+                        if (!showPrevious) {
+                          return;
+                        }
 
-                              widget.onPrevious();
-                            },
-                            child: Container(
-                              height: 55,
-                              width: 55,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(70, 0, 0, 0),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: const Icon(
-                                FontAwesomeIcons.stepBackward,
-                                color: Colors.amber,
-                                size: 26,
-                              ),
-                            ),
-                          ),
-                        );
+                        widget.onPrevious();
                       },
+                      child: Container(
+                        height: 55,
+                        width: 55,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(70, 0, 0, 0),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Icon(
+                          FontAwesomeIcons.stepBackward,
+                          color: Colors.amber,
+                          size: 26,
+                        ),
+                      ),
                     ),
                     GestureDetector(
                       onTap: widget.player.playPause,
@@ -102,35 +95,28 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                         ),
                       ),
                     ),
-                    Observer(
-                      builder: (context) {
+                    GestureDetector(
+                      onTap: () {
                         final showNext = widget.player.showNext;
-                        return Opacity(
-                          opacity: showNext ? 1 : 0,
-                          child: GestureDetector(
-                            onTap: () {
-                              if (!showNext) {
-                                return;
-                              }
+                        if (!showNext) {
+                          return;
+                        }
 
-                              widget.onNext();
-                            },
-                            child: Container(
-                              height: 55,
-                              width: 55,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(70, 0, 0, 0),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: const Icon(
-                                FontAwesomeIcons.stepForward,
-                                color: Colors.amber,
-                                size: 26,
-                              ),
-                            ),
-                          ),
-                        );
+                        widget.onNext();
                       },
+                      child: Container(
+                        height: 55,
+                        width: 55,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(70, 0, 0, 0),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Icon(
+                          FontAwesomeIcons.stepForward,
+                          color: Colors.amber,
+                          size: 26,
+                        ),
+                      ),
                     ),
                   ],
                 ),
