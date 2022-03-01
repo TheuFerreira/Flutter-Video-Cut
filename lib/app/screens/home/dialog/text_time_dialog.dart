@@ -28,8 +28,7 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: Column(
               children: [
                 const SizedBox(height: 8.0),
@@ -52,7 +51,7 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  width: 50,
+                  width: 120,
                   child: Form(
                     key: formKey,
                     child: TextFormField(
@@ -61,9 +60,7 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
                       textAlign: TextAlign.center,
                       controller: secondsController,
                       validator: validateSeconds,
-                      decoration: const InputDecoration(
-                        hintText: '29',
-                      ),
+                      decoration: const InputDecoration(hintText: '29'),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
                           RegExp(r'^([1-9]|[1-9][0-9]|99)$'),
