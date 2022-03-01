@@ -38,7 +38,6 @@ abstract class _PlayerControllerBase with Store {
   double _selectedSpeed = 1;
   late VideoPlayerController? controller;
   Timer? timerCurrentTime;
-  Timer? timerShowControllers;
 
   @action
   Future<void> loadClip(String clipPath) async {
@@ -60,7 +59,6 @@ abstract class _PlayerControllerBase with Store {
     state = PlayerState.initialized;
     isPlaying = false;
     showControllers = false;
-    _cancelTimerShowControllers();
   }
 
   Future setIsLooping(bool value) async {
@@ -86,11 +84,9 @@ abstract class _PlayerControllerBase with Store {
     if (playing) {
       await controller!.pause();
       _cancelTimerCurrentTime();
-      _cancelTimerShowControllers();
     } else {
       await controller!.play();
       _startTimerCurrentTime();
-      _startTimerShowControllers();
     }
 
     isPlaying = !playing;
@@ -117,29 +113,10 @@ abstract class _PlayerControllerBase with Store {
   @action
   void updateControllers() {
     showControllers = !showControllers;
-
-    if (showControllers) {
-      _startTimerShowControllers();
-    } else {
-      _cancelTimerShowControllers();
-    }
-  }
-
-  void _startTimerShowControllers() {
-    timerShowControllers = Timer.periodic(
-      const Duration(seconds: 2),
-      (timer) {
-        if (isPlaying) {
-          showControllers = false;
-          timerShowControllers!.cancel();
-        }
-      },
-    );
   }
 
   Future dispose() async {
     _cancelTimerCurrentTime();
-    _cancelTimerShowControllers();
 
     controller!.removeListener(checkVideoIsEnded);
     await controller!.dispose();
@@ -159,12 +136,6 @@ abstract class _PlayerControllerBase with Store {
   void _cancelTimerCurrentTime() {
     if (timerCurrentTime != null) {
       timerCurrentTime!.cancel();
-    }
-  }
-
-  void _cancelTimerShowControllers() {
-    if (timerShowControllers != null) {
-      timerShowControllers!.cancel();
     }
   }
 }
