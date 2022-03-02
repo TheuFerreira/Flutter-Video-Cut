@@ -152,13 +152,13 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                           );
                         },
                       ),
-                      IconButton(
+                      /*IconButton(
                         onPressed: () => _options.joinClips(context),
                         icon: const Icon(
                           FontAwesomeIcons.objectGroup,
                           color: Colors.white38,
                         ),
-                      ),
+                      ),*/
                     ],
                   ),
                   const SizedBox(height: 8.0),
