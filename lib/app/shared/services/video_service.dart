@@ -9,6 +9,7 @@ import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 abstract class IVideoService {
   Future<List<String>?> cutInClips(String path, {int maxSecondsByClip = 29, String prefixFileName = 'file'});
   Future<int> getTotalSecondsOfVideo(String path);
+  Future<String?> joinClips(String pathListVideos, String fileName);
 }
 
 class VideoService implements IVideoService {
@@ -88,5 +89,18 @@ class VideoService implements IVideoService {
   String _generateNewFilePath(String prefixFileName, int i, String directoryPath) {
     String fileName = prefixFileName + (i + 1).toString();
     return directoryPath + '/$fileName.mp4';
+  }
+
+  @override
+  Future<String?> joinClips(String pathListVideos, String fileName) async {
+    final command = "-safe 0 -f concat -i $pathListVideos -c copy -avoid_negative_ts 1 -y $fileName";
+    final result = await FFmpegKit.execute(command);
+    final returnCode = await result.getReturnCode();
+
+    if (ReturnCode.isSuccess(returnCode)) {
+      return fileName;
+    } else {
+      return null;
+    }
   }
 }
