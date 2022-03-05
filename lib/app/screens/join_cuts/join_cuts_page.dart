@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/screens/join_cuts/components/clip_widget.dart';
 import 'package:flutter_video_cut/app/screens/join_cuts/controllers/join_cuts_controller.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class JoinCutsPage extends StatefulWidget {
@@ -51,9 +52,10 @@ class _JoinCutsPageState extends State<JoinCutsPage> {
         actions: [
           IconButton(
             icon: const Icon(FontAwesomeIcons.info),
-            onPressed: () {
-              // TODO: Info
-            },
+            onPressed: () => DialogService.showInfoDialog(
+              context,
+              'Para juntar clipes, basta selecionar pelo menos 2 clips e clicar em CONFIRMAR',
+            ),
           ),
         ],
       ),
