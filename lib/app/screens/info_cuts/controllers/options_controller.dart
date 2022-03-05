@@ -77,8 +77,20 @@ abstract class _OptionsControllerBase with Store {
   @action
   Future<void> joinClips(BuildContext context) async {
     final result = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => JoinCutsPage(_infoCutsController.cuts),
+      PageRouteBuilder(
+        pageBuilder: (ctx, animation, secondaryAnimation) => JoinCutsPage(_infoCutsController.cuts),
+        transitionsBuilder: (ctx, animation, _, child) {
+          const begin = Offset(1, 0);
+          const end = Offset(0, 0);
+
+          final tween = Tween(begin: begin, end: end);
+          final offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
       ),
     );
     if (result == null) {
