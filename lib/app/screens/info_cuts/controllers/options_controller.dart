@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/player_controller.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/playback_type.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/models/playback_speed.dart';
 import 'package:flutter_video_cut/app/screens/join_cuts/join_cuts_page.dart';
+import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:mobx/mobx.dart';
 
@@ -75,12 +75,17 @@ abstract class _OptionsControllerBase with Store {
   }
 
   @action
-  void joinClips(BuildContext context) {
-    // TODO: Update function join clips
-    Navigator.of(context).push(
+  Future<void> joinClips(BuildContext context) async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => JoinCutsPage(_infoCutsController.cuts),
       ),
     );
+    if (result == null) {
+      return;
+    }
+
+    List<CutModel> cuts = result as List<CutModel>;
+    await _infoCutsController.refreshListOfClips(cuts);
   }
 }

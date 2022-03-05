@@ -48,6 +48,14 @@ mixin _$OptionsController on _OptionsControllerBase, Store {
     return _$nextPlaybackSpeedAsyncAction.run(() => super.nextPlaybackSpeed());
   }
 
+  final _$joinClipsAsyncAction =
+      AsyncAction('_OptionsControllerBase.joinClips');
+
+  @override
+  Future<void> joinClips(BuildContext context) {
+    return _$joinClipsAsyncAction.run(() => super.joinClips(context));
+  }
+
   final _$_OptionsControllerBaseActionController =
       ActionController(name: '_OptionsControllerBase');
 
@@ -57,17 +65,6 @@ mixin _$OptionsController on _OptionsControllerBase, Store {
         name: '_OptionsControllerBase.nextPlaybackType');
     try {
       return super.nextPlaybackType();
-    } finally {
-      _$_OptionsControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void joinClips(BuildContext context) {
-    final _$actionInfo = _$_OptionsControllerBaseActionController.startAction(
-        name: '_OptionsControllerBase.joinClips');
-    try {
-      return super.joinClips(context);
     } finally {
       _$_OptionsControllerBaseActionController.endAction(_$actionInfo);
     }
