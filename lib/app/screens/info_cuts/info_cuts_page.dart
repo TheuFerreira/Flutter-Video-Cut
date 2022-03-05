@@ -59,7 +59,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: _controller.shareCuts,
+            onPressed: () => _controller.shareCuts(context),
           ),
         ],
       ),
