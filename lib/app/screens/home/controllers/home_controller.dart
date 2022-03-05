@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
 import 'package:flutter_video_cut/app/shared/ads/interstitial_manager.dart';
 import 'package:flutter_video_cut/app/shared/dialogs/loading_dialog.dart';
 import 'package:flutter_video_cut/app/shared/erros/video_limit_exception.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/channel_service.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
@@ -26,6 +26,7 @@ abstract class _HomeControllerBase with Store {
   final IStorageService _storageService = StorageService();
   final IThumbnailService _iThumbnailService = ThumbnailService();
   final IFileService _fileService = FileService();
+  final IChannelService _channelService = ChannelService();
   late IVideoService _videoService;
 
   _HomeControllerBase() {
@@ -34,9 +35,8 @@ abstract class _HomeControllerBase with Store {
   }
 
   Future getVideoFromShared(BuildContext context) async {
-    MethodChannel methodChannel = const MethodChannel("com.example.flutter_video_cut.path");
-    final result = await methodChannel.invokeMethod<String>('getSharedData');
-    if (result == '' || result == null) {
+    final result = await _channelService.getSharedData();
+    if (result == null) {
       return;
     }
 

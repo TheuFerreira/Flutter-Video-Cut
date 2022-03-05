@@ -32,6 +32,13 @@ mixin _$ShareController on _ShareControllerBase, Store {
     });
   }
 
+  final _$shareAsyncAction = AsyncAction('_ShareControllerBase.share');
+
+  @override
+  Future<void> share(BuildContext context) {
+    return _$shareAsyncAction.run(() => super.share(context));
+  }
+
   final _$_ShareControllerBaseActionController =
       ActionController(name: '_ShareControllerBase');
 
@@ -41,17 +48,6 @@ mixin _$ShareController on _ShareControllerBase, Store {
         name: '_ShareControllerBase.clickCut');
     try {
       return super.clickCut(context, cut);
-    } finally {
-      _$_ShareControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void share(BuildContext context) {
-    final _$actionInfo = _$_ShareControllerBaseActionController.startAction(
-        name: '_ShareControllerBase.share');
-    try {
-      return super.share(context);
     } finally {
       _$_ShareControllerBaseActionController.endAction(_$actionInfo);
     }
