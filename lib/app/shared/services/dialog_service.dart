@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/shared/dialogs/error_dialog.dart';
+import 'package:flutter_video_cut/app/shared/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/shared/dialogs/question_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,6 +37,17 @@ class DialogService {
       builder: (_) {
         return ErrorDialog(
           title: title,
+          description: description,
+        );
+      },
+    );
+  }
+
+  static Future<void> showInfoDialog(BuildContext context, String description) async {
+    await showDialog(
+      context: context,
+      builder: (_) {
+        return InfoDialog(
           description: description,
         );
       },

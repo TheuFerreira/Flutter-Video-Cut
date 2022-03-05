@@ -50,9 +50,7 @@ class _HomePageState extends State<HomePage> {
             bottom: 0,
             child: TextButton.icon(
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => const CreditsPage(),
-                ),
+                MaterialPageRoute(builder: (ctx) => const CreditsPage()),
               ),
               icon: const FaIcon(Icons.privacy_tip),
               label: const Text('Créditos'),
