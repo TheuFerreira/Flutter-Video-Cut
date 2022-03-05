@@ -36,11 +36,11 @@ mixin _$ShareController on _ShareControllerBase, Store {
       ActionController(name: '_ShareControllerBase');
 
   @override
-  void clickCut(CutModel cut) {
+  void clickCut(BuildContext context, CutModel cut) {
     final _$actionInfo = _$_ShareControllerBaseActionController.startAction(
         name: '_ShareControllerBase.clickCut');
     try {
-      return super.clickCut(cut);
+      return super.clickCut(context, cut);
     } finally {
       _$_ShareControllerBaseActionController.endAction(_$actionInfo);
     }

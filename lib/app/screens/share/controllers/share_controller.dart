@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/share_service.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,17 +17,24 @@ abstract class _ShareControllerBase with Store {
 
   final List<CutModel> cuts;
   final IShareService _shareService = ShareService();
+  final int _shareLimit = 10;
 
   _ShareControllerBase(this.cuts);
 
   @action
-  void clickCut(CutModel cut) {
+  void clickCut(BuildContext context, CutModel cut) {
     final result = selectedCuts.contains(cut);
     if (result) {
       selectedCuts.remove(cut);
-    } else {
-      selectedCuts.add(cut);
+      return;
     }
+
+    if (selectedCuts.length >= _shareLimit) {
+      DialogService.showInfoDialog(context, 'Só podem ser compartilhados no máximo 10 clips.');
+      return;
+    }
+
+    selectedCuts.add(cut);
   }
 
   @action

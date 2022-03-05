@@ -78,7 +78,7 @@ class _SharePageState extends State<SharePage> {
                     index,
                     cut,
                     isSelected: isSelected,
-                    onTap: _controller.clickCut,
+                    onTap: (c) => _controller.clickCut(context, c),
                   );
                 },
               ),
