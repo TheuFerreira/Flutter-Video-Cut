@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/shared/dialogs/loading_dialog.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
+import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/thumbnail_service.dart';
@@ -41,6 +44,11 @@ abstract class _JoinCutsControllerBase with Store {
 
   @action
   Future<void> joinClips(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (builder) => const LoadingDialog(description: 'Estamos juntando os pedaçinhos do seu vídeo...'),
+    );
+
     String contents = _getContents();
 
     final newFileName = await _getPathNewFileName();
@@ -48,8 +56,23 @@ abstract class _JoinCutsControllerBase with Store {
     final newFile = await _generateTempListFile(pathListFile, contents);
     final videoJoined = await _videoService.joinClips(pathListFile, newFileName);
 
+    await Future.delayed(const Duration(seconds: 1));
+
     await newFile.delete();
+    Navigator.of(context).pop();
+
     if (videoJoined == null) {
+      await FirebaseCrashlytics.instance.recordError(
+        null,
+        null,
+        reason: 'Error on join videos',
+        fatal: false,
+      );
+      DialogService.showErrorDialog(
+        context,
+        'Erro Desconhecido',
+        'Houve um problema ao juntar o vídeo',
+      );
       return;
     }
 
