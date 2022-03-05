@@ -87,5 +87,7 @@ abstract class _OptionsControllerBase with Store {
 
     List<CutModel> cuts = result as List<CutModel>;
     await _infoCutsController.refreshListOfClips(cuts);
+
+    DialogService.showMessage('Clips unidos');
   }
 }
