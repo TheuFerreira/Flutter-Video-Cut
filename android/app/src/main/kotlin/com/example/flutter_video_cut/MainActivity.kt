@@ -8,6 +8,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import javautils.FileUtils
+import java.io.File
 
 class MainActivity: FlutterActivity() {
     private var sharedData: String = ""
@@ -25,6 +26,9 @@ class MainActivity: FlutterActivity() {
                     callHandler()
                     result.success(sharedData)
                     sharedData = ""
+                } else if (call.method == "shareFiles") {
+                    val paths = call.arguments as ArrayList<String>;
+                    callShareFilesHandler(paths);
                 }
             }
     }
@@ -38,5 +42,21 @@ class MainActivity: FlutterActivity() {
                 }
             }
         }
+    }
+
+    private fun callShareFilesHandler(paths : ArrayList<String>) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND_MULTIPLE
+        intent.type = "video/*"
+
+        val uriFiles = ArrayList<Uri>()
+        for (path in paths) {
+            val file = File(path)
+            val uri = Uri.fromFile(file)
+            uriFiles.add(uri)
+        }
+
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriFiles)
+        startActivity(Intent.createChooser(intent, "Compartilhar Vídeos"))
     }
 }
