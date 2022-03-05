@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LoadingDialog extends StatelessWidget {
+  final String description;
   const LoadingDialog({
     Key? key,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -15,20 +17,20 @@ class LoadingDialog extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            CircularProgressIndicator(),
-            SizedBox(height: 24.0),
-            Text(
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 24.0),
+            const Text(
               'Aguarde um pouco!!!',
               style: TextStyle(
                 fontSize: 22.0,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
-              'Estamos cortando seu vídeo em pedacinhos...',
+              description,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white60,
               ),
             ),

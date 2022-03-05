@@ -5,10 +5,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/error_video_dialog.dart';
-import 'package:flutter_video_cut/app/screens/home/dialog/loading_dialog.dart';
 import 'package:flutter_video_cut/app/screens/home/dialog/text_time_dialog.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/info_cuts_page.dart';
 import 'package:flutter_video_cut/app/shared/ads/interstitial_manager.dart';
+import 'package:flutter_video_cut/app/shared/dialogs/loading_dialog.dart';
 import 'package:flutter_video_cut/app/shared/erros/video_limit_exception.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
@@ -116,7 +116,9 @@ abstract class _HomeControllerBase with Store {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => const LoadingDialog(),
+      builder: (ctx) => const LoadingDialog(
+        description: 'Estamos cortando seu vídeo em pedacinhos...',
+      ),
     );
 
     await InterstitialManager().loadAd();
