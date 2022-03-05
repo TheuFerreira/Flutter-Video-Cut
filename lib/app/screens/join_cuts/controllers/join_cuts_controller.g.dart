@@ -9,6 +9,14 @@ part of 'join_cuts_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$JoinCutsController on _JoinCutsControllerBase, Store {
+  Computed<bool>? _$hasSelectedComputed;
+
+  @override
+  bool get hasSelected =>
+      (_$hasSelectedComputed ??= Computed<bool>(() => super.hasSelected,
+              name: '_JoinCutsControllerBase.hasSelected'))
+          .value;
+
   final _$selectedCutsAtom = Atom(name: '_JoinCutsControllerBase.selectedCuts');
 
   @override
@@ -22,6 +30,14 @@ mixin _$JoinCutsController on _JoinCutsControllerBase, Store {
     _$selectedCutsAtom.reportWrite(value, super.selectedCuts, () {
       super.selectedCuts = value;
     });
+  }
+
+  final _$joinClipsAsyncAction =
+      AsyncAction('_JoinCutsControllerBase.joinClips');
+
+  @override
+  Future<void> joinClips(BuildContext context) {
+    return _$joinClipsAsyncAction.run(() => super.joinClips(context));
   }
 
   final _$_JoinCutsControllerBaseActionController =
@@ -41,7 +57,8 @@ mixin _$JoinCutsController on _JoinCutsControllerBase, Store {
   @override
   String toString() {
     return '''
-selectedCuts: ${selectedCuts}
+selectedCuts: ${selectedCuts},
+hasSelected: ${hasSelected}
     ''';
   }
 }
