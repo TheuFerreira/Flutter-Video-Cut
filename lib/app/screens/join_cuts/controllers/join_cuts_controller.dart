@@ -17,7 +17,7 @@ abstract class _JoinCutsControllerBase with Store {
   List<CutModel> selectedCuts = ObservableList<CutModel>();
 
   @computed
-  bool get hasSelected => selectedCuts.isNotEmpty;
+  bool get hasSelected => selectedCuts.length >= 2;
 
   List<CutModel> cuts = ObservableList<CutModel>();
   final IThumbnailService _thumbnailService = ThumbnailService();
@@ -71,8 +71,8 @@ abstract class _JoinCutsControllerBase with Store {
 
   Future<String> _getPathNewFileName() async {
     String tempPath = await _directoryService.getTemporaryPath();
-    return tempPath + '/ola.mp4';
-    ;
+    String fullName = DateTime.now().millisecondsSinceEpoch.toString();
+    return tempPath + '/$fullName.mp4';
   }
 
   Future<String> _generatePathTempListFile() async {
