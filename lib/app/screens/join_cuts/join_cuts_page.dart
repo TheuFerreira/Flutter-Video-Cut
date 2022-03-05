@@ -84,11 +84,20 @@ class _JoinCutsPageState extends State<JoinCutsPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-              onPressed: () {
-                // TODO: Confirm
+            child: Observer(
+              builder: (context) {
+                final hasSelected = _controller.hasSelected;
+                return TextButton(
+                  onPressed: hasSelected ? () => _controller.joinClips(context) : null,
+                  child: const Text('Confirmar'),
+                  style: TextButton.styleFrom(
+                    elevation: hasSelected ? 4 : 0,
+                    backgroundColor: hasSelected ? const Color.fromARGB(255, 50, 50, 50) : null,
+                    primary: Colors.white,
+                    fixedSize: Size(MediaQuery.of(context).size.width, 45),
+                  ),
+                );
               },
-              child: Text('Confirmar'),
             ),
           ),
         ],
