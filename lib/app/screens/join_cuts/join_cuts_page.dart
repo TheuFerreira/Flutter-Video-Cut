@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_video_cut/app/screens/join_cuts/components/clip_widget.dart';
 import 'package:flutter_video_cut/app/screens/join_cuts/controllers/join_cuts_controller.dart';
+import 'package:flutter_video_cut/app/shared/components/clip_widget.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,7 +41,7 @@ class _JoinCutsPageState extends State<JoinCutsPage> {
             ),
             SizedBox(width: 8.0),
             Text(
-              'Juntar Videos',
+              'Juntar Clips',
               style: TextStyle(
                 fontSize: 22,
                 color: Colors.amber,
