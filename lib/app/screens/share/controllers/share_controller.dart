@@ -32,7 +32,7 @@ abstract class _ShareControllerBase with Store {
   @action
   void share(BuildContext context) {
     List<String> paths = [];
-    for (var element in cuts) {
+    for (CutModel element in selectedCuts) {
       paths.add(element.path);
     }
 
