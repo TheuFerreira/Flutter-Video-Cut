@@ -38,24 +38,28 @@ abstract class _InfoCutsControllerBase with Store {
     _player.onEnded = nextClip;
   }
 
+  Future refreshListOfClips(List<CutModel> newCuts) async {
+    while (cuts.isNotEmpty) {
+      _deleteClip(0);
+      await _fileService.deleteIfExists(cuts[0].path);
+      cuts.removeAt(0);
+    }
+
+    for (CutModel cut in newCuts) {
+      _addClip(cut);
+    }
+
+    selectClip(0);
+  }
+
+  void _addClip(CutModel newCut) {
+    cuts.add(newCut);
+    listKey.currentState!.insertItem(cuts.length - 1);
+  }
+
   @action
   Future deleteClip(BuildContext context) async {
-    listKey.currentState!.removeItem(
-      selected,
-      (context, animation) {
-        return SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          ),
-          axis: Axis.horizontal,
-          child: ClipThumbnailWidget(
-            selected,
-            cuts[selected],
-          ),
-        );
-      },
-    );
+    _deleteClip(selected);
 
     await Future.delayed(const Duration(milliseconds: 100));
 
@@ -72,6 +76,25 @@ abstract class _InfoCutsControllerBase with Store {
 
     final nextIndex = selected == 0 ? selected : selected - 1;
     await selectClip(nextIndex);
+  }
+
+  void _deleteClip(int index) {
+    listKey.currentState!.removeItem(
+      index,
+      (context, animation) {
+        return SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          axis: Axis.horizontal,
+          child: ClipThumbnailWidget(
+            index,
+            cuts[index],
+          ),
+        );
+      },
+    );
   }
 
   @action
