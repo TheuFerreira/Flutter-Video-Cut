@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/shared/dialogs/error_dialog.dart';
 import 'package:flutter_video_cut/app/shared/dialogs/question_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,6 +27,18 @@ class DialogService {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
+    );
+  }
+
+  static Future<void> showErrorDialog(BuildContext context, String title, String description) async {
+    await showDialog(
+      context: context,
+      builder: (_) {
+        return ErrorDialog(
+          title: title,
+          description: description,
+        );
+      },
     );
   }
 }

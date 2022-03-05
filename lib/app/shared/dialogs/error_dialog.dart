@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ErrorVideoDialog extends StatelessWidget {
+class ErrorDialog extends StatelessWidget {
   final String title;
   final String description;
-  const ErrorVideoDialog({
+  const ErrorDialog({
     Key? key,
     required this.title,
     required this.description,
