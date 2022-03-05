@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/shared/ads/interstitial_manager.dart';
 import 'package:flutter_video_cut/app/shared/dialogs/loading_dialog.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
@@ -51,6 +52,7 @@ abstract class _JoinCutsControllerBase with Store {
 
     String contents = _getContents();
 
+    await InterstitialManager().loadAd();
     final newFileName = await _getPathNewFileName();
     final pathListFile = await _generatePathTempListFile();
     final newFile = await _generateTempListFile(pathListFile, contents);
@@ -71,7 +73,7 @@ abstract class _JoinCutsControllerBase with Store {
       DialogService.showErrorDialog(
         context,
         'Erro Desconhecido',
-        'Houve um problema ao juntar o vídeo',
+        'Houve um problema ao juntar os vídeos',
       );
       return;
     }
