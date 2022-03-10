@@ -15,6 +15,7 @@ import 'package:flutter_video_cut/app/shared/services/directory_service.dart';
 import 'package:flutter_video_cut/app/shared/services/file_service.dart';
 import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
 import 'package:flutter_video_cut/app/shared/services/thumbnail_service.dart';
+import 'package:flutter_video_cut/app/shared/services/version_service.dart';
 import 'package:flutter_video_cut/app/shared/services/video_service.dart';
 import 'package:mobx/mobx.dart';
 
@@ -27,11 +28,31 @@ abstract class _HomeControllerBase with Store {
   final IThumbnailService _iThumbnailService = ThumbnailService();
   final IFileService _fileService = FileService();
   final IChannelService _channelService = ChannelService();
+  final IVersionService _versionService = VersionService();
   late IVideoService _videoService;
 
-  _HomeControllerBase() {
+  _HomeControllerBase(BuildContext context) {
+    showUpdateIfAvailable(context);
     IDirectoryService _directoryService = DirectoryService();
     _videoService = VideoService(_directoryService, _fileService);
+  }
+
+  void showUpdateIfAvailable(BuildContext context) async {
+    final updateAvailable = await _versionService.updateAvailable();
+    if (!updateAvailable) {
+      return;
+    }
+
+    final result = await DialogService.showQuestionDialog(
+      context,
+      'Nova versão disponível',
+      'Deseja atualizar o Video Cut?',
+    );
+    if (result != true) {
+      return;
+    }
+
+    await _versionService.launchAppStore();
   }
 
   Future getVideoFromShared(BuildContext context) async {

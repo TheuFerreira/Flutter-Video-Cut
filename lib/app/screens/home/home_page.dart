@@ -12,12 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _controller = HomeController();
+  late HomeController _controller;
 
   @override
   void initState() {
     super.initState();
 
+    _controller = HomeController(context);
     _controller.getVideoFromShared(context);
   }
 
