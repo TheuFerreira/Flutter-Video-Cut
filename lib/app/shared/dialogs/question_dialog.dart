@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class QuestionDialog extends StatelessWidget {
   final IconData? icon;
+  final Color iconColor;
   final String title;
   final String description;
   final Function()? onCancel;
@@ -10,6 +11,7 @@ class QuestionDialog extends StatelessWidget {
   const QuestionDialog({
     Key? key,
     this.icon,
+    this.iconColor = Colors.white,
     this.title = 'Title',
     this.description = 'Description',
     this.onCancel,
@@ -26,15 +28,14 @@ class QuestionDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: Column(
               children: [
                 const SizedBox(height: 8.0),
                 FaIcon(
                   icon,
                   size: 56,
-                  color: Colors.red[700]!,
+                  color: iconColor,
                 ),
                 const SizedBox(height: 16.0),
                 Text(

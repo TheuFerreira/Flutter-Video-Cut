@@ -12,7 +12,26 @@ class DialogService {
       builder: (_) {
         return QuestionDialog(
           icon: FontAwesomeIcons.exclamationTriangle,
+          iconColor: Colors.red[700]!,
           title: 'Confirmação de Exclusão',
+          description: description,
+          onCancel: () => Navigator.pop(context, false),
+          onConfirm: () => Navigator.pop(context, true),
+        );
+      },
+    );
+
+    if (result == null) return false;
+    return result as bool;
+  }
+
+  static Future<bool> showQuestionDialog(BuildContext context, String title, String description) async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) {
+        return QuestionDialog(
+          icon: FontAwesomeIcons.info,
+          title: title,
           description: description,
           onCancel: () => Navigator.pop(context, false),
           onConfirm: () => Navigator.pop(context, true),
