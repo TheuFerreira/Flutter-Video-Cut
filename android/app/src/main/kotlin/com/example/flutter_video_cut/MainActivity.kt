@@ -2,12 +2,15 @@ package com.example.flutter_video_cut
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import javautils.FileUtils
+import javautils.GenericFileProvider
 import java.io.File
 
 class MainActivity: FlutterActivity() {
@@ -45,18 +48,28 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun callShareFilesHandler(paths : ArrayList<String>) {
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND_MULTIPLE
-        intent.type = "video/*"
-
-        val uriFiles = ArrayList<Uri>()
+        val uris = ArrayList<Uri>()
         for (path in paths) {
             val file = File(path)
-            val uri = Uri.fromFile(file)
-            uriFiles.add(uri)
+            var uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                GenericFileProvider.getUriForFile(
+                    context,
+                    "com.ferreira.myprovider",
+                    file
+                );
+            } else {
+                Uri.fromFile(file)
+            }
+            
+            uris.add(uri)
         }
 
-        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriFiles)
+        val intent = Intent()
+        intent.setType("video/*")
+        intent.setAction(Intent.ACTION_SEND_MULTIPLE)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+
         startActivity(Intent.createChooser(intent, "Compartilhar Vídeos"))
     }
 }
