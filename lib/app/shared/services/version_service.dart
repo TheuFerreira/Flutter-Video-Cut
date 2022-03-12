@@ -14,7 +14,7 @@ class VersionService implements IVersionService {
     if (version == null) {
       return;
     }
-    await _newVersion.launchAppStore(version!.appStoreLink);
+    await _newVersion.launchAppStore(version.appStoreLink);
   }
 
   @override

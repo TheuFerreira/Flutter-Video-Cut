@@ -47,6 +47,12 @@ class _CreditsPageState extends State<CreditsPage> {
               onPressed: () => _controller.open('https://www.linkedin.com/in/paulo-fernando-071bb31a9/'),
             ),
           ),
+          ListTile(
+            leading: const FaIcon(FontAwesomeIcons.sync),
+            title: const Text('Atualização'),
+            subtitle: const Text('Procurar por nova versão'),
+            onTap: () => _controller.checkForNewVersion(context),
+          ),
           TextButton.icon(
             onPressed: () => showLicensePage(context: context),
             icon: const FaIcon(Icons.privacy_tip),

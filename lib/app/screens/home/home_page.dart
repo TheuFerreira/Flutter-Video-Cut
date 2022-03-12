@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _controller = HomeController(context);
+    _controller = HomeController();
     _controller.getVideoFromShared(context);
   }
 
@@ -53,8 +53,11 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (ctx) => const CreditsPage()),
               ),
-              icon: const FaIcon(Icons.privacy_tip),
-              label: const Text('Créditos'),
+              icon: const FaIcon(FontAwesomeIcons.info),
+              label: const Text(
+                'Sobre',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
           ),
         ],
