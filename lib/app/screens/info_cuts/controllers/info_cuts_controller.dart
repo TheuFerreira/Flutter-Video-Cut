@@ -141,7 +141,7 @@ abstract class _InfoCutsControllerBase with Store {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => SharePage(cuts),
         transitionsBuilder: (context, animation, _, child) {
-          const begin =  Offset(1, 0);
+          const begin = Offset(1, 0);
           const end = Offset(0, 0);
 
           final tween = Tween(begin: begin, end: end);

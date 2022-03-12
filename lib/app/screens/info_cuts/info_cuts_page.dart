@@ -103,6 +103,7 @@ class _InfoCutsPageState extends State<InfoCutsPage> {
                             _controller.cuts[index],
                             isSelected: _controller.selected == index,
                             onTap: _controller.selectClip,
+                            onLongPress: (details, cut) => _options.showMenuOptions(context, details, cut),
                           ),
                         ),
                       ),
