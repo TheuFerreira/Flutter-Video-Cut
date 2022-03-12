@@ -4,11 +4,11 @@ import 'package:flutter_video_cut/app/shared/services/url_service.dart';
 import 'package:flutter_video_cut/app/shared/services/version_service.dart';
 import 'package:mobx/mobx.dart';
 
-part 'credits_controller.g.dart';
+part 'about_controller.g.dart';
 
-class CreditsController = _CreditsControllerBase with _$CreditsController;
+class AboutController = _AboutControllerBase with _$AboutController;
 
-abstract class _CreditsControllerBase with Store {
+abstract class _AboutControllerBase with Store {
   final IUrlService urlService = UrlService();
   final IVersionService _versionService = VersionService();
 

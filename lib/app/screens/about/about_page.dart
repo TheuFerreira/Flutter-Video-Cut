@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_video_cut/app/screens/credits/controllers/credits_controller.dart';
+import 'package:flutter_video_cut/app/screens/about/controllers/about_controller.dart';
 import 'package:flutter_video_cut/app/shared/components/logo_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class CreditsPage extends StatefulWidget {
-  const CreditsPage({Key? key}) : super(key: key);
+class AboutPage extends StatefulWidget {
+  const AboutPage({Key? key}) : super(key: key);
 
   @override
-  _CreditsPageState createState() => _CreditsPageState();
+  _AboutPageState createState() => _AboutPageState();
 }
 
-class _CreditsPageState extends State<CreditsPage> {
-  final CreditsController _controller = CreditsController();
+class _AboutPageState extends State<AboutPage> {
+  final AboutController _controller = AboutController();
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_video_cut/app/screens/credits/credits_page.dart';
+import 'package:flutter_video_cut/app/screens/about/about_page.dart';
 import 'package:flutter_video_cut/app/screens/home/controllers/home_controller.dart';
 import 'package:flutter_video_cut/app/shared/components/logo_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             bottom: 0,
             child: TextButton.icon(
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => const CreditsPage()),
+                MaterialPageRoute(builder: (ctx) => const AboutPage()),
               ),
               icon: const FaIcon(FontAwesomeIcons.info),
               label: const Text(
