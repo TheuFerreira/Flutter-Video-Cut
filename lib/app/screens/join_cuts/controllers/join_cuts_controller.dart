@@ -47,7 +47,9 @@ abstract class _JoinCutsControllerBase with Store {
   Future<void> joinClips(BuildContext context) async {
     showDialog(
       context: context,
-      builder: (builder) => const LoadingDialog(description: 'Estamos juntando os pedaçinhos do seu vídeo...'),
+      barrierDismissible: false,
+      builder: (builder) => const LoadingDialog(
+          description: 'Estamos juntando os pedaçinhos do seu vídeo...'),
     );
 
     String contents = _getContents();
@@ -56,7 +58,8 @@ abstract class _JoinCutsControllerBase with Store {
     final newFileName = await _getPathNewFileName();
     final pathListFile = await _generatePathTempListFile();
     final newFile = await _generateTempListFile(pathListFile, contents);
-    final videoJoined = await _videoService.joinClips(pathListFile, newFileName);
+    final videoJoined =
+        await _videoService.joinClips(pathListFile, newFileName);
 
     await Future.delayed(const Duration(seconds: 1));
 
