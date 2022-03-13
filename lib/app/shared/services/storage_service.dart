@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class IStorageService {
   Future<File?> getVideoFromGallery();
+  Future<bool> saveVideoInGallery(String originalFile, String newName);
 }
 
 class StorageService implements IStorageService {
@@ -18,5 +20,18 @@ class StorageService implements IStorageService {
 
     final file = File(video.path);
     return file;
+  }
+
+  @override
+  Future<bool> saveVideoInGallery(String originalFile, String newName) async {
+    try {
+      MethodChannel channel =
+          const MethodChannel("com.example.flutter_video_cut.path");
+      final result = await channel
+          .invokeMethod<bool>('saveFileInGallery', [originalFile, newName]);
+      return result!;
+    } on Exception {
+      return false;
+    }
   }
 }

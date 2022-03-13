@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/components/popup_menu_widget.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/controllers/info_cuts_controller.dart';
@@ -6,9 +7,12 @@ import 'package:flutter_video_cut/app/screens/info_cuts/enums/playback_type.dart
 import 'package:flutter_video_cut/app/screens/info_cuts/enums/popup_menu_type.dart';
 import 'package:flutter_video_cut/app/screens/info_cuts/models/playback_speed.dart';
 import 'package:flutter_video_cut/app/screens/join_cuts/join_cuts_page.dart';
+import 'package:flutter_video_cut/app/shared/dialogs/loading_dialog.dart';
 import 'package:flutter_video_cut/app/shared/model/cut_model.dart';
 import 'package:flutter_video_cut/app/shared/services/channel_service.dart';
 import 'package:flutter_video_cut/app/shared/services/dialog_service.dart';
+import 'package:flutter_video_cut/app/shared/services/storage_service.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 part 'options_controller.g.dart';
@@ -32,6 +36,7 @@ abstract class _OptionsControllerBase with Store {
   final InfoCutsController _infoCutsController;
   final PlayerController _playerController;
   final IChannelService _channelService = ChannelService();
+  final IStorageService _storageService = StorageService();
 
   _OptionsControllerBase(this._infoCutsController, this._playerController) {
     playbackSpeed = speeds[_selectedSpeed];
@@ -82,7 +87,8 @@ abstract class _OptionsControllerBase with Store {
   Future<void> joinClips(BuildContext context) async {
     final result = await Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (ctx, animation, secondaryAnimation) => JoinCutsPage(_infoCutsController.cuts),
+        pageBuilder: (ctx, animation, secondaryAnimation) =>
+            JoinCutsPage(_infoCutsController.cuts),
         transitionsBuilder: (ctx, animation, _, child) {
           const begin = Offset(1, 0);
           const end = Offset(0, 0);
@@ -107,8 +113,10 @@ abstract class _OptionsControllerBase with Store {
     DialogService.showMessage('Clips unidos');
   }
 
-  Future<void> showMenuOptions(BuildContext context, TapDownDetails details, CutModel cut) async {
-    final RenderBox overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
+  Future<void> showMenuOptions(
+      BuildContext context, TapDownDetails details, CutModel cut) async {
+    final RenderBox overlay =
+        Overlay.of(context)!.context.findRenderObject() as RenderBox;
 
     final result = await showMenu<PopupMenuType?>(
       context: context,
@@ -126,9 +134,55 @@ abstract class _OptionsControllerBase with Store {
       List<String> paths = [cut.path];
       _channelService.shareFiles(paths);
     } else if (result == PopupMenuType.save) {
-      // TODO: Save
+      _saveVideoInGallery(context, cut.path);
     } else if (result == PopupMenuType.cutClip) {
       // TODO: Cut Clip
     }
+  }
+
+  Future<void> _saveVideoInGallery(
+      BuildContext context, String originalFile) async {
+    String newName = _generateNewFileName(originalFile);
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) =>
+          const LoadingDialog(description: 'Salvando clip na Galeria!!!'),
+    );
+
+    final isSaved = await _storageService.saveVideoInGallery(
+      originalFile,
+      newName,
+    );
+
+    Navigator.of(context).pop();
+
+    if (!isSaved) {
+      await FirebaseCrashlytics.instance.recordError(
+        null,
+        null,
+        reason: 'Error on save video on Gallery.',
+        fatal: false,
+      );
+
+      DialogService.showErrorDialog(
+        context,
+        'Erro',
+        'Houve um problema ao salvar o clip na galeria!!!',
+      );
+      return;
+    }
+
+    DialogService.showMessage('Clip salvo na galeria');
+  }
+
+  String _generateNewFileName(String file) {
+    final dotIndex = file.lastIndexOf('.');
+    final extension = file.substring(dotIndex);
+    final formatedDate = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
+    String newName = "videoCut_" + formatedDate + extension;
+
+    return newName;
   }
 }
