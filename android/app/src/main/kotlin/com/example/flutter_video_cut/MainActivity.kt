@@ -4,7 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
+import android.provider.MediaStore
+import android.util.Log
 import androidx.core.content.FileProvider
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -29,9 +32,14 @@ class MainActivity: FlutterActivity() {
                     callHandler()
                     result.success(sharedData)
                     sharedData = ""
-                } else if (call.method == "shareFiles") {
-                    val paths = call.arguments as ArrayList<String>;
-                    callShareFilesHandler(paths);
+                }
+                else if (call.method == "shareFiles") {
+                    val paths = call.arguments as ArrayList<String>
+                    callShareFilesHandler(paths)
+                }
+                else if (call.method == "saveFileInGallery") {
+                    val arguments = call.arguments as ArrayList<String>
+                    callSaveFileInGallery(arguments)
                 }
             }
     }
@@ -72,4 +80,22 @@ class MainActivity: FlutterActivity() {
 
         startActivity(Intent.createChooser(intent, "Compartilhar Vídeos"))
     }
+
+    private fun callSaveFileInGallery(arguments : ArrayList<String>) {
+        var originalFilePath = arguments[0]
+        var originalFile = File(originalFilePath)
+
+        var newName = arguments[1]
+        var dcim = context.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+        val newFilePath = "$dcim//$newName"
+        val newfile = File(newFilePath)
+
+        if (newfile.exists()) {
+            Log.i("New File", "Exists")
+        } else {
+            Log.i("New File", "Not Exists")
+            originalFile.copyTo(newfile, true)
+        }
+    }
+
 }

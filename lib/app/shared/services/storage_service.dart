@@ -25,11 +25,9 @@ class StorageService implements IStorageService {
   @override
   Future<bool> saveVideoInGallery(String originalFile, String newName) async {
     try {
-      MethodChannel channel =
-          const MethodChannel("com.example.flutter_video_cut.path");
-      final result = await channel
-          .invokeMethod<bool>('saveFileInGallery', [originalFile, newName]);
-      return result!;
+      MethodChannel channel = const MethodChannel("com.example.flutter_video_cut.path");
+      channel.invokeMethod('saveFileInGallery', [originalFile, newName]);
+      return true;
     } on Exception {
       return false;
     }
