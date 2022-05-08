@@ -1,4 +1,0 @@
-enum PlayerState {
-  loading,
-  initialized,
-}
