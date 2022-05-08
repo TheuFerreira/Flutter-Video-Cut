@@ -32,7 +32,8 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: Column(
               children: [
                 const SizedBox(height: 8.0),
@@ -139,6 +140,8 @@ class _TextTimeDialogState extends State<TextTimeDialog> {
     } else if (valueInt > widget.maxSeconds) {
       return 'Máximo de ${widget.maxSeconds} segundos';
     }
+
+    return null;
   }
 
   void _onCancel() {
