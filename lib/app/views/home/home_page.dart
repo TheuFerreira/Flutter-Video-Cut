@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
+import 'package:flutter_video_cut/app/views/credits/credits_page.dart';
 import 'package:flutter_video_cut/app/views/home/controllers/home_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -49,7 +50,11 @@ class _HomePageState extends State<HomePage> {
                   'Sobre',
                   style: TextStyle(fontSize: 18),
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (builder) => const CreditsPage(),
+                  ),
+                ),
               ),
             ],
           ),
