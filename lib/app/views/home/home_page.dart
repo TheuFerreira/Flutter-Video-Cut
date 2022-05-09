@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
 import 'package:flutter_video_cut/app/views/credits/credits_page.dart';
+import 'package:flutter_video_cut/app/views/home/components/search_video_component.dart';
 import 'package:flutter_video_cut/app/views/home/controllers/home_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -35,12 +36,7 @@ class _HomePageState extends State<HomePage> {
                       return const CircularProgressIndicator();
                     }
 
-                    return ElevatedButton.icon(
-                      icon: const FaIcon(FontAwesomeIcons.video),
-                      label: const Text(
-                        'Escolher vídeo',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    return SearchVideoComponent(
                       onPressed: () => homeController.searchVideo(),
                     );
                   },
