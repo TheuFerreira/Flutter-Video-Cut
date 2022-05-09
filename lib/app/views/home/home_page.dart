@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
 import 'package:flutter_video_cut/app/views/credits/credits_page.dart';
 import 'package:flutter_video_cut/app/views/home/controllers/home_controller.dart';
@@ -27,13 +28,22 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Image.asset('assets/images/cut.png', height: 80),
                 const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  icon: const FaIcon(FontAwesomeIcons.video),
-                  label: const Text(
-                    'Escolher vídeo',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  onPressed: () => homeController.searchVideo(),
+                Observer(
+                  builder: (builder) {
+                    final isSearching = homeController.isSearching;
+                    if (isSearching) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    return ElevatedButton.icon(
+                      icon: const FaIcon(FontAwesomeIcons.video),
+                      label: const Text(
+                        'Escolher vídeo',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      onPressed: () => homeController.searchVideo(),
+                    );
+                  },
                 ),
               ],
             ),
