@@ -10,7 +10,7 @@ class LogoComponent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: const [
         FaIcon(
-          FontAwesomeIcons.cut,
+          FontAwesomeIcons.scissors,
           color: Colors.amber,
         ),
         SizedBox(width: 8),

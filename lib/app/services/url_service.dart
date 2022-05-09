@@ -3,8 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class UrlService implements IUrlService {
   @override
-  Future<bool> openUrl(String url) async {
-    final result = await launch(url);
+  Future<bool> openUrl(Uri uri) async {
+    final result = await launchUrl(uri);
     return result;
   }
 }
