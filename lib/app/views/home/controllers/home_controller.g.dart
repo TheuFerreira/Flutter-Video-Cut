@@ -29,8 +29,8 @@ mixin _$HomeController on _HomeControllerBase, Store {
       AsyncAction('_HomeControllerBase.searchVideo', context: context);
 
   @override
-  Future<void> searchVideo() {
-    return _$searchVideoAsyncAction.run(() => super.searchVideo());
+  Future<void> searchVideo(BuildContext context) {
+    return _$searchVideoAsyncAction.run(() => super.searchVideo(context));
   }
 
   @override

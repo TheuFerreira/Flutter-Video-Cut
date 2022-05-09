@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
                     }
 
                     return SearchVideoComponent(
-                      onPressed: () => homeController.searchVideo(),
+                      onPressed: () => homeController.searchVideo(builder),
                     );
                   },
                 ),
