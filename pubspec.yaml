@@ -32,6 +32,7 @@ dependencies:
   image_picker: ^0.8.5
   mobx: ^2.0.7
   flutter_mobx: ^2.0.5
+  url_launcher: ^6.1.0
 
   
   path_provider: ^2.0.8
@@ -40,7 +41,6 @@ dependencies:
   video_thumbnail: ^0.4.3
   video_player: ^2.2.10
   fluttertoast: ^8.0.8
-  url_launcher: ^6.0.18
   firebase_crashlytics: ^2.5.1
   firebase_core: ^1.12.0
   google_mobile_ads: ^1.1.0
