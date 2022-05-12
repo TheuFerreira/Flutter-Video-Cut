@@ -22,7 +22,6 @@ abstract class _HomeControllerBase with Store {
     isSearching = false;
 
     if (file == null) {
-      // TODO: Message when fails on search a video
       return;
     }
 

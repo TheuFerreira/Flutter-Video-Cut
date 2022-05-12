@@ -56,7 +56,10 @@ class _VideoPageState extends State<VideoPage> {
                       return AspectRatio(
                         aspectRatio:
                             _controller.playerController!.value.aspectRatio,
-                        child: VideoPlayer(_controller.playerController!),
+                        child: GestureDetector(
+                          child: VideoPlayer(_controller.playerController!),
+                          onTap: () => _controller.resumeVideo(),
+                        ),
                       );
                     },
                   ),

@@ -24,4 +24,13 @@ abstract class _VideoControllerBase with Store {
 
     isLoaded = true;
   }
+
+  @action
+  Future<void> resumeVideo() async {
+    if (!playerController!.value.isPlaying) {
+      await playerController!.play();
+    } else {
+      await playerController!.pause();
+    }
+  }
 }
