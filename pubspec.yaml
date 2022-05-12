@@ -35,12 +35,12 @@ dependencies:
   url_launcher: ^6.1.0
   font_awesome_flutter: ^10.1.0
   fluttertoast: ^8.0.9
+  video_player: ^2.4.2
 
   
   path_provider: ^2.0.8
   ffmpeg_kit_flutter_min: 4.5.1-LTS
   video_thumbnail: ^0.4.3
-  video_player: ^2.2.10
   firebase_crashlytics: ^2.5.1
   firebase_core: ^1.12.0
   google_mobile_ads: ^1.1.0
