@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
@@ -47,26 +45,26 @@ class _VideoPageState extends State<VideoPage> {
           Expanded(
             child: Stack(
               children: [
-                Observer(
-                  builder: (builder) {
-                    final isLoaded = _controller.isLoaded;
-                    if (!isLoaded) {
-                      return Container();
-                    }
+                Center(
+                  child: Observer(
+                    builder: (builder) {
+                      final isLoaded = _controller.isLoaded;
+                      if (!isLoaded) {
+                        return const CircularProgressIndicator();
+                      }
 
-                    return Center(
-                      child: AspectRatio(
+                      return AspectRatio(
                         aspectRatio:
                             _controller.playerController!.value.aspectRatio,
                         child: VideoPlayer(_controller.playerController!),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 150)
+          const SizedBox(height: 150)
         ],
       ),
     );
