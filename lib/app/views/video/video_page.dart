@@ -71,7 +71,7 @@ class _VideoPageState extends State<VideoPage> {
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 140,
+            height: 100,
             child: Column(
               children: [
                 Expanded(
@@ -116,8 +116,6 @@ class _VideoPageState extends State<VideoPage> {
   void dispose() {
     super.dispose();
 
-    if (_controller.playerController != null) {
-      _controller.playerController!.dispose();
-    }
+    _controller.dispose();
   }
 }

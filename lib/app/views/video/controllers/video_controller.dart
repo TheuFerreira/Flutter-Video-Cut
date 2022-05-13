@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -80,6 +81,16 @@ abstract class _VideoControllerBase with Store {
       await playerController!.play();
     } else {
       await playerController!.pause();
+    }
+  }
+
+  void dispose() {
+    if (playerController != null) {
+      playerController!.dispose();
+    }
+
+    for (Clip clip in clips) {
+      _storageService.deleteFile(clip.url);
     }
   }
 }

@@ -23,4 +23,10 @@ class StorageService implements IStorageService {
     final temporaryPath = temporaryDirectory.path;
     return temporaryPath;
   }
+
+  @override
+  void deleteFile(String url) {
+    final file = File(url);
+    file.deleteSync();
+  }
 }
