@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
+import 'package:flutter_video_cut/app/models/clip.dart';
 import 'package:flutter_video_cut/app/services/storage_service.dart';
 import 'package:flutter_video_cut/app/services/video_service.dart';
 import 'package:mobx/mobx.dart';
@@ -12,6 +13,9 @@ part 'video_controller.g.dart';
 class VideoController = _VideoControllerBase with _$VideoController;
 
 abstract class _VideoControllerBase with Store {
+  @observable
+  List<Clip> clips = ObservableList<Clip>();
+
   @observable
   VideoPlayerController? playerController;
 
@@ -31,7 +35,13 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
-    loadFile(videosCuted[0]);
+    for (String videoCuted in videosCuted) {
+      final thumbnail = await _videoService.getThumbnail(videoCuted);
+      Clip clip = Clip(url: videoCuted, thumbnail: thumbnail);
+      clips.add(clip);
+    }
+
+    loadFile(clips[0].url);
   }
 
   Future<void> loadFile(String url) async {

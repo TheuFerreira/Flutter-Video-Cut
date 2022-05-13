@@ -9,6 +9,22 @@ part of 'video_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$VideoController on _VideoControllerBase, Store {
+  late final _$clipsAtom =
+      Atom(name: '_VideoControllerBase.clips', context: context);
+
+  @override
+  List<Clip> get clips {
+    _$clipsAtom.reportRead();
+    return super.clips;
+  }
+
+  @override
+  set clips(List<Clip> value) {
+    _$clipsAtom.reportWrite(value, super.clips, () {
+      super.clips = value;
+    });
+  }
+
   late final _$playerControllerAtom =
       Atom(name: '_VideoControllerBase.playerController', context: context);
 
@@ -60,6 +76,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   @override
   String toString() {
     return '''
+clips: ${clips},
 playerController: ${playerController},
 isLoaded: ${isLoaded}
     ''';
