@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
+import 'package:flutter_video_cut/app/views/video/components/clip_component.dart';
 import 'package:flutter_video_cut/app/views/video/controllers/video_controller.dart';
 import 'package:video_player/video_player.dart';
 
@@ -17,6 +18,7 @@ class VideoPage extends StatefulWidget {
 
 class _VideoPageState extends State<VideoPage> {
   final VideoController _controller = VideoController();
+  final _scrollClips = ScrollController();
 
   @override
   void initState() {
@@ -67,7 +69,44 @@ class _VideoPageState extends State<VideoPage> {
               ],
             ),
           ),
-          const SizedBox(height: 150)
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 140,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Observer(
+                    builder: (builder) {
+                      final clips = _controller.clips;
+
+                      return AnimatedList(
+                        key: _controller.listKey,
+                        controller: _scrollClips,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        initialItemCount: clips.length,
+                        itemBuilder: (ctx, index, animation) {
+                          return Observer(
+                            builder: (context) {
+                              bool isSelected =
+                                  _controller.selectedClip == index;
+                              return ClipComponent(
+                                index: index,
+                                title: 'Clip ${index + 1}',
+                                thumbnail: clips[index].thumbnail,
+                                isSelected: isSelected,
+                                onTap: (index) => _controller.selectClip(index),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

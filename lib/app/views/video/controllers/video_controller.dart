@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
 import 'package:flutter_video_cut/app/models/clip.dart';
@@ -13,8 +14,13 @@ part 'video_controller.g.dart';
 class VideoController = _VideoControllerBase with _$VideoController;
 
 abstract class _VideoControllerBase with Store {
+  final listKey = GlobalKey<AnimatedListState>();
+
   @observable
   List<Clip> clips = ObservableList<Clip>();
+
+  @observable
+  int selectedClip = 0;
 
   @observable
   VideoPlayerController? playerController;
@@ -37,15 +43,29 @@ abstract class _VideoControllerBase with Store {
 
     for (String videoCuted in videosCuted) {
       final thumbnail = await _videoService.getThumbnail(videoCuted);
-      Clip clip = Clip(url: videoCuted, thumbnail: thumbnail);
+      final clip = Clip(url: videoCuted, thumbnail: thumbnail);
+
       clips.add(clip);
+      listKey.currentState!.insertItem(clips.length - 1);
     }
 
     loadFile(clips[0].url);
   }
 
+  @action
+  Future<void> selectClip(int index) async {
+    selectedClip = index;
+    final clip = clips[index];
+    await loadFile(clip.url);
+  }
+
+  @action
   Future<void> loadFile(String url) async {
     isLoaded = false;
+
+    if (playerController != null) {
+      playerController!.dispose();
+    }
 
     final file = File(url);
     playerController = VideoPlayerController.file(file);
