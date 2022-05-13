@@ -1,3 +1,4 @@
 abstract class IVideoService {
-  void cutVideo({required String url, int seconds = 20});
+  Future<List<String>?> cutVideo(
+      {required String url, required String destiny, int seconds = 20});
 }

@@ -22,7 +22,7 @@ class _VideoPageState extends State<VideoPage> {
   void initState() {
     super.initState();
 
-    _controller.loadFile(widget.videoPath);
+    _controller.cutVideo(widget.videoPath);
   }
 
   @override
@@ -76,6 +76,9 @@ class _VideoPageState extends State<VideoPage> {
   @override
   void dispose() {
     super.dispose();
-    _controller.playerController!.dispose();
+
+    if (_controller.playerController != null) {
+      _controller.playerController!.dispose();
+    }
   }
 }
