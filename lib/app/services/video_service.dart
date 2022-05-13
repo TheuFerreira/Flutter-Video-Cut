@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoService implements IVideoService {
   @override
@@ -61,5 +64,15 @@ class VideoService implements IVideoService {
     }
 
     return true;
+  }
+
+  @override
+  Future<Uint8List> getThumbnail(String url) async {
+    final thumbnail = await VideoThumbnail.thumbnailData(
+      video: url,
+      imageFormat: ImageFormat.PNG,
+    );
+
+    return thumbnail!;
   }
 }
