@@ -90,6 +90,11 @@ abstract class _VideoControllerBase with Store {
     }
   }
 
+  void shareFiles() {
+    List<String> files = clips.map((e) => e.url).toList();
+    _storageService.shareFiles(files);
+  }
+
   void dispose() {
     if (playerController != null) {
       playerController!.dispose();

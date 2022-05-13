@@ -36,9 +36,7 @@ class _VideoPageState extends State<VideoPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {
-              // TODO: Not Implemented Share
-            },
+            onPressed: () => _controller.shareFiles(),
           ),
         ],
       ),

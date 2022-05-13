@@ -5,4 +5,5 @@ abstract class IStorageService {
   Future<String> getCachePath();
   void deleteFile(String url);
   void copyFile(String url, String destiny);
+  void shareFiles(List<String> files);
 }
