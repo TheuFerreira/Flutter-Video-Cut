@@ -49,14 +49,6 @@ mixin _$VideoController on _VideoControllerBase, Store {
     return _$cutVideoAsyncAction.run(() => super.cutVideo(url));
   }
 
-  late final _$loadFileAsyncAction =
-      AsyncAction('_VideoControllerBase.loadFile', context: context);
-
-  @override
-  Future<void> loadFile(String url) {
-    return _$loadFileAsyncAction.run(() => super.loadFile(url));
-  }
-
   late final _$resumeVideoAsyncAction =
       AsyncAction('_VideoControllerBase.resumeVideo', context: context);
 

@@ -1,10 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
+import 'package:flutter_video_cut/app/services/storage_service.dart';
 import 'package:flutter_video_cut/app/services/video_service.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
 part 'video_controller.g.dart';
@@ -19,14 +19,14 @@ abstract class _VideoControllerBase with Store {
   bool isLoaded = false;
 
   final IVideoService _videoService = VideoService();
+  final IStorageService _storageService = StorageService();
 
   @action
   Future<void> cutVideo(String url) async {
-    final temporaryDirectory = await getTemporaryDirectory();
-    final temporaryPath = temporaryDirectory.path;
+    final cachePath = await _storageService.getCachePath();
 
     final videosCuted =
-        await _videoService.cutVideo(url: url, destiny: temporaryPath);
+        await _videoService.cutVideo(url: url, destiny: cachePath);
     if (videosCuted == null) {
       return;
     }
@@ -34,7 +34,6 @@ abstract class _VideoControllerBase with Store {
     loadFile(videosCuted[0]);
   }
 
-  @action
   Future<void> loadFile(String url) async {
     isLoaded = false;
 
