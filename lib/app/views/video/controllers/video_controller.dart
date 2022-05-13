@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -31,13 +30,20 @@ abstract class _VideoControllerBase with Store {
 
   final IVideoService _videoService = VideoService();
   final IStorageService _storageService = StorageService();
+  String _cachedFile = '';
 
   @action
   Future<void> cutVideo(String url) async {
     final cachePath = await _storageService.getCachePath();
 
+    final values = url.split('.');
+    final extension = values[values.length - 1];
+    _cachedFile = '$cachePath/cachedFile.$extension';
+
+    _storageService.copyFile(url, _cachedFile);
+
     final videosCuted =
-        await _videoService.cutVideo(url: url, destiny: cachePath);
+        await _videoService.cutVideo(url: _cachedFile, destiny: cachePath);
     if (videosCuted == null) {
       return;
     }
@@ -91,6 +97,10 @@ abstract class _VideoControllerBase with Store {
 
     for (Clip clip in clips) {
       _storageService.deleteFile(clip.url);
+    }
+
+    if (_cachedFile != '') {
+      _storageService.deleteFile(_cachedFile);
     }
   }
 }

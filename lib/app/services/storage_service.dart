@@ -29,4 +29,10 @@ class StorageService implements IStorageService {
     final file = File(url);
     file.deleteSync();
   }
+
+  @override
+  File copyFile(String url, String destiny) {
+    final file = File(url);
+    return file.copySync(destiny);
+  }
 }
