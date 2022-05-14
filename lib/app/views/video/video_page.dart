@@ -24,7 +24,7 @@ class _VideoPageState extends State<VideoPage> {
   void initState() {
     super.initState();
 
-    _controller.cutVideo(widget.videoPath);
+    _controller.cutVideo(widget.videoPath, context);
   }
 
   @override

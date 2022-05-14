@@ -37,12 +37,12 @@ abstract class _VideoControllerBase with Store {
   String _cachedFile = '';
 
   @action
-  Future<void> cutVideo(String url) async {
+  Future<void> cutVideo(String url, BuildContext context) async {
     final cachePath = await _storageService.getCachePath();
     if (cachePath == null) {
       _dialogService
           .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
-      // TODO: Return to main
+      Navigator.of(context).pop();
       return;
     }
 
@@ -54,7 +54,7 @@ abstract class _VideoControllerBase with Store {
     if (!isCopied) {
       _dialogService.showMessageError(
           'Problema ao copiar o arquivo para o cache do Video Cut.');
-      // TODO: Return to main
+      Navigator.of(context).pop();
       return;
     }
 
@@ -63,7 +63,7 @@ abstract class _VideoControllerBase with Store {
     if (videosCuted == null) {
       _dialogService
           .showMessageError('Houve um problema ao cortar o vídeo selecionado.');
-      // TODO: Return to main
+      Navigator.of(context).pop();
       return;
     }
 
@@ -72,7 +72,7 @@ abstract class _VideoControllerBase with Store {
       if (thumbnail == null) {
         _dialogService.showMessageError(
             'Houve um problema ao buscar as Thumbnails dos vídeos.');
-        // TODO: Return to main
+        Navigator.of(context).pop();
         return;
       }
 
