@@ -26,10 +26,19 @@ class StorageService implements IStorageService {
   }
 
   @override
-  Future<String> getCachePath() async {
-    final temporaryDirectory = await getTemporaryDirectory();
-    final temporaryPath = temporaryDirectory.path;
-    return temporaryPath;
+  Future<String?> getCachePath() async {
+    String? path;
+    try {
+      final temporaryDirectory = await getTemporaryDirectory();
+      path = temporaryDirectory.path;
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Get Cache Path');
+
+      path = null;
+    }
+
+    return path;
   }
 
   @override
@@ -39,17 +48,40 @@ class StorageService implements IStorageService {
   }
 
   @override
-  File copyFile(String url, String destiny) {
-    final file = File(url);
-    return file.copySync(destiny);
+  Future<bool> copyFile(String url, String destiny) async {
+    bool isCopied = false;
+    try {
+      final file = File(url);
+      await file.copy(destiny);
+
+      isCopied = true;
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s,
+          reason: 'Error on copy original file to cache Path');
+
+      isCopied = false;
+    }
+
+    return isCopied;
   }
 
   @override
-  void shareFiles(List<String> files) async {
-    await Share.shareFiles(
-      files,
-      text: 'Video Cut',
-      subject: 'Serviço de Compartilhamento',
-    );
+  Future<bool> shareFiles(List<String> files) async {
+    bool isShared = false;
+    try {
+      await Share.shareFiles(
+        files,
+        text: 'Video Cut',
+        subject: 'Serviço de Compartilhamento',
+      );
+
+      isShared = true;
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on share files');
+
+      isShared = false;
+    }
+    return isShared;
   }
 }

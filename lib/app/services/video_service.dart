@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -13,26 +14,33 @@ class VideoService implements IVideoService {
     required String destiny,
     int seconds = 20,
   }) async {
-    int maxDuration = await _getDuration(url: url);
-    final clips = (maxDuration / seconds).ceil();
+    List<String>? cutedVideos = [];
+    try {
+      int maxDuration = await _getDuration(url: url);
+      final clips = (maxDuration / seconds).ceil();
 
-    List<String> cutedVideos = [];
-    for (int i = 0; i < clips; i++) {
-      int timeStart = i * seconds;
-      String newPath = "$destiny/${i + 1}.mp4";
+      for (int i = 0; i < clips; i++) {
+        int timeStart = i * seconds;
+        String newPath = "$destiny/${i + 1}.mp4";
 
-      final isCuted = await _cutVideo(
-        currentPath: url,
-        newPath: newPath,
-        seconds: seconds,
-        timeStart: timeStart,
-      );
+        final isCuted = await _cutVideo(
+          currentPath: url,
+          newPath: newPath,
+          seconds: seconds,
+          timeStart: timeStart,
+        );
 
-      if (!isCuted) {
-        return null;
+        if (!isCuted) {
+          return null;
+        }
+
+        cutedVideos.add(newPath);
       }
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on cut video in clips');
 
-      cutedVideos.add(newPath);
+      cutedVideos = null;
     }
 
     return cutedVideos;
@@ -67,11 +75,19 @@ class VideoService implements IVideoService {
   }
 
   @override
-  Future<Uint8List> getThumbnail(String url) async {
-    final thumbnail = await VideoThumbnail.thumbnailData(
-      video: url,
-      imageFormat: ImageFormat.PNG,
-    );
+  Future<Uint8List?> getThumbnail(String url) async {
+    Uint8List? thumbnail;
+    try {
+      thumbnail = await VideoThumbnail.thumbnailData(
+        video: url,
+        imageFormat: ImageFormat.PNG,
+      );
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on get thubmnail of video');
+
+      thumbnail = null;
+    }
 
     return thumbnail!;
   }

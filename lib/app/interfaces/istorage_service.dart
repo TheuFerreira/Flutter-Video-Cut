@@ -2,8 +2,8 @@ import 'dart:io';
 
 abstract class IStorageService {
   Future<File?> pickVideo();
-  Future<String> getCachePath();
+  Future<String?> getCachePath();
   void deleteFile(String url);
-  void copyFile(String url, String destiny);
-  void shareFiles(List<String> files);
+  Future<bool> copyFile(String url, String destiny);
+  Future<bool> shareFiles(List<String> files);
 }
