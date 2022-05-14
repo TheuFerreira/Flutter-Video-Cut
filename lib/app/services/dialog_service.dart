@@ -6,4 +6,12 @@ class DialogService implements IDialogService {
   void showMessage(String message) {
     Fluttertoast.showToast(msg: message);
   }
+
+  @override
+  void showMessageError(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+    );
+  }
 }
