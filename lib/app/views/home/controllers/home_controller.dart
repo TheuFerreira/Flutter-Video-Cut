@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/services/storage_service.dart';
@@ -17,9 +20,19 @@ abstract class _HomeControllerBase with Store {
   Future<void> searchVideo(BuildContext context) async {
     isSearching = true;
 
-    final file = await _storageService.pickVideo();
-
-    isSearching = false;
+    File? file;
+    try {
+      file = await _storageService.pickVideo();
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(
+        e,
+        s,
+        reason: 'Error on Pick Video',
+      );
+      return;
+    } finally {
+      isSearching = false;
+    }
 
     if (file == null) {
       return;
@@ -27,7 +40,7 @@ abstract class _HomeControllerBase with Store {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (builder) => VideoPage(videoPath: file.path),
+        builder: (builder) => VideoPage(videoPath: file!.path),
       ),
     );
   }
