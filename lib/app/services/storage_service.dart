@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,13 +9,19 @@ import 'package:share_plus/share_plus.dart';
 class StorageService implements IStorageService {
   @override
   Future<File?> pickVideo() async {
-    final _picker = ImagePicker();
-    final video = await _picker.pickVideo(source: ImageSource.gallery);
-    if (video == null) {
-      return null;
+    File? file;
+
+    try {
+      final _picker = ImagePicker();
+      final video = await _picker.pickVideo(source: ImageSource.gallery);
+      file = video == null ? null : File(video.path);
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Pick Video');
+
+      file = null;
     }
 
-    File file = File(video.path);
     return file;
   }
 
