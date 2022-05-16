@@ -81,6 +81,14 @@ mixin _$VideoController on _VideoControllerBase, Store {
     return _$cutVideoAsyncAction.run(() => super.cutVideo(url, context));
   }
 
+  late final _$deleteClipAsyncAction =
+      AsyncAction('_VideoControllerBase.deleteClip', context: context);
+
+  @override
+  Future<void> deleteClip(BuildContext context) {
+    return _$deleteClipAsyncAction.run(() => super.deleteClip(context));
+  }
+
   late final _$selectClipAsyncAction =
       AsyncAction('_VideoControllerBase.selectClip', context: context);
 

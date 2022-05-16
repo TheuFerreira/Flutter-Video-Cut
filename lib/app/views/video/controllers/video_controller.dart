@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_video_cut/app/models/clip.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/services/storage_service.dart';
 import 'package:flutter_video_cut/app/services/video_service.dart';
+import 'package:flutter_video_cut/app/views/video/components/clip_component.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -83,6 +84,59 @@ abstract class _VideoControllerBase with Store {
     }
 
     loadFile(clips[0].url);
+  }
+
+  @action
+  Future<void> deleteClip(BuildContext context) async {
+    final delete = await _dialogService.showQuestionDialog(
+      context,
+      'Confirmação de Exclusão',
+      'Tem certeza de que deseja excluir o clip selecionado?',
+    );
+    if (delete != true) {
+      return;
+    }
+
+    int index = selectedClip;
+
+    listKey.currentState!.removeItem(
+      index,
+      (context, animation) {
+        return SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          axis: Axis.horizontal,
+          child: ClipComponent(
+            index: index,
+            thumbnail: clips[index].thumbnail,
+            isSelected: true,
+            title: '',
+            onTap: (index) {},
+          ),
+        );
+      },
+    );
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
+
+    Clip clip = clips[index];
+    clips.remove(clip);
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    _storageService.deleteFile(clip.url);
+
+    if (clips.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+
+    final nextIndex = index == 0 ? index : index - 1;
+    await selectClip(nextIndex);
   }
 
   @action
