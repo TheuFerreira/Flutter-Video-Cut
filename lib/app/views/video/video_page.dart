@@ -8,9 +8,11 @@ import 'package:video_player/video_player.dart';
 
 class VideoPage extends StatefulWidget {
   final String videoPath;
+  final int secondsOfClip;
   const VideoPage({
     Key? key,
     required this.videoPath,
+    required this.secondsOfClip,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class _VideoPageState extends State<VideoPage> {
   void initState() {
     super.initState();
 
-    _controller.cutVideo(widget.videoPath, context);
+    _controller.cutVideo(widget.videoPath, widget.secondsOfClip, context);
   }
 
   @override

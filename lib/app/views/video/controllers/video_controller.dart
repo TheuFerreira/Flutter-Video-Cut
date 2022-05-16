@@ -38,7 +38,8 @@ abstract class _VideoControllerBase with Store {
   String _cachedFile = '';
 
   @action
-  Future<void> cutVideo(String url, BuildContext context) async {
+  Future<void> cutVideo(
+      String url, int secondsOfClip, BuildContext context) async {
     final cachePath = await _storageService.getCachePath();
     if (cachePath == null) {
       _dialogService
@@ -59,8 +60,11 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
-    final videosCuted =
-        await _videoService.cutVideo(url: _cachedFile, destiny: cachePath);
+    final videosCuted = await _videoService.cutVideo(
+      url: _cachedFile,
+      destiny: cachePath,
+      secondsOfClip: secondsOfClip,
+    );
     if (videosCuted == null) {
       _dialogService
           .showMessageError('Houve um problema ao cortar o vídeo selecionado.');

@@ -12,11 +12,12 @@ class VideoService implements IVideoService {
   Future<List<String>?> cutVideo({
     required String url,
     required String destiny,
+    required int secondsOfClip,
     int seconds = 20,
   }) async {
     List<String>? cutedVideos = [];
     try {
-      int maxDuration = await _getDuration(url: url);
+      int maxDuration = secondsOfClip;
       final clips = (maxDuration / seconds).ceil();
 
       for (int i = 0; i < clips; i++) {
@@ -44,16 +45,6 @@ class VideoService implements IVideoService {
     }
 
     return cutedVideos;
-  }
-
-  Future<int> _getDuration({required String url}) async {
-    final videoInformation = await FFprobeKit.getMediaInformation(url);
-    final mediaInformation = videoInformation.getMediaInformation();
-    String durations = mediaInformation!.getDuration()!;
-
-    String duration = durations.split('.')[0];
-    int seconds = int.parse(duration);
-    return seconds;
   }
 
   Future<bool> _cutVideo(
@@ -90,5 +81,16 @@ class VideoService implements IVideoService {
     }
 
     return thumbnail!;
+  }
+
+  @override
+  Future<int> getSeconds(String url) async {
+    final videoInformation = await FFprobeKit.getMediaInformation(url);
+    final mediaInformation = videoInformation.getMediaInformation();
+    String durations = mediaInformation!.getDuration()!;
+
+    String duration = durations.split('.')[0];
+    int seconds = int.parse(duration);
+    return seconds;
   }
 }
