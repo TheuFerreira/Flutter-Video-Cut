@@ -17,6 +17,15 @@ mixin _$AboutController on _AboutControllerBase, Store {
     return _$openUrlAsyncAction.run(() => super.openUrl(url));
   }
 
+  late final _$checkForUpdatesAsyncAction =
+      AsyncAction('_AboutControllerBase.checkForUpdates', context: context);
+
+  @override
+  Future<void> checkForUpdates(BuildContext context) {
+    return _$checkForUpdatesAsyncAction
+        .run(() => super.checkForUpdates(context));
+  }
+
   @override
   String toString() {
     return '''

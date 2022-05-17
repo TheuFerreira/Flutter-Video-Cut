@@ -46,6 +46,16 @@ class _AboutPageState extends State<AboutPage> {
             onTap: () => _aboutController
                 .openUrl('https://www.linkedin.com/in/theu-ferreira/'),
           ),
+          ListTile(
+            leading: const FaIcon(FontAwesomeIcons.arrowsRotate),
+            title: const Text('Atualização'),
+            subtitle: const Text('Procurar por nova versão'),
+            trailing: const FaIcon(
+              FontAwesomeIcons.googlePlay,
+              color: Colors.amber,
+            ),
+            onTap: () => _aboutController.checkForUpdates(context),
+          ),
         ],
       ),
     );
