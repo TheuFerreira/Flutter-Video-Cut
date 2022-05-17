@@ -29,7 +29,7 @@ class QuestionDialog extends StatelessWidget {
                 Icon(
                   icon,
                   size: 56,
-                  color: Colors.red[700]!,
+                  color: Colors.blue[700]!,
                 ),
                 const SizedBox(height: 16.0),
                 Text(

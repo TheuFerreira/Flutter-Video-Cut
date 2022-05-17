@@ -29,7 +29,7 @@ class DialogService implements IDialogService {
       context: context,
       builder: (ctx) {
         return QuestionDialog(
-          icon: FontAwesomeIcons.triangleExclamation,
+          icon: FontAwesomeIcons.question,
           title: title,
           description: description,
         );
