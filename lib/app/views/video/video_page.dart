@@ -60,10 +60,7 @@ class _VideoPageState extends State<VideoPage> {
                       return AspectRatio(
                         aspectRatio:
                             _controller.playerController!.value.aspectRatio,
-                        child: GestureDetector(
-                          child: VideoPlayer(_controller.playerController!),
-                          onTap: () => _controller.resumeVideo(),
-                        ),
+                        child: VideoPlayer(_controller.playerController!),
                       );
                     },
                   ),
@@ -80,10 +77,22 @@ class _VideoPageState extends State<VideoPage> {
                 icon: FontAwesomeIcons.backwardStep,
                 onTap: () {},
               ),
-              ActionButtonComponent(
-                icon: FontAwesomeIcons.pause,
-                size: 40,
-                onTap: () {},
+              Observer(
+                builder: (context) {
+                  final isPlaying = _controller.isPlaying;
+                  if (isPlaying) {
+                    return ActionButtonComponent(
+                      icon: FontAwesomeIcons.pause,
+                      size: 40,
+                      onTap: _controller.resumeVideo,
+                    );
+                  }
+                  return ActionButtonComponent(
+                    icon: FontAwesomeIcons.play,
+                    size: 40,
+                    onTap: _controller.resumeVideo,
+                  );
+                },
               ),
               ActionButtonComponent(
                 icon: FontAwesomeIcons.forwardStep,

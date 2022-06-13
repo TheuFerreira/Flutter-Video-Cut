@@ -41,6 +41,22 @@ mixin _$VideoController on _VideoControllerBase, Store {
     });
   }
 
+  late final _$isPlayingAtom =
+      Atom(name: '_VideoControllerBase.isPlaying', context: context);
+
+  @override
+  bool get isPlaying {
+    _$isPlayingAtom.reportRead();
+    return super.isPlaying;
+  }
+
+  @override
+  set isPlaying(bool value) {
+    _$isPlayingAtom.reportWrite(value, super.isPlaying, () {
+      super.isPlaying = value;
+    });
+  }
+
   late final _$playerControllerAtom =
       Atom(name: '_VideoControllerBase.playerController', context: context);
 
@@ -119,6 +135,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
     return '''
 clips: ${clips},
 selectedClip: ${selectedClip},
+isPlaying: ${isPlaying},
 playerController: ${playerController},
 isLoaded: ${isLoaded}
     ''';

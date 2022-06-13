@@ -27,6 +27,9 @@ abstract class _VideoControllerBase with Store {
   int selectedClip = 0;
 
   @observable
+  bool isPlaying = false;
+
+  @observable
   VideoPlayerController? playerController;
 
   @observable
@@ -101,6 +104,8 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
+    isPlaying = false;
+
     int index = selectedClip;
 
     listKey.currentState!.removeItem(
@@ -145,6 +150,8 @@ abstract class _VideoControllerBase with Store {
 
   @action
   Future<void> selectClip(int index) async {
+    isPlaying = false;
+
     selectedClip = index;
     final clip = clips[index];
     await loadFile(clip.url);
@@ -169,8 +176,10 @@ abstract class _VideoControllerBase with Store {
   Future<void> resumeVideo() async {
     if (!playerController!.value.isPlaying) {
       await playerController!.play();
+      isPlaying = true;
     } else {
       await playerController!.pause();
+      isPlaying = false;
     }
   }
 
