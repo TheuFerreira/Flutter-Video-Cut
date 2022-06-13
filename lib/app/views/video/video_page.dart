@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
+import 'package:flutter_video_cut/app/views/video/components/action_button_component.dart';
 import 'package:flutter_video_cut/app/views/video/components/clip_component.dart';
 import 'package:flutter_video_cut/app/views/video/controllers/video_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -71,6 +72,26 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ActionButtonComponent(
+                icon: FontAwesomeIcons.backwardStep,
+                onTap: () {},
+              ),
+              ActionButtonComponent(
+                icon: FontAwesomeIcons.pause,
+                size: 40,
+                onTap: () {},
+              ),
+              ActionButtonComponent(
+                icon: FontAwesomeIcons.forwardStep,
+                onTap: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
           SizedBox(
             height: 80,
             child: Column(
@@ -86,21 +107,19 @@ class _VideoPageState extends State<VideoPage> {
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         initialItemCount: clips.length,
-                        itemBuilder: (ctx, index, animation) {
-                          return Observer(
-                            builder: (context) {
-                              bool isSelected =
-                                  _controller.selectedClip == index;
-                              return ClipComponent(
-                                index: index,
-                                title: 'Clip ${index + 1}',
-                                thumbnail: clips[index].thumbnail,
-                                isSelected: isSelected,
-                                onTap: (index) => _controller.selectClip(index),
-                              );
-                            },
-                          );
-                        },
+                        itemBuilder: (ctx, index, animation) => Observer(
+                          builder: (context) {
+                            final isSelected =
+                                _controller.selectedClip == index;
+                            return ClipComponent(
+                              index: index,
+                              title: 'Clip ${index + 1}',
+                              thumbnail: clips[index].thumbnail,
+                              isSelected: isSelected,
+                              onTap: (index) => _controller.selectClip(index),
+                            );
+                          },
+                        ),
                       );
                     },
                   ),
