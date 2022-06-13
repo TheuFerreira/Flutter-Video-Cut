@@ -73,9 +73,14 @@ class _VideoPageState extends State<VideoPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ActionButtonComponent(
-                icon: FontAwesomeIcons.backwardStep,
-                onTap: () {},
+              Observer(
+                builder: (context) {
+                  final isFirst = _controller.isFirstClip;
+                  return ActionButtonComponent(
+                    icon: FontAwesomeIcons.backwardStep,
+                    onTap: isFirst ? null : _controller.previousClip,
+                  );
+                },
               ),
               Observer(
                 builder: (context) {
@@ -94,9 +99,14 @@ class _VideoPageState extends State<VideoPage> {
                   );
                 },
               ),
-              ActionButtonComponent(
-                icon: FontAwesomeIcons.forwardStep,
-                onTap: () {},
+              Observer(
+                builder: (context) {
+                  final isLast = _controller.isLastClip;
+                  return ActionButtonComponent(
+                    icon: FontAwesomeIcons.forwardStep,
+                    onTap: isLast ? null : _controller.nextClip,
+                  );
+                },
               ),
             ],
           ),

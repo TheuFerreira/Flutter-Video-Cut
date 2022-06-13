@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ActionButtonComponent extends StatelessWidget {
   final IconData icon;
   final double size;
-  final void Function() onTap;
+  final void Function()? onTap;
   const ActionButtonComponent({
     Key? key,
     required this.icon,

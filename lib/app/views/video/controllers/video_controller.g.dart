@@ -9,6 +9,21 @@ part of 'video_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$VideoController on _VideoControllerBase, Store {
+  Computed<bool>? _$isFirstClipComputed;
+
+  @override
+  bool get isFirstClip =>
+      (_$isFirstClipComputed ??= Computed<bool>(() => super.isFirstClip,
+              name: '_VideoControllerBase.isFirstClip'))
+          .value;
+  Computed<bool>? _$isLastClipComputed;
+
+  @override
+  bool get isLastClip =>
+      (_$isLastClipComputed ??= Computed<bool>(() => super.isLastClip,
+              name: '_VideoControllerBase.isLastClip'))
+          .value;
+
   late final _$clipsAtom =
       Atom(name: '_VideoControllerBase.clips', context: context);
 
@@ -130,6 +145,31 @@ mixin _$VideoController on _VideoControllerBase, Store {
     return _$resumeVideoAsyncAction.run(() => super.resumeVideo());
   }
 
+  late final _$_VideoControllerBaseActionController =
+      ActionController(name: '_VideoControllerBase', context: context);
+
+  @override
+  void previousClip() {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.previousClip');
+    try {
+      return super.previousClip();
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void nextClip() {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.nextClip');
+    try {
+      return super.nextClip();
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
@@ -137,7 +177,9 @@ clips: ${clips},
 selectedClip: ${selectedClip},
 isPlaying: ${isPlaying},
 playerController: ${playerController},
-isLoaded: ${isLoaded}
+isLoaded: ${isLoaded},
+isFirstClip: ${isFirstClip},
+isLastClip: ${isLastClip}
     ''';
   }
 }

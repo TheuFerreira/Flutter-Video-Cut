@@ -26,6 +26,12 @@ abstract class _VideoControllerBase with Store {
   @observable
   int selectedClip = 0;
 
+  @computed
+  bool get isFirstClip => selectedClip == 0;
+
+  @computed
+  bool get isLastClip => selectedClip == clips.length - 1;
+
   @observable
   bool isPlaying = false;
 
@@ -146,6 +152,16 @@ abstract class _VideoControllerBase with Store {
 
     final nextIndex = index == 0 ? index : index - 1;
     await selectClip(nextIndex);
+  }
+
+  @action
+  void previousClip() {
+    selectClip(selectedClip - 1);
+  }
+
+  @action
+  void nextClip() {
+    selectClip(selectedClip + 1);
   }
 
   @action
