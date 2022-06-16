@@ -35,6 +35,9 @@ abstract class _VideoControllerBase with Store {
   @observable
   bool isPlaying = false;
 
+  @computed
+  double get totalTime => playerController!.value.duration.inSeconds.toDouble();
+
   @observable
   VideoPlayerController? playerController;
 

@@ -47,25 +47,42 @@ class _VideoPageState extends State<VideoPage> {
       body: Column(
         children: [
           Expanded(
-            child: Stack(
-              children: [
-                Center(
-                  child: Observer(
-                    builder: (builder) {
-                      final isLoaded = _controller.isLoaded;
-                      if (!isLoaded) {
-                        return const CircularProgressIndicator();
-                      }
+            child: Center(
+              child: Observer(
+                builder: (builder) {
+                  final isLoaded = _controller.isLoaded;
+                  if (!isLoaded) {
+                    return const CircularProgressIndicator();
+                  }
 
-                      return AspectRatio(
-                        aspectRatio:
-                            _controller.playerController!.value.aspectRatio,
-                        child: VideoPlayer(_controller.playerController!),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                  return AspectRatio(
+                    aspectRatio:
+                        _controller.playerController!.value.aspectRatio,
+                    child: Stack(
+                      fit: StackFit.loose,
+                      children: [
+                        VideoPlayer(_controller.playerController!),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Observer(
+                            builder: (context) {
+                              final totalTime = _controller.totalTime;
+                              return Slider(
+                                min: 0,
+                                value: 0.5,
+                                max: totalTime,
+                                onChanged: (_) {},
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 16),
