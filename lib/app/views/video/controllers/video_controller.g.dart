@@ -194,6 +194,39 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void startChangeTrack(double newValue) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.startChangeTrack');
+    try {
+      return super.startChangeTrack(newValue);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void endChangeTrack(double newValue) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.endChangeTrack');
+    try {
+      return super.endChangeTrack(newValue);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void changeTrack(double newValue) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.changeTrack');
+    try {
+      return super.changeTrack(newValue);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 clips: ${clips},

@@ -200,16 +200,9 @@ abstract class _VideoControllerBase with Store {
       _timer();
     });
 
-    _timerTrack = Timer.periodic(
-      const Duration(milliseconds: 500),
-      (_) => _timer(),
-    );
+    _startTimer();
 
     isLoaded = true;
-  }
-
-  void _timer() {
-    currentTime = playerController!.value.position.inMilliseconds.toDouble();
   }
 
   @action
@@ -226,9 +219,42 @@ abstract class _VideoControllerBase with Store {
   void _checkIsPlaying() {
     if (playerController!.value.isPlaying) {
       isPlaying = true;
+      _startTimer();
     } else {
       isPlaying = false;
+      _timerTrack?.cancel();
     }
+  }
+
+  void _startTimer() {
+    _timerTrack = Timer.periodic(
+      const Duration(milliseconds: 500),
+      (_) => _timer(),
+    );
+  }
+
+  void _timer() {
+    currentTime = playerController!.value.position.inMilliseconds.toDouble();
+  }
+
+  @action
+  void startChangeTrack(double newValue) {
+    _timerTrack?.cancel();
+
+    changeTrack(newValue);
+  }
+
+  @action
+  void endChangeTrack(double newValue) {
+    changeTrack(newValue);
+
+    _startTimer();
+    _timer();
+  }
+
+  @action
+  void changeTrack(double newValue) {
+    playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
   }
 
   Future<void> shareFiles() async {

@@ -74,7 +74,9 @@ class _VideoPageState extends State<VideoPage> {
                                 min: 0,
                                 value: currentTime,
                                 max: totalTime,
-                                onChanged: (_) {},
+                                onChangeStart: _controller.startChangeTrack,
+                                onChanged: _controller.changeTrack,
+                                onChangeEnd: _controller.endChangeTrack,
                               );
                             },
                           ),
