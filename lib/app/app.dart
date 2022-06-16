@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/shapes/track_shape.dart';
 import 'package:flutter_video_cut/app/views/home/home_page.dart';
 
 class App extends StatelessWidget {
@@ -26,6 +27,10 @@ class App extends StatelessWidget {
           style: TextButton.styleFrom(
             primary: Colors.white38,
           ),
+        ),
+        sliderTheme: SliderThemeData(
+          trackShape: TrackShape(),
+          inactiveTrackColor: const Color.fromARGB(100, 255, 255, 255),
         ),
       ),
       home: const HomePage(),
