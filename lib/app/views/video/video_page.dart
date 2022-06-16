@@ -69,46 +69,55 @@ class _VideoPageState extends State<VideoPage> {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Observer(
-                builder: (context) {
-                  final isFirst = _controller.isFirstClip;
-                  return ActionButtonComponent(
-                    icon: FontAwesomeIcons.backwardStep,
-                    onTap: isFirst ? null : _controller.previousClip,
-                  );
-                },
-              ),
-              Observer(
-                builder: (context) {
-                  final isPlaying = _controller.isPlaying;
-                  if (isPlaying) {
-                    return ActionButtonComponent(
-                      icon: FontAwesomeIcons.pause,
-                      size: 40,
-                      onTap: _controller.resumeVideo,
-                    );
-                  }
-                  return ActionButtonComponent(
-                    icon: FontAwesomeIcons.play,
-                    size: 40,
-                    onTap: _controller.resumeVideo,
-                  );
-                },
-              ),
-              Observer(
-                builder: (context) {
-                  final isLast = _controller.isLastClip;
-                  return ActionButtonComponent(
-                    icon: FontAwesomeIcons.forwardStep,
-                    onTap: isLast ? null : _controller.nextClip,
-                  );
-                },
-              ),
-            ],
+          Observer(
+            builder: (_) {
+              final isLoaded = _controller.isLoaded;
+              if (!isLoaded) {
+                return Container();
+              }
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Observer(
+                    builder: (context) {
+                      final isFirst = _controller.isFirstClip;
+                      return ActionButtonComponent(
+                        icon: FontAwesomeIcons.backwardStep,
+                        onTap: isFirst ? null : _controller.previousClip,
+                      );
+                    },
+                  ),
+                  Observer(
+                    builder: (context) {
+                      final isPlaying = _controller.isPlaying;
+                      if (isPlaying) {
+                        return ActionButtonComponent(
+                          icon: FontAwesomeIcons.pause,
+                          size: 40,
+                          onTap: _controller.resumeVideo,
+                        );
+                      }
+                      return ActionButtonComponent(
+                        icon: FontAwesomeIcons.play,
+                        size: 40,
+                        onTap: _controller.resumeVideo,
+                      );
+                    },
+                  ),
+                  Observer(
+                    builder: (context) {
+                      final isLast = _controller.isLastClip;
+                      return ActionButtonComponent(
+                        icon: FontAwesomeIcons.forwardStep,
+                        onTap: isLast ? null : _controller.nextClip,
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 16),
           SizedBox(
