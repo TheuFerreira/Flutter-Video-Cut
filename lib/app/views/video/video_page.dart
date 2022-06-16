@@ -68,10 +68,11 @@ class _VideoPageState extends State<VideoPage> {
                           right: 0,
                           child: Observer(
                             builder: (context) {
+                              final currentTime = _controller.currentTime;
                               final totalTime = _controller.totalTime;
                               return Slider(
                                 min: 0,
-                                value: 0.5,
+                                value: currentTime,
                                 max: totalTime,
                                 onChanged: (_) {},
                               );

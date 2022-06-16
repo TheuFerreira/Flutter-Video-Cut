@@ -79,6 +79,22 @@ mixin _$VideoController on _VideoControllerBase, Store {
     });
   }
 
+  late final _$currentTimeAtom =
+      Atom(name: '_VideoControllerBase.currentTime', context: context);
+
+  @override
+  double get currentTime {
+    _$currentTimeAtom.reportRead();
+    return super.currentTime;
+  }
+
+  @override
+  set currentTime(double value) {
+    _$currentTimeAtom.reportWrite(value, super.currentTime, () {
+      super.currentTime = value;
+    });
+  }
+
   late final _$playerControllerAtom =
       Atom(name: '_VideoControllerBase.playerController', context: context);
 
@@ -178,11 +194,23 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void updateCurrentTime(dynamic _) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.updateCurrentTime');
+    try {
+      return super.updateCurrentTime(_);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 clips: ${clips},
 selectedClip: ${selectedClip},
 isPlaying: ${isPlaying},
+currentTime: ${currentTime},
 playerController: ${playerController},
 isLoaded: ${isLoaded},
 isFirstClip: ${isFirstClip},

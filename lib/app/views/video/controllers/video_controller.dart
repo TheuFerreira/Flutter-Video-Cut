@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -35,6 +36,9 @@ abstract class _VideoControllerBase with Store {
   @observable
   bool isPlaying = false;
 
+  @observable
+  double currentTime = 0;
+
   @computed
   double get totalTime => playerController!.value.duration.inSeconds.toDouble();
 
@@ -48,6 +52,8 @@ abstract class _VideoControllerBase with Store {
   final IStorageService _storageService = StorageService();
   final IDialogService _dialogService = DialogService();
   String _cachedFile = '';
+
+  Timer? _timerTrack;
 
   @action
   Future<void> cutVideo(
@@ -180,15 +186,25 @@ abstract class _VideoControllerBase with Store {
   Future<void> loadFile(String url) async {
     isLoaded = false;
 
-    if (playerController != null) {
-      playerController!.dispose();
-    }
+    currentTime = 0;
+    _timerTrack?.cancel();
+    playerController?.dispose();
 
     final file = File(url);
     playerController = VideoPlayerController.file(file);
     await playerController!.initialize();
 
+    _timerTrack = Timer.periodic(
+      const Duration(milliseconds: 500),
+      updateCurrentTime,
+    );
+
     isLoaded = true;
+  }
+
+  @action
+  void updateCurrentTime(_) {
+    currentTime = playerController!.value.position.inSeconds.toDouble();
   }
 
   @action
@@ -213,9 +229,8 @@ abstract class _VideoControllerBase with Store {
   }
 
   void dispose() {
-    if (playerController != null) {
-      playerController!.dispose();
-    }
+    _timerTrack?.cancel();
+    playerController?.dispose();
 
     for (Clip clip in clips) {
       _storageService.deleteFile(clip.url);
