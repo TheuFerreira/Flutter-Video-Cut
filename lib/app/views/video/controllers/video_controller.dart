@@ -40,7 +40,8 @@ abstract class _VideoControllerBase with Store {
   double currentTime = 0;
 
   @computed
-  double get totalTime => playerController!.value.duration.inSeconds.toDouble();
+  double get totalTime =>
+      playerController!.value.duration.inMilliseconds.toDouble();
 
   @observable
   VideoPlayerController? playerController;
@@ -194,26 +195,38 @@ abstract class _VideoControllerBase with Store {
     playerController = VideoPlayerController.file(file);
     await playerController!.initialize();
 
+    playerController!.addListener(() {
+      _checkIsPlaying();
+      _timer();
+    });
+
     _timerTrack = Timer.periodic(
       const Duration(milliseconds: 500),
-      updateCurrentTime,
+      (_) => _timer(),
     );
 
     isLoaded = true;
   }
 
-  @action
-  void updateCurrentTime(_) {
-    currentTime = playerController!.value.position.inSeconds.toDouble();
+  void _timer() {
+    currentTime = playerController!.value.position.inMilliseconds.toDouble();
   }
 
   @action
   Future<void> resumeVideo() async {
     if (!playerController!.value.isPlaying) {
       await playerController!.play();
-      isPlaying = true;
     } else {
       await playerController!.pause();
+    }
+
+    _checkIsPlaying();
+  }
+
+  void _checkIsPlaying() {
+    if (playerController!.value.isPlaying) {
+      isPlaying = true;
+    } else {
       isPlaying = false;
     }
   }

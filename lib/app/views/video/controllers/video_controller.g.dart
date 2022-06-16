@@ -194,17 +194,6 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
-  void updateCurrentTime(dynamic _) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.updateCurrentTime');
-    try {
-      return super.updateCurrentTime(_);
-    } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 clips: ${clips},
