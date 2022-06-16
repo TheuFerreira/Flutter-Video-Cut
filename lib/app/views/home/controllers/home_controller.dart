@@ -32,6 +32,12 @@ abstract class _HomeControllerBase with Store {
     final secondsOfVideo = await _videoService.getSeconds(file.path);
     isSearching = false;
 
+    if (secondsOfVideo <= 10) {
+      _dialogService
+          .showMessageError('O limite mínimo é de 10 segundos por vídeo.');
+      return;
+    }
+
     double minutes = secondsOfVideo / 60.0;
     if (minutes > 5) {
       _dialogService
