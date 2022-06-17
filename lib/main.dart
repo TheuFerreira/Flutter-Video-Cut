@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_video_cut/app/app_module.dart';
 
 import 'app/app.dart';
 
@@ -16,5 +18,10 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   }
 
-  runApp(const App());
+  runApp(
+    ModularApp(
+      module: AppModule(),
+      child: const App(),
+    ),
+  );
 }
