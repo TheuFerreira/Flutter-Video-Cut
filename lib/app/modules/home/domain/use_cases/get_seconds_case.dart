@@ -1,13 +1,14 @@
-import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
 import 'package:flutter_video_cut/app/modules/home/domain/errors/home_errors.dart';
-import 'package:flutter_video_cut/app/services/video_service.dart';
+import 'package:flutter_video_cut/app/modules/home/domain/services/video_service.dart';
 
 abstract class GetSecondsCase {
   Future<int> call(String path);
 }
 
 class GetSecondsCaseImpl implements GetSecondsCase {
-  final IVideoService _videoService = VideoService();
+  final VideoService _videoService;
+
+  GetSecondsCaseImpl(this._videoService);
 
   final int _minSeconds = 10;
   final int _maxMinutes = 5;

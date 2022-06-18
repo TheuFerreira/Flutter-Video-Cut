@@ -9,6 +9,6 @@ class AppModule extends Module {
   List<Bind> get binds => [
         Bind.factory<GalleryService>((i) => GalleryServiceImpl()),
         Bind.factory<PickVideoCase>((i) => PickVideoCaseImpl(i())),
-        Bind.factory<GetSecondsCase>((i) => GetSecondsCaseImpl()),
+        Bind.factory<GetSecondsCase>((i) => GetSecondsCaseImpl(i())),
       ];
 }
