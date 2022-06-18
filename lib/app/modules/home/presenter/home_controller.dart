@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
+import 'package:flutter_video_cut/app/modules/home/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/app/modules/home/domain/use_cases/pick_video_case.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/services/video_service.dart';
@@ -23,14 +24,12 @@ abstract class _HomeControllerBase with Store {
   Future<void> searchVideo(BuildContext context) async {
     isSearching = true;
 
-    String? path;
+    String path;
 
     try {
       path = await _pickVideoCase();
-      if (path == null) {
-        isSearching = false;
-        return;
-      }
+    } on HomeNotSelectedVideoException {
+      return;
     } on Exception {
       _dialogService.showMessageError('Um problema aconteceu');
       return;
@@ -57,7 +56,7 @@ abstract class _HomeControllerBase with Store {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (builder) =>
-            VideoPage(videoPath: path!, secondsOfClip: secondsOfVideo),
+            VideoPage(videoPath: path, secondsOfClip: secondsOfVideo),
       ),
     );
   }
