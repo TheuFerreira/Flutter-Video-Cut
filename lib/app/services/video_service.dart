@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
@@ -81,16 +80,5 @@ class VideoService implements IVideoService {
     }
 
     return thumbnail!;
-  }
-
-  @override
-  Future<int> getSeconds(String url) async {
-    final videoInformation = await FFprobeKit.getMediaInformation(url);
-    final mediaInformation = videoInformation.getMediaInformation();
-    String durations = mediaInformation!.getDuration()!;
-
-    String duration = durations.split('.')[0];
-    int seconds = int.parse(duration);
-    return seconds;
   }
 }

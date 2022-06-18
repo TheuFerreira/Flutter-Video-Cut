@@ -9,6 +9,4 @@ abstract class IVideoService {
   });
 
   Future<Uint8List?> getThumbnail(String url);
-
-  Future<int> getSeconds(String url);
 }
