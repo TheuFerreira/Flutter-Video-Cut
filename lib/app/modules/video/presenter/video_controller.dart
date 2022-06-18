@@ -7,6 +7,8 @@ import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
 import 'package:flutter_video_cut/app/models/clip.dart';
+import 'package:flutter_video_cut/app/modules/video/domain/errors/video_errors.dart';
+import 'package:flutter_video_cut/app/modules/video/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/app/modules/video/presenter/components/clip_component.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/services/storage_service.dart';
@@ -67,12 +69,9 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
-    final values = url.split('.');
-    final extension = values[values.length - 1];
-    _cachedFile = '$cachePath/cachedFile.$extension';
-
-    bool isCopied = await _storageService.copyFile(url, _cachedFile);
-    if (!isCopied) {
+    try {
+      _cachedFile = await CopyFileToCacheCaseImpl()(cachePath, url);
+    } on VideoCopyException {
       _dialogService.showMessageError(
           'Problema ao copiar o arquivo para o cache do Video Cut.');
       Navigator.of(context).pop();
