@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/shapes/track_shape.dart';
-import 'package:flutter_video_cut/app/views/home/home_page.dart';
+import 'package:flutter_video_cut/app/modules/home/presenter/home_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
