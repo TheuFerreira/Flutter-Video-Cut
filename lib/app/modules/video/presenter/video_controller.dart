@@ -72,41 +72,45 @@ abstract class _VideoControllerBase with Store {
         cachedFile: _cachedFile,
         secondsOfVideo: secondsOfClip,
       );
+
+      for (String videoCuted in videosCuted) {
+        Uint8List? thumbnail = await _videoService.getThumbnail(videoCuted);
+        if (thumbnail == null) {
+          _dialogService.showMessageError(
+              'Houve um problema ao buscar as Thumbnails dos vídeos.');
+          Navigator.of(context).pop();
+          return;
+        }
+
+        final clip = Clip(url: videoCuted, thumbnail: thumbnail);
+
+        clips.add(clip);
+        listKey.currentState!.insertItem(clips.length - 1);
+      }
+
+      loadFile(clips[0].url);
     } on VideoCacheException catch (e, s) {
       _dialogService
           .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
       Navigator.of(context).pop();
+
       await FirebaseCrashlytics.instance
           .recordError(e, s, reason: 'Error on Get Cache Path');
-      return;
     } on VideoCopyException {
       _dialogService.showMessageError(
           'Problema ao copiar o arquivo para o cache do Video Cut.');
       Navigator.of(context).pop();
-      return;
     } on VideoCutException {
       _dialogService
           .showMessageError('Houve um problema ao cortar o vídeo selecionado.');
       Navigator.of(context).pop();
-      return;
+    } on Exception catch (e, s) {
+      _dialogService.showMessageError('Um problema aconteceu');
+      Navigator.of(context).pop();
+
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Cut Video');
     }
-
-    for (String videoCuted in videosCuted) {
-      Uint8List? thumbnail = await _videoService.getThumbnail(videoCuted);
-      if (thumbnail == null) {
-        _dialogService.showMessageError(
-            'Houve um problema ao buscar as Thumbnails dos vídeos.');
-        Navigator.of(context).pop();
-        return;
-      }
-
-      final clip = Clip(url: videoCuted, thumbnail: thumbnail);
-
-      clips.add(clip);
-      listKey.currentState!.insertItem(clips.length - 1);
-    }
-
-    loadFile(clips[0].url);
   }
 
   @action
