@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/app/modules/home/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/app/modules/home/domain/services/gallery_service.dart';
 
@@ -22,10 +21,6 @@ class PickVideoCaseImpl implements PickVideoCase {
       final path = file.path;
       return path;
     } on HomeNotSelectedVideoException {
-      rethrow;
-    } on Exception catch (e, s) {
-      await FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'Error on Pick Video');
       rethrow;
     }
   }
