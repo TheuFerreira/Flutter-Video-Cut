@@ -18,9 +18,7 @@ class PickVideoCaseImpl implements PickVideoCase {
       if (file == null) {
         throw HomeNotSelectedVideoException();
       }
-      /*final _picker = ImagePicker();
-      final video = await _picker.pickVideo(source: ImageSource.gallery);
-      final path = video?.path;*/
+
       final path = file.path;
       return path;
     } on HomeNotSelectedVideoException {
