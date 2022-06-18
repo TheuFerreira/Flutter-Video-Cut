@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
@@ -71,10 +72,12 @@ abstract class _VideoControllerBase with Store {
         cachedFile: _cachedFile,
         secondsOfVideo: secondsOfClip,
       );
-    } on VideoCacheException {
+    } on VideoCacheException catch (e, s) {
       _dialogService
           .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
       Navigator.of(context).pop();
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Get Cache Path');
       return;
     } on VideoCopyException {
       _dialogService.showMessageError(
