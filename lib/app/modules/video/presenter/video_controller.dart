@@ -9,6 +9,7 @@ import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
 import 'package:flutter_video_cut/app/models/clip.dart';
 import 'package:flutter_video_cut/app/modules/video/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/app/modules/video/domain/use_cases/copy_file_to_cache_case.dart';
+import 'package:flutter_video_cut/app/modules/video/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/app/modules/video/presenter/components/clip_component.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/services/storage_service.dart';
@@ -69,21 +70,22 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
+    List<String> videosCuted = [];
+
     try {
       _cachedFile = await CopyFileToCacheCaseImpl()(cachePath, url);
+
+      videosCuted = await CutVideoCaseImpl()(
+        cachedFile: _cachedFile,
+        cachePath: cachePath,
+        secondsOfVideo: secondsOfClip,
+      );
     } on VideoCopyException {
       _dialogService.showMessageError(
           'Problema ao copiar o arquivo para o cache do Video Cut.');
       Navigator.of(context).pop();
       return;
-    }
-
-    final videosCuted = await _videoService.cutVideo(
-      url: _cachedFile,
-      destiny: cachePath,
-      secondsOfClip: secondsOfClip,
-    );
-    if (videosCuted == null) {
+    } on VideoCutException {
       _dialogService
           .showMessageError('Houve um problema ao cortar o vídeo selecionado.');
       Navigator.of(context).pop();
