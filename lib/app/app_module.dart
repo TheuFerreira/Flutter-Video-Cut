@@ -4,6 +4,6 @@ import 'package:flutter_video_cut/app/modules/home/domain/use_cases/pick_video_c
 class AppModule extends Module {
   @override
   List<Bind> get binds => [
-        Bind.factory<PickVideoCase>((i) => PickVideoCaseImpl()),
+        Bind.factory<PickVideoCase>((i) => PickVideoCaseImpl(i())),
       ];
 }
