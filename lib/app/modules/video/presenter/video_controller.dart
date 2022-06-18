@@ -7,10 +7,10 @@ import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/app/interfaces/istorage_service.dart';
 import 'package:flutter_video_cut/app/interfaces/ivideo_service.dart';
 import 'package:flutter_video_cut/app/models/clip.dart';
+import 'package:flutter_video_cut/app/modules/video/presenter/components/clip_component.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/app/services/storage_service.dart';
 import 'package:flutter_video_cut/app/services/video_service.dart';
-import 'package:flutter_video_cut/app/views/video/components/clip_component.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 

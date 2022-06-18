@@ -6,7 +6,7 @@ import 'package:flutter_video_cut/app/modules/home/domain/errors/home_errors.dar
 import 'package:flutter_video_cut/app/modules/home/domain/use_cases/get_seconds_case.dart';
 import 'package:flutter_video_cut/app/modules/home/domain/use_cases/pick_video_case.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
-import 'package:flutter_video_cut/app/views/video/video_page.dart';
+import 'package:flutter_video_cut/app/modules/video/presenter/video_page.dart';
 import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
