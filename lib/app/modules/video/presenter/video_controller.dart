@@ -62,24 +62,20 @@ abstract class _VideoControllerBase with Store {
   @action
   Future<void> cutVideo(
       String url, int secondsOfClip, BuildContext context) async {
-    final cachePath = await _storageService.getCachePath();
-    if (cachePath == null) {
+    List<String> videosCuted = [];
+
+    try {
+      _cachedFile = await CopyFileToCacheCaseImpl()(url);
+
+      videosCuted = await CutVideoCaseImpl()(
+        cachedFile: _cachedFile,
+        secondsOfVideo: secondsOfClip,
+      );
+    } on VideoCacheException {
       _dialogService
           .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
       Navigator.of(context).pop();
       return;
-    }
-
-    List<String> videosCuted = [];
-
-    try {
-      _cachedFile = await CopyFileToCacheCaseImpl()(cachePath, url);
-
-      videosCuted = await CutVideoCaseImpl()(
-        cachedFile: _cachedFile,
-        cachePath: cachePath,
-        secondsOfVideo: secondsOfClip,
-      );
     } on VideoCopyException {
       _dialogService.showMessageError(
           'Problema ao copiar o arquivo para o cache do Video Cut.');
