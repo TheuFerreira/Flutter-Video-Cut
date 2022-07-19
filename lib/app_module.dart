@@ -7,6 +7,7 @@ import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart'
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
 import 'package:flutter_video_cut/infra/services/gallery_service_impl.dart';
@@ -31,5 +32,6 @@ class AppModule extends Module {
         Bind.factory<DeleteFileFromStorageCase>(
             (i) => DeleteFileFromStorageCaseImpl(i())),
         Bind.factory<ShareClipsCase>((i) => ShareClipsCaseImpl(i())),
+        Bind.factory<GetThumbnailsCase>((i) => GetThumbnailsCaseImpl(i())),
       ];
 }

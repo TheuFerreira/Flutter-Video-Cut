@@ -79,8 +79,10 @@ abstract class _VideoControllerBase with Store {
       );
 
       final tempClips = await _getThumbnailCase(videosCuted);
-      clips.addAll(tempClips);
-      listKey.currentState!.insertItem(clips.length - 1);
+      for (final clip in tempClips) {
+        clips.add(clip);
+        listKey.currentState!.insertItem(clips.length - 1);
+      }
 
       loadFile(clips[0].url);
     } on ThumbnailException {
