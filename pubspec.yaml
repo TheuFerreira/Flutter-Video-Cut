@@ -43,11 +43,11 @@ dependencies:
   firebase_crashlytics: ^2.8.0
   firebase_core: ^1.17.0
   new_version: ^0.3.0
+  flutter_modular: ^5.0.3
 
   
   google_mobile_ads: ^1.1.0
   intl: ^0.17.0
-  flutter_modular: ^5.0.3
   mockito: ^5.2.0
 
 dev_dependencies:

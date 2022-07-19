@@ -3,9 +3,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_video_cut/app/app_module.dart';
+import 'package:flutter_video_cut/app_module.dart';
 
-import 'app/app.dart';
+import 'app_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,7 @@ void main() async {
   runApp(
     ModularApp(
       module: AppModule(),
-      child: const App(),
+      child: const AppWidget(),
     ),
   );
 }
