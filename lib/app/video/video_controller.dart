@@ -12,6 +12,7 @@ import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
@@ -52,6 +53,7 @@ abstract class _VideoControllerBase with Store {
   bool isLoaded = false;
 
   final _storageService = Modular.get<StorageService>();
+  final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
   final IDialogService _dialogService = DialogService();
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
@@ -151,7 +153,7 @@ abstract class _VideoControllerBase with Store {
 
     await Future.delayed(const Duration(milliseconds: 100));
 
-    _storageService.deleteFile(clip.url);
+    _deleteFileFromStorageCase(clip.url);
 
     if (clips.isEmpty) {
       Navigator.pop(context);

@@ -5,6 +5,7 @@ import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/domain/services/video_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
 import 'package:flutter_video_cut/infra/services/gallery_service_impl.dart';
@@ -25,6 +26,8 @@ class AppModule extends Module {
         Bind.factory<GetSecondsCase>((i) => GetSecondsCaseImpl(i())),
         Bind.factory<CutVideoCase>((i) => CutVideoCaseImpl(i(), i())),
         Bind.factory<CopyFileToCacheCase>(
-            (i) => CopyFileToCacheCaseImpl(i(), i()))
+            (i) => CopyFileToCacheCaseImpl(i(), i())),
+        Bind.factory<DeleteFileFromStorageCase>(
+            (i) => DeleteFileFromStorageCaseImpl(i())),
       ];
 }
