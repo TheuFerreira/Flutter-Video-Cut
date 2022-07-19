@@ -2,6 +2,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
+import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
@@ -30,10 +31,24 @@ abstract class _HomeControllerBase with Store {
       final path = await _pickVideoCase();
       final secondsOfVideo = await _getSecondsCase(path);
 
+      final secondsOfClip = await showDialog<int>(
+        context: context,
+        builder: (builder) {
+          return TimeVideoDialog(maxSeconds: secondsOfVideo);
+        },
+      );
+
+      if (secondsOfClip == null) {
+        return;
+      }
+
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (builder) =>
-              VideoPage(videoPath: path, secondsOfClip: secondsOfVideo),
+          builder: (builder) => VideoPage(
+            videoPath: path,
+            secondsOfVideo: secondsOfVideo,
+            secondsOfClip: secondsOfClip,
+          ),
         ),
       );
     } on HomeNotSelectedVideoException {

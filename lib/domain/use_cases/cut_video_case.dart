@@ -6,6 +6,7 @@ abstract class CutVideoCase {
   Future<List<String>> call({
     required String cachedFile,
     required int secondsOfVideo,
+    required int secondsOfClip,
   });
 }
 
@@ -19,6 +20,7 @@ class CutVideoCaseImpl implements CutVideoCase {
   Future<List<String>> call({
     required String cachedFile,
     required int secondsOfVideo,
+    required int secondsOfClip,
   }) async {
     final cachePath = await _pathService.getCachePath();
 
@@ -26,6 +28,7 @@ class CutVideoCaseImpl implements CutVideoCase {
       url: cachedFile,
       destiny: cachePath,
       secondsOfClip: secondsOfVideo,
+      seconds: secondsOfClip,
     );
 
     if (videosCuted == null) {

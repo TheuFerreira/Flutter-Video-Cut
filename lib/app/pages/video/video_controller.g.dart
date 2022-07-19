@@ -131,9 +131,10 @@ mixin _$VideoController on _VideoControllerBase, Store {
       AsyncAction('_VideoControllerBase.cutVideo', context: context);
 
   @override
-  Future<void> cutVideo(String url, int secondsOfClip, BuildContext context) {
+  Future<void> cutVideo(
+      String url, int secondsOfVideo, int secondsOfClip, BuildContext context) {
     return _$cutVideoAsyncAction
-        .run(() => super.cutVideo(url, secondsOfClip, context));
+        .run(() => super.cutVideo(url, secondsOfVideo, secondsOfClip, context));
   }
 
   late final _$deleteClipAsyncAction =

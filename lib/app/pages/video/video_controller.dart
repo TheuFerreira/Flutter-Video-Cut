@@ -67,7 +67,11 @@ abstract class _VideoControllerBase with Store {
 
   @action
   Future<void> cutVideo(
-      String url, int secondsOfClip, BuildContext context) async {
+    String url,
+    int secondsOfVideo,
+    int secondsOfClip,
+    BuildContext context,
+  ) async {
     List<String> videosCuted = [];
 
     try {
@@ -75,7 +79,8 @@ abstract class _VideoControllerBase with Store {
 
       videosCuted = await _cutVideoCase(
         cachedFile: _cachedFile,
-        secondsOfVideo: secondsOfClip,
+        secondsOfVideo: secondsOfVideo,
+        secondsOfClip: secondsOfClip,
       );
 
       final tempClips = await _getThumbnailCase(videosCuted);
