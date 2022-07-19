@@ -2,7 +2,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
-import 'package:flutter_video_cut/app/video/video_page.dart';
+import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';

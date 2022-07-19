@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_video_cut/app/home/home_page.dart';
+import 'package:flutter_video_cut/app/pages/home/home_page.dart';
 import 'package:flutter_video_cut/app/shapes/track_shape.dart';
 
 class AppWidget extends StatelessWidget {

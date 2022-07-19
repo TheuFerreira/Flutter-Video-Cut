@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
-import 'package:flutter_video_cut/app/video/components/clip_component.dart';
+import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';

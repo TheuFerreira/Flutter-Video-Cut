@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_video_cut/app/video/components/action_button_component.dart';
-import 'package:flutter_video_cut/app/video/components/clip_component.dart';
-import 'package:flutter_video_cut/app/video/video_controller.dart';
+import 'package:flutter_video_cut/app/pages/video/components/action_button_component.dart';
+import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
+import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
 import 'package:flutter_video_cut/app/views/components/logo_component.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
