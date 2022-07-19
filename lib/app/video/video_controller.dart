@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +10,9 @@ import 'package:flutter_video_cut/app/video/components/clip_component.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/app/services/dialog_service.dart';
-import 'package:flutter_video_cut/domain/services/video_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -52,11 +51,12 @@ abstract class _VideoControllerBase with Store {
   @observable
   bool isLoaded = false;
 
-  final _videoService = Modular.get<VideoService>();
   final _storageService = Modular.get<StorageService>();
   final IDialogService _dialogService = DialogService();
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
+  final _getThumbnailCase = Modular.get<GetThumbnailsCase>();
+
   String _cachedFile = '';
 
   Timer? _timerTrack;
@@ -74,22 +74,15 @@ abstract class _VideoControllerBase with Store {
         secondsOfVideo: secondsOfClip,
       );
 
-      for (String videoCuted in videosCuted) {
-        Uint8List? thumbnail = await _videoService.getThumbnail(videoCuted);
-        if (thumbnail == null) {
-          _dialogService.showMessageError(
-              'Houve um problema ao buscar as Thumbnails dos vídeos.');
-          Navigator.of(context).pop();
-          return;
-        }
-
-        final clip = Clip(url: videoCuted, thumbnail: thumbnail);
-
-        clips.add(clip);
-        listKey.currentState!.insertItem(clips.length - 1);
-      }
+      final tempClips = await _getThumbnailCase(videosCuted);
+      clips.addAll(tempClips);
+      listKey.currentState!.insertItem(clips.length - 1);
 
       loadFile(clips[0].url);
+    } on ThumbnailException {
+      _dialogService.showMessageError(
+          'Houve um problema ao buscar as Thumbnails dos vídeos.');
+      Navigator.of(context).pop();
     } on VideoCacheException catch (e, s) {
       _dialogService
           .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
