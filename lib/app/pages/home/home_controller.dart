@@ -34,7 +34,9 @@ abstract class _HomeControllerBase with Store {
       final secondsOfClip = await showDialog<int>(
         context: context,
         builder: (builder) {
-          return TimeVideoDialog(maxSeconds: secondsOfVideo);
+          return TimeVideoDialog(
+            maxSecondsOfVideo: secondsOfVideo,
+          );
         },
       );
 

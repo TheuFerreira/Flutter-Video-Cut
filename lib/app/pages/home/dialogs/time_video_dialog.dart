@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_video_cut/domain/utils/time.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TimeVideoDialog extends StatefulWidget {
-  final int maxSeconds;
+  final int maxSecondsOfVideo;
   const TimeVideoDialog({
     Key? key,
-    required this.maxSeconds,
+    required this.maxSecondsOfVideo,
   }) : super(key: key);
 
   @override
@@ -21,7 +22,9 @@ class _TimeVideoDialogState extends State<TimeVideoDialog> {
   void initState() {
     super.initState();
     secondsController = TextEditingController(
-        text: widget.maxSeconds >= 29 ? '29' : widget.maxSeconds.toString());
+        text: widget.maxSecondsOfVideo >= 29
+            ? '29'
+            : '${widget.maxSecondsOfVideo}');
   }
 
   @override
@@ -137,10 +140,10 @@ class _TimeVideoDialogState extends State<TimeVideoDialog> {
     }
 
     final valueInt = int.parse(value);
-    if (valueInt < 10) {
-      return 'Mínimo de 10 segundos.';
-    } else if (valueInt > widget.maxSeconds) {
-      return 'Máximo de ${widget.maxSeconds} segundos';
+    if (valueInt < minSecondsPerVideo) {
+      return 'Mínimo de $minSecondsPerVideo segundos.';
+    } else if (valueInt > widget.maxSecondsOfVideo) {
+      return 'Máximo de ${widget.maxSecondsOfVideo} segundos';
     }
 
     return null;
