@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/domain/services/path_service.dart';
@@ -20,8 +21,11 @@ class CopyFileToCacheCaseImpl implements CopyFileToCacheCase {
     final extension = values[values.length - 1];
     final cachedFile = '$cachePath/cachedFile.$extension';
 
-    bool isCopied = await _storageService.copyFile(oldPath, cachedFile);
-    if (!isCopied) {
+    try {
+      await _storageService.copyFile(oldPath, cachedFile);
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s,
+          reason: 'Error on copy original file to cache Path');
       throw VideoCopyException();
     }
 

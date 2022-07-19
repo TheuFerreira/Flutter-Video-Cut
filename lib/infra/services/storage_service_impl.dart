@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -12,40 +11,17 @@ class StorageServiceImpl implements StorageService {
   }
 
   @override
-  Future<bool> copyFile(String url, String destiny) async {
-    bool isCopied = false;
-    try {
-      final file = File(url);
-      await file.copy(destiny);
-
-      isCopied = true;
-    } on Exception catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s,
-          reason: 'Error on copy original file to cache Path');
-
-      isCopied = false;
-    }
-
-    return isCopied;
+  Future<void> copyFile(String url, String destiny) async {
+    final file = File(url);
+    await file.copy(destiny);
   }
 
   @override
-  Future<bool> shareFiles(List<String> files) async {
-    bool isShared = false;
-    try {
-      await Share.shareFiles(
-        files,
-        text: 'Video Cut',
-        subject: 'Serviço de Compartilhamento',
-      );
-
-      isShared = true;
-    } on Exception catch (e, s) {
-      await FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'Error on share files');
-
-      isShared = false;
-    }
-    return isShared;
+  Future<void> shareFiles(List<String> files) async {
+    await Share.shareFiles(
+      files,
+      text: 'Video Cut',
+      subject: 'Serviço de Compartilhamento',
+    );
   }
 }

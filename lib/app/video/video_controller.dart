@@ -14,6 +14,7 @@ import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart'
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -58,6 +59,7 @@ abstract class _VideoControllerBase with Store {
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
   final _getThumbnailCase = Modular.get<GetThumbnailsCase>();
+  final _shareClipsCase = Modular.get<ShareClipsCase>();
 
   String _cachedFile = '';
 
@@ -258,10 +260,9 @@ abstract class _VideoControllerBase with Store {
   }
 
   Future<void> shareFiles() async {
-    List<String> files = clips.map((e) => e.url).toList();
-
-    bool isShared = await _storageService.shareFiles(files);
-    if (!isShared) {
+    try {
+      await _shareClipsCase(clips);
+    } catch (e) {
       _dialogService
           .showMessageError('Ocorreu um problema ao compartilhar os vídeos.');
     }
