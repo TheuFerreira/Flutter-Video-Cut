@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/components/logo_component.dart';
+import 'package:flutter_video_cut/app/pages/about/about_page.dart';
 import 'package:flutter_video_cut/app/pages/home/components/search_video_component.dart';
 import 'package:flutter_video_cut/app/pages/home/home_controller.dart';
-import 'package:flutter_video_cut/app/views/about/about_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {

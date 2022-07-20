@@ -1,0 +1,1 @@
+class AppDontHaveUpdateException implements Exception {}

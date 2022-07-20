@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_video_cut/app/views/about/controllers/about_controller.dart';
+import 'package:flutter_video_cut/app/pages/about/about_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AboutPage extends StatefulWidget {

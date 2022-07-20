@@ -1,3 +1,3 @@
-abstract class IUrlService {
+abstract class UrlService {
   Future<bool> openUrl(Uri uri);
 }

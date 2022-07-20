@@ -4,12 +4,11 @@ import 'dart:io';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
-import 'package:flutter_video_cut/app/services/dialog_service.dart';
+import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
@@ -55,7 +54,7 @@ abstract class _VideoControllerBase with Store {
 
   final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
-  final IDialogService _dialogService = DialogService();
+  final _dialogService = DialogService();
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
   final _getThumbnailCase = Modular.get<GetThumbnailsCase>();

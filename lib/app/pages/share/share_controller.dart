@@ -1,5 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_video_cut/app/services/dialog_service.dart';
+import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
 import 'package:mobx/mobx.dart';

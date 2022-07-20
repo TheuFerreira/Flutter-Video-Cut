@@ -1,7 +1,7 @@
-import 'package:flutter_video_cut/app/interfaces/iversion_service.dart';
+import 'package:flutter_video_cut/domain/services/version_service.dart';
 import 'package:new_version/new_version.dart';
 
-class VersionService implements IVersionService {
+class VersionServiceImpl implements VersionService {
   final _version = NewVersion();
 
   @override

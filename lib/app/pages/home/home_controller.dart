@@ -1,11 +1,10 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_video_cut/app/interfaces/idialog_service.dart';
+import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
-import 'package:flutter_video_cut/app/services/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
 import 'package:mobx/mobx.dart';
@@ -21,7 +20,7 @@ abstract class _HomeControllerBase with Store {
   final _pickVideoCase = Modular.get<PickVideoCase>();
   final _getSecondsCase = Modular.get<GetSecondsCase>();
 
-  final IDialogService _dialogService = DialogService();
+  final _dialogService = DialogService();
 
   @action
   Future<void> searchVideo(BuildContext context) async {
