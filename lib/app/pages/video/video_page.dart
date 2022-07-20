@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_video_cut/app/pages/share/share_page.dart';
 import 'package:flutter_video_cut/app/pages/video/components/action_button_component.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
@@ -47,7 +48,11 @@ class _VideoPageState extends State<VideoPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => _controller.shareFiles(),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (builder) => SharePage(clips: _controller.clips),
+              ),
+            ),
           ),
         ],
       ),

@@ -22,7 +22,12 @@ class GetThumbnailsCaseImpl implements GetThumbnailsCase {
         throw ThumbnailException();
       }
 
-      final clip = Clip(url: videoCuted, thumbnail: thumbnail);
+      final index = videosCuted.indexOf(videoCuted);
+      final clip = Clip(
+        index: index,
+        url: videoCuted,
+        thumbnail: thumbnail,
+      );
       clips.add(clip);
     }
 
