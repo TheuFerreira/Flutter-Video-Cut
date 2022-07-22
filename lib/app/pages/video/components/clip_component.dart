@@ -38,8 +38,9 @@ class _ClipComponentState extends State<ClipComponent> {
                 color: widget.isSelected
                     ? Colors.red[700]!
                     : const Color.fromARGB(255, 20, 20, 20),
-                width: widget.isSelected ? 4 : 3,
+                width: widget.isSelected ? 3 : 2,
               ),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Image.memory(widget.thumbnail),
           ),
