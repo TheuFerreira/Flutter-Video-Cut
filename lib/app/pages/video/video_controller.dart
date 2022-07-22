@@ -1,18 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
-import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
-import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
-import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
-import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
@@ -55,66 +50,17 @@ abstract class _VideoControllerBase with Store {
   final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
   final _dialogService = DialogService();
-  final _cutVideoCase = Modular.get<CutVideoCase>();
-  final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
-  final _getThumbnailCase = Modular.get<GetThumbnailsCase>();
   final _shareClipsCase = Modular.get<ShareClipsCase>();
-
-  String _cachedFile = '';
 
   Timer? _timerTrack;
 
   @action
-  Future<void> cutVideo(
-    String url,
-    int secondsOfVideo,
-    int secondsOfClip,
-    BuildContext context,
-  ) async {
-    List<String> videosCuted = [];
-
-    try {
-      _cachedFile = await _copyFileToCacheCase(url);
-
-      videosCuted = await _cutVideoCase(
-        cachedFile: _cachedFile,
-        secondsOfVideo: secondsOfVideo,
-        secondsOfClip: secondsOfClip,
-      );
-
-      final tempClips = await _getThumbnailCase(videosCuted);
-      for (final clip in tempClips) {
-        clips.add(clip);
-        listKey.currentState!.insertItem(clips.length - 1);
-      }
-
-      loadFile(clips[0].url);
-    } on ThumbnailException {
-      _dialogService.showMessageError(
-          'Houve um problema ao buscar as Thumbnails dos vídeos.');
-      Navigator.of(context).pop();
-    } on VideoCacheException catch (e, s) {
-      _dialogService
-          .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
-      Navigator.of(context).pop();
-
-      await FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'Error on Get Cache Path');
-    } on VideoCopyException {
-      _dialogService.showMessageError(
-          'Problema ao copiar o arquivo para o cache do Video Cut.');
-      Navigator.of(context).pop();
-    } on VideoCutException {
-      _dialogService
-          .showMessageError('Houve um problema ao cortar o vídeo selecionado.');
-      Navigator.of(context).pop();
-    } on Exception catch (e, s) {
-      _dialogService.showMessageError('Um problema aconteceu');
-      Navigator.of(context).pop();
-
-      await FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'Error on Cut Video');
+  Future<void> load(List<Clip> tempClips) async {
+    for (final clip in tempClips) {
+      clips.add(clip);
     }
+
+    loadFile(clips[0].url);
   }
 
   @action
@@ -280,10 +226,6 @@ abstract class _VideoControllerBase with Store {
 
     for (Clip clip in clips) {
       _storageService.deleteFile(clip.url);
-    }
-
-    if (_cachedFile != '') {
-      _storageService.deleteFile(_cachedFile);
     }
   }
 }

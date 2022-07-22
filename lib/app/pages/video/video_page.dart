@@ -5,18 +5,15 @@ import 'package:flutter_video_cut/app/pages/share/share_page.dart';
 import 'package:flutter_video_cut/app/pages/video/components/action_button_component.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
+import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPage extends StatefulWidget {
-  final String videoPath;
-  final int secondsOfVideo;
-  final int secondsOfClip;
+  final List<Clip> clips;
   const VideoPage({
     Key? key,
-    required this.videoPath,
-    required this.secondsOfVideo,
-    required this.secondsOfClip,
+    required this.clips,
   }) : super(key: key);
 
   @override
@@ -30,13 +27,7 @@ class _VideoPageState extends State<VideoPage> {
   @override
   void initState() {
     super.initState();
-
-    _controller.cutVideo(
-      widget.videoPath,
-      widget.secondsOfVideo,
-      widget.secondsOfClip,
-      context,
-    );
+    _controller.load(widget.clips);
   }
 
   @override

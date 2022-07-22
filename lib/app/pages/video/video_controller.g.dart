@@ -127,14 +127,12 @@ mixin _$VideoController on _VideoControllerBase, Store {
     });
   }
 
-  late final _$cutVideoAsyncAction =
-      AsyncAction('_VideoControllerBase.cutVideo', context: context);
+  late final _$loadAsyncAction =
+      AsyncAction('_VideoControllerBase.load', context: context);
 
   @override
-  Future<void> cutVideo(
-      String url, int secondsOfVideo, int secondsOfClip, BuildContext context) {
-    return _$cutVideoAsyncAction
-        .run(() => super.cutVideo(url, secondsOfVideo, secondsOfClip, context));
+  Future<void> load(List<Clip> tempClips) {
+    return _$loadAsyncAction.run(() => super.load(tempClips));
   }
 
   late final _$deleteClipAsyncAction =
