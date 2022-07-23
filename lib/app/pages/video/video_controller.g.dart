@@ -280,6 +280,17 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void saveFileInGallery() {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.saveFileInGallery');
+    try {
+      return super.saveFileInGallery();
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void changeTrack(double newValue) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.changeTrack');

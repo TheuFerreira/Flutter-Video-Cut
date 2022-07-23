@@ -11,6 +11,7 @@ import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/save_file_in_gallery_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -57,6 +58,7 @@ abstract class _VideoControllerBase with Store {
 
   final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
+  final _saveFileInGalleryCase = Modular.get<SaveFileInGalleryCase>();
   final _dialogService = DialogService();
 
   Timer? _timerTrack;
@@ -256,6 +258,15 @@ abstract class _VideoControllerBase with Store {
 
     playbackSpeed = playbackSpeeds[index];
     await playerController!.setPlaybackSpeed(playbackSpeed.value);
+  }
+
+  @action
+  void saveFileInGallery() => _saveFileInGallery();
+
+  _saveFileInGallery() async {
+    final clip = clips[selectedClip];
+
+    await _saveFileInGalleryCase(clip.url);
   }
 
   @action
