@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
 
 class StorageServiceImpl implements StorageService {
@@ -15,6 +16,10 @@ class StorageServiceImpl implements StorageService {
     final file = File(url);
     await file.copy(destiny);
   }
+
+  @override
+  Future<void> saveInGallery(String path) async =>
+      await GallerySaver.saveVideo(path, albumName: 'Video Cut');
 
   @override
   Future<void> shareFiles(List<String> files) async {

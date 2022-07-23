@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/domain/services/version_service.dart';
+import 'package:flutter_video_cut/domain/use_cases/save_file_in_gallery_case.dart';
 import 'package:flutter_video_cut/infra/services/version_service_impl.dart';
 import 'package:flutter_video_cut/domain/services/url_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/check_app_version_case.dart';
@@ -45,5 +46,7 @@ class AppModule extends Module {
         Bind.factory<OpenUrlCase>((i) => OpenUrlCaseImpl(i())),
         Bind.factory<CheckAppVersionCase>((i) => CheckAppVersionCaseImpl(i())),
         Bind.factory<UpdateAppCase>((i) => UpdateAppCaseImpl(i())),
+        Bind.factory<SaveFileInGalleryCase>(
+            (i) => SaveFileInGalleryCaseImpl(i())),
       ];
 }
