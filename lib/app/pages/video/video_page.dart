@@ -5,6 +5,7 @@ import 'package:flutter_video_cut/app/pages/share/share_page.dart';
 import 'package:flutter_video_cut/app/pages/video/components/action_button_component.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
+import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';

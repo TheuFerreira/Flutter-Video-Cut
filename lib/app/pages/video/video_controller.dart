@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
+import 'package:flutter_video_cut/app/utils/playback_type.dart';
+import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
@@ -14,28 +17,6 @@ import 'package:video_player/video_player.dart';
 part 'video_controller.g.dart';
 
 class VideoController = _VideoControllerBase with _$VideoController;
-
-enum PlaybackType {
-  repeatOne,
-  loop,
-  repeat,
-}
-
-class PlaybackSpeed {
-  final String text;
-  final double value;
-
-  PlaybackSpeed({
-    required this.text,
-    required this.value,
-  });
-}
-
-List<PlaybackSpeed> playbackSpeeds = [
-  PlaybackSpeed(text: '1x', value: 1),
-  PlaybackSpeed(text: '1.5x', value: 1.2),
-  PlaybackSpeed(text: '2x', value: 2),
-];
 
 abstract class _VideoControllerBase with Store {
   final listKey = GlobalKey<AnimatedListState>();
