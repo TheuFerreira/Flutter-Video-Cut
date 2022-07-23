@@ -203,6 +203,20 @@ class _VideoPageState extends State<VideoPage> {
                   );
                 },
               ),
+              Observer(
+                builder: (_) {
+                  final playbackSpeed = _controller.playbackSpeed;
+                  return TextButton(
+                    onPressed: _controller.changePlaybackSpeed,
+                    child: Text(
+                      playbackSpeed.text,
+                      style: const TextStyle(
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ],

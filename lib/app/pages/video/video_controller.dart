@@ -21,6 +21,22 @@ enum PlaybackType {
   repeat,
 }
 
+class PlaybackSpeed {
+  final String text;
+  final double value;
+
+  PlaybackSpeed({
+    required this.text,
+    required this.value,
+  });
+}
+
+List<PlaybackSpeed> playbackSpeeds = [
+  PlaybackSpeed(text: '1x', value: 1),
+  PlaybackSpeed(text: '1.5x', value: 1.2),
+  PlaybackSpeed(text: '2x', value: 2),
+];
+
 abstract class _VideoControllerBase with Store {
   final listKey = GlobalKey<AnimatedListState>();
 
@@ -29,6 +45,9 @@ abstract class _VideoControllerBase with Store {
 
   @observable
   PlaybackType playbackType = PlaybackType.repeatOne;
+
+  @observable
+  PlaybackSpeed playbackSpeed = playbackSpeeds[0];
 
   @observable
   int selectedClip = 0;
@@ -152,6 +171,7 @@ abstract class _VideoControllerBase with Store {
     playerController = VideoPlayerController.file(file);
     await playerController!.initialize();
     await playerController!.setLooping(playbackType == PlaybackType.repeat);
+    await playerController!.setPlaybackSpeed(playbackSpeed.value);
 
     playerController!.addListener(() {
       videoEnded();
@@ -241,6 +261,20 @@ abstract class _VideoControllerBase with Store {
     }
 
     await playerController!.setLooping(playbackType == PlaybackType.repeat);
+  }
+
+  @action
+  void changePlaybackSpeed() => _changePlaybackSpeed();
+
+  _changePlaybackSpeed() async {
+    int index = playbackSpeeds.indexOf(playbackSpeed);
+    index++;
+    if (index == playbackSpeeds.length) {
+      index = 0;
+    }
+
+    playbackSpeed = playbackSpeeds[index];
+    await playerController!.setPlaybackSpeed(playbackSpeed.value);
   }
 
   @action

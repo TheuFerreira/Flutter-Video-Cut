@@ -63,6 +63,22 @@ mixin _$VideoController on _VideoControllerBase, Store {
     });
   }
 
+  late final _$playbackSpeedAtom =
+      Atom(name: '_VideoControllerBase.playbackSpeed', context: context);
+
+  @override
+  PlaybackSpeed get playbackSpeed {
+    _$playbackSpeedAtom.reportRead();
+    return super.playbackSpeed;
+  }
+
+  @override
+  set playbackSpeed(PlaybackSpeed value) {
+    _$playbackSpeedAtom.reportWrite(value, super.playbackSpeed, () {
+      super.playbackSpeed = value;
+    });
+  }
+
   late final _$selectedClipAtom =
       Atom(name: '_VideoControllerBase.selectedClip', context: context);
 
@@ -253,6 +269,17 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void changePlaybackSpeed() {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.changePlaybackSpeed');
+    try {
+      return super.changePlaybackSpeed();
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void changeTrack(double newValue) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.changeTrack');
@@ -268,6 +295,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
     return '''
 clips: ${clips},
 playbackType: ${playbackType},
+playbackSpeed: ${playbackSpeed},
 selectedClip: ${selectedClip},
 isPlaying: ${isPlaying},
 currentTime: ${currentTime},
