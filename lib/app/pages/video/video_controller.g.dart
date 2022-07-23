@@ -23,13 +23,6 @@ mixin _$VideoController on _VideoControllerBase, Store {
       (_$isLastClipComputed ??= Computed<bool>(() => super.isLastClip,
               name: '_VideoControllerBase.isLastClip'))
           .value;
-  Computed<double>? _$totalTimeComputed;
-
-  @override
-  double get totalTime =>
-      (_$totalTimeComputed ??= Computed<double>(() => super.totalTime,
-              name: '_VideoControllerBase.totalTime'))
-          .value;
 
   late final _$clipsAtom =
       Atom(name: '_VideoControllerBase.clips', context: context);
@@ -44,6 +37,22 @@ mixin _$VideoController on _VideoControllerBase, Store {
   set clips(List<Clip> value) {
     _$clipsAtom.reportWrite(value, super.clips, () {
       super.clips = value;
+    });
+  }
+
+  late final _$playbackTypeAtom =
+      Atom(name: '_VideoControllerBase.playbackType', context: context);
+
+  @override
+  PlaybackType get playbackType {
+    _$playbackTypeAtom.reportRead();
+    return super.playbackType;
+  }
+
+  @override
+  set playbackType(PlaybackType value) {
+    _$playbackTypeAtom.reportWrite(value, super.playbackType, () {
+      super.playbackType = value;
     });
   }
 
@@ -92,6 +101,22 @@ mixin _$VideoController on _VideoControllerBase, Store {
   set currentTime(double value) {
     _$currentTimeAtom.reportWrite(value, super.currentTime, () {
       super.currentTime = value;
+    });
+  }
+
+  late final _$totalTimeAtom =
+      Atom(name: '_VideoControllerBase.totalTime', context: context);
+
+  @override
+  double get totalTime {
+    _$totalTimeAtom.reportRead();
+    return super.totalTime;
+  }
+
+  @override
+  set totalTime(double value) {
+    _$totalTimeAtom.reportWrite(value, super.totalTime, () {
+      super.totalTime = value;
     });
   }
 
@@ -193,6 +218,17 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void videoEnded() {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.videoEnded');
+    try {
+      return super.videoEnded();
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void startChangeTrack(double newValue) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.startChangeTrack');
@@ -215,6 +251,17 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void changePlaybackType() {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.changePlaybackType');
+    try {
+      return super.changePlaybackType();
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void changeTrack(double newValue) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.changeTrack');
@@ -229,14 +276,15 @@ mixin _$VideoController on _VideoControllerBase, Store {
   String toString() {
     return '''
 clips: ${clips},
+playbackType: ${playbackType},
 selectedClip: ${selectedClip},
 isPlaying: ${isPlaying},
 currentTime: ${currentTime},
+totalTime: ${totalTime},
 playerController: ${playerController},
 isLoaded: ${isLoaded},
 isFirstClip: ${isFirstClip},
-isLastClip: ${isLastClip},
-totalTime: ${totalTime}
+isLastClip: ${isLastClip}
     ''';
   }
 }

@@ -188,6 +188,21 @@ class _VideoPageState extends State<VideoPage> {
                   color: Colors.white38,
                 ),
               ),
+              Observer(
+                builder: (_) {
+                  final playbackType = _controller.playbackType;
+                  IconData iconData = Icons.repeat_one;
+                  if (playbackType == PlaybackType.loop) {
+                    iconData = Icons.loop;
+                  } else if (playbackType == PlaybackType.repeat) {
+                    iconData = Icons.repeat;
+                  }
+                  return IconButton(
+                    onPressed: _controller.changePlaybackType,
+                    icon: Icon(iconData),
+                  );
+                },
+              ),
             ],
           ),
         ],

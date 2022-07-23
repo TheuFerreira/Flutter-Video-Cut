@@ -8,7 +8,6 @@ import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
-import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -16,11 +15,20 @@ part 'video_controller.g.dart';
 
 class VideoController = _VideoControllerBase with _$VideoController;
 
+enum PlaybackType {
+  repeatOne,
+  loop,
+  repeat,
+}
+
 abstract class _VideoControllerBase with Store {
   final listKey = GlobalKey<AnimatedListState>();
 
   @observable
   List<Clip> clips = ObservableList<Clip>();
+
+  @observable
+  PlaybackType playbackType = PlaybackType.repeatOne;
 
   @observable
   int selectedClip = 0;
@@ -37,9 +45,8 @@ abstract class _VideoControllerBase with Store {
   @observable
   double currentTime = 0;
 
-  @computed
-  double get totalTime =>
-      playerController!.value.duration.inMilliseconds.toDouble();
+  @observable
+  double totalTime = 0;
 
   @observable
   VideoPlayerController? playerController;
@@ -50,7 +57,6 @@ abstract class _VideoControllerBase with Store {
   final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
   final _dialogService = DialogService();
-  final _shareClipsCase = Modular.get<ShareClipsCase>();
 
   Timer? _timerTrack;
 
@@ -119,14 +125,10 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void previousClip() {
-    selectClip(selectedClip - 1);
-  }
+  void previousClip() => selectClip(selectedClip - 1);
 
   @action
-  void nextClip() {
-    selectClip(selectedClip + 1);
-  }
+  void nextClip() => selectClip(selectedClip + 1);
 
   @action
   Future<void> selectClip(int index) async {
@@ -142,14 +144,18 @@ abstract class _VideoControllerBase with Store {
     isLoaded = false;
 
     currentTime = 0;
+    totalTime = 1;
     _timerTrack?.cancel();
     playerController?.dispose();
 
     final file = File(url);
     playerController = VideoPlayerController.file(file);
     await playerController!.initialize();
+    await playerController!.setLooping(playbackType == PlaybackType.repeat);
+    totalTime = playerController!.value.duration.inMilliseconds.toDouble();
 
     playerController!.addListener(() {
+      videoEnded();
       _checkIsPlaying();
       _timer();
     });
@@ -180,15 +186,32 @@ abstract class _VideoControllerBase with Store {
     }
   }
 
-  void _startTimer() {
-    _timerTrack = Timer.periodic(
-      const Duration(milliseconds: 500),
-      (_) => _timer(),
-    );
-  }
+  void _startTimer() => _timerTrack = Timer.periodic(
+        const Duration(milliseconds: 500),
+        (_) => _timer(),
+      );
 
-  void _timer() {
-    currentTime = playerController!.value.position.inMilliseconds.toDouble();
+  void _timer() =>
+      currentTime = playerController!.value.position.inMilliseconds.toDouble();
+
+  @action
+  void videoEnded() => _videoEnded();
+
+  _videoEnded() async {
+    final playerValue = playerController!.value;
+    final isEnded = playerValue.duration == playerValue.position;
+    final isLoop = playbackType == PlaybackType.loop;
+
+    if (!isEnded || playerValue.isPlaying || !isLoop) {
+      return;
+    }
+
+    selectedClip++;
+    if (selectedClip == clips.length) {
+      selectedClip = 0;
+    }
+
+    await selectClip(selectedClip);
   }
 
   @action
@@ -207,18 +230,23 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void changeTrack(double newValue) {
-    playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
+  void changePlaybackType() => _changePlaybackType();
+
+  _changePlaybackType() async {
+    if (playbackType == PlaybackType.repeatOne) {
+      playbackType = PlaybackType.repeat;
+    } else if (playbackType == PlaybackType.repeat) {
+      playbackType = PlaybackType.loop;
+    } else if (playbackType == PlaybackType.loop) {
+      playbackType = PlaybackType.repeatOne;
+    }
+
+    await playerController!.setLooping(playbackType == PlaybackType.repeat);
   }
 
-  Future<void> shareFiles() async {
-    try {
-      await _shareClipsCase(clips);
-    } catch (e) {
-      _dialogService
-          .showMessageError('Ocorreu um problema ao compartilhar os vídeos.');
-    }
-  }
+  @action
+  void changeTrack(double newValue) =>
+      playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
 
   void dispose() {
     _timerTrack?.cancel();
