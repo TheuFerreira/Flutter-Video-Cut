@@ -22,6 +22,7 @@ class VideoServiceImpl implements VideoService {
   Future<List<String>?> cutVideo({
     required String url,
     required String destiny,
+    required String baseFileName,
     required int secondsOfClip,
     int seconds = 20,
   }) async {
@@ -31,7 +32,7 @@ class VideoServiceImpl implements VideoService {
 
     for (int i = 0; i < clips; i++) {
       int timeStart = i * seconds;
-      String newPath = "$destiny/${i + 1}.mp4";
+      String newPath = "$destiny/${baseFileName}_${i + 1}.mp4";
 
       final isCuted = await _cutVideo(
         currentPath: url,

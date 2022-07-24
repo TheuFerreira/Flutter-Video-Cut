@@ -5,7 +5,7 @@ class DateTimeServiceImpl implements DateTimeService {
   final Intl _intl = Intl();
   @override
   String getFormattedDateToFileName(DateTime date) {
-    DateFormat dateFormat = _intl.date('yyyy-MM-dd-hh-mm-ss');
+    DateFormat dateFormat = _intl.date('yyyyMMddhhmmss');
     final formattedDate = dateFormat.format(date);
     return formattedDate;
   }

@@ -101,23 +101,28 @@ abstract class _HomeControllerBase with Store {
     int secondsOfClip,
     BuildContext context,
   ) async {
-    infoDialog.show(context);
+    try {
+      infoDialog.show(context);
 
-    final _cachedFile = await _copyFileToCacheCase(url);
+      final _cachedFile = await _copyFileToCacheCase(url);
 
-    List<String> videosCuted = await _cutVideoCase(
-      cachedFile: _cachedFile,
-      secondsOfVideo: secondsOfVideo,
-      secondsOfClip: secondsOfClip,
-    );
+      List<String> videosCuted = await _cutVideoCase(
+        cachedFile: _cachedFile,
+        secondsOfVideo: secondsOfVideo,
+        secondsOfClip: secondsOfClip,
+      );
 
-    final tempClips = await _getThumbnailCase(videosCuted);
-    infoDialog.close();
+      final tempClips = await _getThumbnailCase(videosCuted);
 
-    if (_cachedFile != '') {
-      _storageService.deleteFile(_cachedFile);
+      if (_cachedFile != '') {
+        _storageService.deleteFile(_cachedFile);
+      }
+
+      return tempClips;
+    } catch (e) {
+      rethrow;
+    } finally {
+      infoDialog.close();
     }
-
-    return tempClips;
   }
 }
