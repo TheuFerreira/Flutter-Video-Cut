@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/domain/services/log_service.dart';
 import 'package:flutter_video_cut/domain/services/path_service.dart';
@@ -31,20 +32,29 @@ class CutVideoCaseImpl implements CutVideoCase {
     _logService.writeInfo('Getting a Cache Path');
     final cachePath = await _pathService.getCachePath();
 
-    _logService.writeInfo('Cut a video in clips');
-    final videosCuted = await _videoService.cutVideo(
-      url: cachedFile,
-      destiny: cachePath,
-      secondsOfClip: secondsOfVideo,
-      seconds: secondsOfClip,
-    );
+    try {
+      _logService.writeInfo('Cutting a video in clips');
+      final videosCuted = await _videoService.cutVideo(
+        url: cachedFile,
+        destiny: cachePath,
+        secondsOfClip: secondsOfVideo,
+        seconds: secondsOfClip,
+      );
 
-    if (videosCuted == null) {
-      _logService.writeError('Error on cut a video');
+      if (videosCuted == null) {
+        _logService.writeError('Error on cut a video');
+        throw VideoCutException();
+      }
+
+      _logService.writeInfo('Clips, $videosCuted');
+      return videosCuted;
+    } on VideoCutException {
+      rethrow;
+    } on Exception catch (e, s) {
+      _logService.writeError(e.toString());
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on cut video in clips');
       throw VideoCutException();
     }
-
-    _logService.writeInfo('Clips, $videosCuted');
-    return videosCuted;
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/domain/services/log_service.dart';
@@ -23,19 +24,28 @@ class GetThumbnailsCaseImpl implements GetThumbnailsCase {
     List<Clip> clips = [];
     for (String videoCuted in videosCuted) {
       _logService.writeInfo('Getting thumbnail of video, $videoCuted');
-      Uint8List? thumbnail = await _videoService.getThumbnail(videoCuted);
-      if (thumbnail == null) {
-        _logService.writeError('Error on get a thumbnail of video');
+      try {
+        Uint8List? thumbnail = await _videoService.getThumbnail(videoCuted);
+        if (thumbnail == null) {
+          _logService.writeError('Error on get a thumbnail of video');
+          throw ThumbnailException();
+        }
+
+        final index = videosCuted.indexOf(videoCuted);
+        final clip = Clip(
+          index: index,
+          url: videoCuted,
+          thumbnail: thumbnail,
+        );
+        clips.add(clip);
+      } on ThumbnailException {
+        rethrow;
+      } on Exception catch (e, s) {
+        _logService.writeError(e.toString());
+        await FirebaseCrashlytics.instance
+            .recordError(e, s, reason: 'Error on get thubmnail of video');
         throw ThumbnailException();
       }
-
-      final index = videosCuted.indexOf(videoCuted);
-      final clip = Clip(
-        index: index,
-        url: videoCuted,
-        thumbnail: thumbnail,
-      );
-      clips.add(clip);
     }
 
     return clips;
