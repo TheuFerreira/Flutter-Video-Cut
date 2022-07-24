@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
-import 'package:flutter_video_cut/app/pages/home/dialogs/info_dialog.dart';
+import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';

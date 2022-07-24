@@ -11,6 +11,7 @@ class InfoDialog {
 
     showDialog(
       context: this.context,
+      barrierDismissible: false,
       builder: (_) => _InfoDialog(
         text: text,
       ),

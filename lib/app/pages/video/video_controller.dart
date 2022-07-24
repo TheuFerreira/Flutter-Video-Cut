@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_video_cut/app/pages/home/dialogs/info_dialog.dart';
+import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
