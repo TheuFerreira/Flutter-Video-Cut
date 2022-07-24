@@ -280,11 +280,11 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
-  void saveFileInGallery() {
+  void saveFileInGallery(BuildContext context) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.saveFileInGallery');
     try {
-      return super.saveFileInGallery();
+      return super.saveFileInGallery(context);
     } finally {
       _$_VideoControllerBaseActionController.endAction(_$actionInfo);
     }

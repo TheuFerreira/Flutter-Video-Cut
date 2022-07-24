@@ -219,7 +219,7 @@ class _VideoPageState extends State<VideoPage> {
                 },
               ),
               IconButton(
-                onPressed: _controller.saveFileInGallery,
+                onPressed: () => _controller.saveFileInGallery(context),
                 icon: const Icon(Icons.download),
               ),
             ],

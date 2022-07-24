@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_video_cut/app/pages/home/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
@@ -261,12 +262,18 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void saveFileInGallery() => _saveFileInGallery();
+  void saveFileInGallery(BuildContext context) => _saveFileInGallery(context);
 
-  _saveFileInGallery() async {
+  _saveFileInGallery(BuildContext context) async {
     final clip = clips[selectedClip];
 
+    final infoDialog = InfoDialog();
+    infoDialog.show(context, text: 'Estamos salvando seu vídeo na galeria...');
+
+    await Future.delayed(const Duration(seconds: 2));
     await _saveFileInGalleryCase(clip.url);
+
+    infoDialog.close();
   }
 
   @action

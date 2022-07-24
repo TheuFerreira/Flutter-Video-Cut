@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 class InfoDialog {
   late BuildContext context;
 
-  void show(BuildContext context) {
+  void show(
+    BuildContext context, {
+    String text = 'Estamos cortando seu vídeo em pedacinhos...',
+  }) {
     this.context = context;
 
     showDialog(
       context: this.context,
-      builder: (_) {
-        return const _InfoDialog();
-      },
+      builder: (_) => _InfoDialog(
+        text: text,
+      ),
     );
   }
 
@@ -20,7 +23,8 @@ class InfoDialog {
 }
 
 class _InfoDialog extends StatelessWidget {
-  const _InfoDialog({Key? key}) : super(key: key);
+  final String text;
+  const _InfoDialog({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +36,13 @@ class _InfoDialog extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
             Text(
-              'Estamos cortando seu vídeo em pedacinhos...',
+              text,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),

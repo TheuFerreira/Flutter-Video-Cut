@@ -47,6 +47,6 @@ class AppModule extends Module {
         Bind.factory<CheckAppVersionCase>((i) => CheckAppVersionCaseImpl(i())),
         Bind.factory<UpdateAppCase>((i) => UpdateAppCaseImpl(i())),
         Bind.factory<SaveFileInGalleryCase>(
-            (i) => SaveFileInGalleryCaseImpl(i())),
+            (i) => SaveFileInGalleryCaseImpl(i(), i())),
       ];
 }
