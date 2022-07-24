@@ -13,4 +13,11 @@ class PathServiceImpl implements PathService {
       throw VideoCacheException();
     }
   }
+
+  @override
+  String getExtensionFileName(String path) {
+    final values = path.split('.');
+    final extension = values[values.length - 1];
+    return extension;
+  }
 }

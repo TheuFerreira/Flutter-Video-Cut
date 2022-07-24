@@ -34,19 +34,20 @@ class AppModule extends Module {
         Bind.factory<UrlService>((i) => UrlServiceImpl()),
         Bind.factory<VersionService>((i) => VersionServiceImpl()),
         // Use Cases
-        Bind.factory<PickVideoCase>((i) => PickVideoCaseImpl(i())),
-        Bind.factory<GetSecondsCase>((i) => GetSecondsCaseImpl(i())),
-        Bind.factory<CutVideoCase>((i) => CutVideoCaseImpl(i(), i())),
+        Bind.factory<PickVideoCase>((i) => PickVideoCaseImpl(i(), i())),
+        Bind.factory<GetSecondsCase>((i) => GetSecondsCaseImpl(i(), i())),
+        Bind.factory<CutVideoCase>((i) => CutVideoCaseImpl(i(), i(), i())),
         Bind.factory<CopyFileToCacheCase>(
-            (i) => CopyFileToCacheCaseImpl(i(), i())),
+            (i) => CopyFileToCacheCaseImpl(i(), i(), i())),
         Bind.factory<DeleteFileFromStorageCase>(
-            (i) => DeleteFileFromStorageCaseImpl(i())),
-        Bind.factory<ShareClipsCase>((i) => ShareClipsCaseImpl(i())),
-        Bind.factory<GetThumbnailsCase>((i) => GetThumbnailsCaseImpl(i())),
-        Bind.factory<OpenUrlCase>((i) => OpenUrlCaseImpl(i())),
-        Bind.factory<CheckAppVersionCase>((i) => CheckAppVersionCaseImpl(i())),
-        Bind.factory<UpdateAppCase>((i) => UpdateAppCaseImpl(i())),
+            (i) => DeleteFileFromStorageCaseImpl(i(), i())),
+        Bind.factory<ShareClipsCase>((i) => ShareClipsCaseImpl(i(), i())),
+        Bind.factory<GetThumbnailsCase>((i) => GetThumbnailsCaseImpl(i(), i())),
+        Bind.factory<OpenUrlCase>((i) => OpenUrlCaseImpl(i(), i())),
+        Bind.factory<CheckAppVersionCase>(
+            (i) => CheckAppVersionCaseImpl(i(), i())),
+        Bind.factory<UpdateAppCase>((i) => UpdateAppCaseImpl(i(), i())),
         Bind.factory<SaveFileInGalleryCase>(
-            (i) => SaveFileInGalleryCaseImpl(i(), i())),
+            (i) => SaveFileInGalleryCaseImpl(i(), i(), i(), i())),
       ];
 }

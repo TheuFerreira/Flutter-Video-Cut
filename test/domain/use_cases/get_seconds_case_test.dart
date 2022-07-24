@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
+import 'package:flutter_video_cut/domain/services/log_service.dart';
 import 'package:flutter_video_cut/domain/services/video_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
 import 'package:mockito/annotations.dart';
@@ -8,9 +9,18 @@ import 'package:mockito/mockito.dart';
 @GenerateMocks([VideoService])
 import 'get_seconds_case_test.mocks.dart';
 
+class MockLogService implements LogService {
+  @override
+  void writeError(String data) {}
+
+  @override
+  void writeInfo(String data) {}
+}
+
 void main() {
   final mockVideo = MockVideoService();
-  final getSecondsCase = GetSecondsCaseImpl(mockVideo);
+  final mockLog = MockLogService();
+  final getSecondsCase = GetSecondsCaseImpl(mockVideo, mockLog);
 
   test('Get seconds of video', () async {
     when(mockVideo.getSeconds(any)).thenAnswer((_) async => 50);
