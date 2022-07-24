@@ -1,6 +1,6 @@
+import 'package:flutter_video_cut/domain/services/datetime_service.dart';
 import 'package:flutter_video_cut/domain/services/log_service.dart';
 import 'package:flutter_video_cut/domain/services/path_service.dart';
-import 'package:intl/intl.dart';
 
 abstract class CacheFileByDateTimeCase {
   Future<String> call(String originalFile);
@@ -8,10 +8,12 @@ abstract class CacheFileByDateTimeCase {
 
 class CacheFileByDateTimeCaseImpl implements CacheFileByDateTimeCase {
   final PathService _pathService;
+  final DateTimeService _dateTimeService;
   final LogService _logService;
 
   CacheFileByDateTimeCaseImpl(
     this._pathService,
+    this._dateTimeService,
     this._logService,
   );
 
@@ -21,7 +23,8 @@ class CacheFileByDateTimeCaseImpl implements CacheFileByDateTimeCase {
     final cachePath = await _pathService.getCachePath();
 
     _logService.writeInfo('Converting current date to file name');
-    final fileName = Intl().date('yyyy-MM-dd-hh-mm-ss').format(DateTime.now());
+    final fileName =
+        _dateTimeService.getFormattedDateToFileName(DateTime.now());
 
     _logService.writeInfo('Getting a Extension of file');
     final extension = _pathService.getExtensionFileName(originalFile);
