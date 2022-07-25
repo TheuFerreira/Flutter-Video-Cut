@@ -291,6 +291,17 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void joinClips(BuildContext context) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.joinClips');
+    try {
+      return super.joinClips(context);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void changeTrack(double newValue) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.changeTrack');

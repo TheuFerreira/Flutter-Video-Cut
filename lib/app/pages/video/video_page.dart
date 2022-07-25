@@ -222,6 +222,13 @@ class _VideoPageState extends State<VideoPage> {
                 onPressed: () => _controller.saveFileInGallery(context),
                 icon: const Icon(Icons.download),
               ),
+              IconButton(
+                onPressed: () => _controller.joinClips(context),
+                icon: const Icon(
+                  FontAwesomeIcons.objectGroup,
+                  color: Colors.white38,
+                ),
+              ),
             ],
           ),
         ],

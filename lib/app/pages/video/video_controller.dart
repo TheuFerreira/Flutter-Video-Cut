@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
+import 'package:flutter_video_cut/app/pages/join/join_page.dart';
 import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
@@ -274,6 +275,15 @@ abstract class _VideoControllerBase with Store {
     await _saveFileInGalleryCase(clip.url);
 
     infoDialog.close();
+  }
+
+  @action
+  void joinClips(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => JoinPage(clips: clips),
+      ),
+    );
   }
 
   @action
