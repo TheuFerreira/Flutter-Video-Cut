@@ -52,4 +52,14 @@ class MockVideoService extends _i1.Mock implements _i2.VideoService {
               }),
               returnValue: Future<List<String>?>.value())
           as _i3.Future<List<String>?>);
+  @override
+  _i3.Future<String?> joinClips(
+          {String? pathTxtFile, String? destiny, String? baseFileName}) =>
+      (super.noSuchMethod(
+          Invocation.method(#joinClips, [], {
+            #pathTxtFile: pathTxtFile,
+            #destiny: destiny,
+            #baseFileName: baseFileName
+          }),
+          returnValue: Future<String?>.value()) as _i3.Future<String?>);
 }
