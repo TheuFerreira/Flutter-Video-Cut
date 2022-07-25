@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/domain/services/datetime_service.dart';
 import 'package:flutter_video_cut/domain/services/log_service.dart';
 import 'package:flutter_video_cut/domain/services/version_service.dart';
+import 'package:flutter_video_cut/domain/use_cases/join_clips_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/save_file_in_gallery_case.dart';
 import 'package:flutter_video_cut/infra/services/datetime_service_impl.dart';
 import 'package:flutter_video_cut/infra/services/log_service_impl.dart';
@@ -55,5 +56,7 @@ class AppModule extends Module {
         Bind.factory<UpdateAppCase>((i) => UpdateAppCaseImpl(i(), i())),
         Bind.factory<SaveFileInGalleryCase>(
             (i) => SaveFileInGalleryCaseImpl(i(), i())),
+        Bind.factory<JoinClipsCase>(
+            (i) => JoinClipsCaseImpl(i(), i(), i(), i())),
       ];
 }
