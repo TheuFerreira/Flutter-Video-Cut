@@ -1,5 +1,7 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/use_cases/join_clips_case.dart';
@@ -22,6 +24,7 @@ abstract class JoinControllerBase with Store {
   final _joinClipsCase = Modular.get<JoinClipsCaseImpl>();
 
   final _infoDialog = InfoDialog();
+  final _dialogService = DialogService();
 
   JoinControllerBase(this.clips);
 
@@ -49,17 +52,23 @@ abstract class JoinControllerBase with Store {
   }
 
   _join(BuildContext context) async {
-    _infoDialog.show(
-      context,
-      text: 'Estamos unindo seus clips selecionados...',
-    );
+    try {
+      _infoDialog.show(
+        context,
+        text: 'Estamos unindo seus clips selecionados...',
+      );
 
-    selecteds.sort((a, b) => a.index.compareTo(b.index));
+      selecteds.sort((a, b) => a.index.compareTo(b.index));
 
-    final newClip = await _joinClipsCase(selecteds);
-    final index = clips.indexOf(selecteds[0]);
-    clips[index] = newClip;
-
-    _infoDialog.close();
+      final newClip = await _joinClipsCase(selecteds);
+      final index = clips.indexOf(selecteds[0]);
+      clips[index] = newClip;
+    } catch (e, s) {
+      _dialogService.showMessageError('Error on Join Clips');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Join Clips');
+    } finally {
+      _infoDialog.close();
+    }
   }
 }

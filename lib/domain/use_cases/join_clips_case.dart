@@ -60,6 +60,7 @@ class JoinClipsCaseImpl implements JoinClipsCase {
     Clip finalClip = clips[0];
     finalClip.url = path;
 
+    _logService.writeInfo('Getting thumbnail of video...');
     final thumbnail = await _videoService.getThumbnail(finalClip.url);
     finalClip.thumbnail = thumbnail!;
 
