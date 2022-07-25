@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_video_cut/app/pages/share/components/clip_share_component.dart';
+import 'package:flutter_video_cut/app/components/clip_grid_component.dart';
 import 'package:flutter_video_cut/app/pages/share/share_controller.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -70,7 +70,7 @@ class _SharePageState extends State<SharePage> {
                 builder: (context) {
                   final clip = widget.clips[index];
                   final isSelected = _controller.selecteds.contains(clip);
-                  return ClipShareComponent(
+                  return ClipGridComponent(
                     clip: clip,
                     itemHeight: itemHeight,
                     itemWidth: itemWidth,

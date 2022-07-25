@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 
-class ClipShareComponent extends StatelessWidget {
+class ClipGridComponent extends StatelessWidget {
   final double itemHeight;
   final double itemWidth;
   final Clip clip;
   final String title;
   final bool isSelected;
   final Function(Clip) onTap;
-  const ClipShareComponent({
+  const ClipGridComponent({
     Key? key,
     required this.itemHeight,
     required this.itemWidth,
