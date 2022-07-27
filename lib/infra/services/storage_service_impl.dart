@@ -29,4 +29,11 @@ class StorageServiceImpl implements StorageService {
       subject: 'Serviço de Compartilhamento',
     );
   }
+
+  @override
+  bool checkFileExists(String url) {
+    final file = File(url);
+    final exists = file.existsSync();
+    return exists;
+  }
 }
