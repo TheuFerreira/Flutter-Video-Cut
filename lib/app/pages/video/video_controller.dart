@@ -47,9 +47,8 @@ abstract class _VideoControllerBase with Store {
   @observable
   double currentTime = 0;
 
-  @computed
-  double get totalTime =>
-      playerController!.value.duration.inMilliseconds.toDouble();
+  @observable
+  double totalTime = 1;
 
   @observable
   VideoPlayerController? playerController;
@@ -151,11 +150,13 @@ abstract class _VideoControllerBase with Store {
     _timerTrack?.cancel();
     playerController?.dispose();
 
+    totalTime = 1;
     final file = File(url);
     playerController = VideoPlayerController.file(file);
     await playerController!.initialize();
     await playerController!.setLooping(playbackType == PlaybackType.repeat);
     await playerController!.setPlaybackSpeed(playbackSpeed.value);
+    totalTime = playerController!.value.duration.inMilliseconds.toDouble();
 
     playerController!.addListener(() {
       videoEnded();
