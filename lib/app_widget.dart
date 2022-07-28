@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video_cut/app/pages/home/home_page.dart';
 import 'package:flutter_video_cut/app/shapes/track_shape.dart';
+import 'package:flutter_video_cut/app/utils/fonts.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class AppWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        fontFamily: 'BalsamiqSans',
+        fontFamily: defaulFontFamily,
         scaffoldBackgroundColor: const Color.fromARGB(255, 30, 30, 30),
         primarySwatch: Colors.amber,
         appBarTheme: const AppBarTheme(

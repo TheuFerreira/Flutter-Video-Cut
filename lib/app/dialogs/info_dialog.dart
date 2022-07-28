@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/utils/fonts.dart';
 import 'package:flutter_video_cut/domain/entities/text_info.dart';
 
 class InfoDialog {
@@ -61,7 +62,7 @@ class _InfoDialog extends StatelessWidget {
                 child: DefaultTextStyle(
                   style: const TextStyle(
                     fontSize: 18,
-                    fontFamily: 'BalsamiqSans',
+                    fontFamily: defaulFontFamily,
                   ),
                   child: AnimatedTextKit(
                     animatedTexts: texts!
