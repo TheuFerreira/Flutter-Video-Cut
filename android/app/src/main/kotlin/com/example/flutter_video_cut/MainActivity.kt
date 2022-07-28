@@ -59,10 +59,9 @@ class MainActivity: FlutterActivity() {
         val intent = Intent()
         intent.type = "video/*"
         intent.action = Intent.ACTION_SEND_MULTIPLE
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
-
-        startActivity(Intent.createChooser(intent, "Compartilhar Vídeos"))
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        intent.putExtra(Intent.EXTRA_STREAM, uris)
+        startActivity(intent)
     }
 
     private fun callSaveFileInGallery(arguments : ArrayList<String>) {
