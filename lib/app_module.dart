@@ -1,7 +1,9 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_video_cut/domain/services/datetime_service.dart';
 import 'package:flutter_video_cut/domain/services/log_service.dart';
 import 'package:flutter_video_cut/domain/services/version_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/save_file_in_gallery_case.dart';
+import 'package:flutter_video_cut/infra/services/datetime_service_impl.dart';
 import 'package:flutter_video_cut/infra/services/log_service_impl.dart';
 import 'package:flutter_video_cut/infra/services/version_service_impl.dart';
 import 'package:flutter_video_cut/domain/services/url_service.dart';
@@ -35,11 +37,12 @@ class AppModule extends Module {
         Bind.factory<StorageService>((i) => StorageServiceImpl()),
         Bind.factory<UrlService>((i) => UrlServiceImpl()),
         Bind.factory<VersionService>((i) => VersionServiceImpl()),
+        Bind.factory<DateTimeService>((i) => DateTimeServiceImpl()),
         Bind.factory<LogService>((i) => LogServiceImpl()),
         // Use Cases
         Bind.factory<PickVideoCase>((i) => PickVideoCaseImpl(i(), i())),
         Bind.factory<GetSecondsCase>((i) => GetSecondsCaseImpl(i(), i())),
-        Bind.factory<CutVideoCase>((i) => CutVideoCaseImpl(i(), i(), i())),
+        Bind.factory<CutVideoCase>((i) => CutVideoCaseImpl(i(), i(), i(), i())),
         Bind.factory<CopyFileToCacheCase>(
             (i) => CopyFileToCacheCaseImpl(i(), i(), i())),
         Bind.factory<DeleteFileFromStorageCase>(
@@ -51,6 +54,6 @@ class AppModule extends Module {
             (i) => CheckAppVersionCaseImpl(i(), i())),
         Bind.factory<UpdateAppCase>((i) => UpdateAppCaseImpl(i(), i())),
         Bind.factory<SaveFileInGalleryCase>(
-            (i) => SaveFileInGalleryCaseImpl(i(), i(), i(), i())),
+            (i) => SaveFileInGalleryCaseImpl(i(), i())),
       ];
 }
