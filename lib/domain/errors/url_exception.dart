@@ -1,0 +1,1 @@
+class UrlException implements Exception {}

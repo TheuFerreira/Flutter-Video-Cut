@@ -46,7 +46,17 @@
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
            android:value="ca-app-pub-2801250254321156~1627032582"/>
-    </application>
+
+       <provider
+           android:authorities="com.ferreira.myprovider"
+           android:name="javautils.GenericFileProvider"
+           android:grantUriPermissions="true"
+           android:exported="false">
+           <meta-data
+               android:name="android.support.FILE_PROVIDER_PATHS"
+               android:resource="@xml/provider_paths"/>
+       </provider>
+   </application>
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
