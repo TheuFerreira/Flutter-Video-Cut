@@ -266,6 +266,15 @@ abstract class _VideoControllerBase with Store {
   @action
   void saveFileInGallery(BuildContext context) => _saveFileInGallery(context);
   _saveFileInGallery(BuildContext context) async {
+    final save = await _dialogService.showQuestionDialog(
+      context,
+      'Confirmação de Salvamento',
+      'Tem certeza de que deseja salvar o clip selecionado na sua galeria?',
+    );
+    if (save != true) {
+      return;
+    }
+
     final clip = clips[selectedClip];
 
     final infoDialog = InfoDialog();
