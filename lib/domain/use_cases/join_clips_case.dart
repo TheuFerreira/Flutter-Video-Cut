@@ -42,8 +42,8 @@ class JoinClipsCaseImpl implements JoinClipsCase {
     }
 
     _logService.writeInfo('Generating a Base File Name');
-    final baseFileName =
-        _dateTimeService.getFormattedDateToFileName(DateTime.now());
+    String baseFileName = 'VideoCut-';
+    baseFileName += _dateTimeService.getFormattedDateToFileName(DateTime.now());
 
     _logService.writeInfo('Joining clips...');
     final path = await _videoService.joinClips(
@@ -57,13 +57,11 @@ class JoinClipsCaseImpl implements JoinClipsCase {
       throw Exception();
     }
 
-    Clip finalClip = clips[0];
-    finalClip.url = path;
-
     _logService.writeInfo('Getting thumbnail of video...');
-    final thumbnail = await _videoService.getThumbnail(finalClip.url);
-    finalClip.thumbnail = thumbnail!;
+    final thumbnail = await _videoService.getThumbnail(path);
 
+    final finalClip =
+        Clip(index: clips[0].index, url: path, thumbnail: thumbnail!);
     return finalClip;
   }
 }
