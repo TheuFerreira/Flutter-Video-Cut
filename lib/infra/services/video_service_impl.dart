@@ -74,4 +74,22 @@ class VideoServiceImpl implements VideoService {
 
     return thumbnail!;
   }
+
+  @override
+  Future<String?> joinClips({
+    required String pathTxtFile,
+    required String destiny,
+    required String baseFileName,
+  }) async {
+    final output = '$destiny/$baseFileName.mp4';
+    final command = '-y -f concat -safe 0 -i $pathTxtFile -c copy $output';
+
+    final result = await FFmpegKit.execute(command);
+    final returnCode = await result.getReturnCode();
+    if (ReturnCode.isSuccess(returnCode)) {
+      return output;
+    }
+
+    return null;
+  }
 }

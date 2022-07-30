@@ -6,13 +6,14 @@ import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart'
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
+import 'package:flutter_video_cut/domain/entities/text_info.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
-import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/get_thumbnail_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
 import 'package:mobx/mobx.dart';
 
@@ -29,8 +30,7 @@ abstract class _HomeControllerBase with Store {
   final _getSecondsCase = Modular.get<GetSecondsCase>();
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
-  final _getThumbnailCase = Modular.get<GetThumbnailsCase>();
-  final infoDialog = InfoDialog();
+  final _getThumbnailCase = Modular.get<GetThumbnailCase>();
 
   final _dialogService = DialogService();
 
@@ -101,8 +101,24 @@ abstract class _HomeControllerBase with Store {
     int secondsOfClip,
     BuildContext context,
   ) async {
+    final infoDialog = InfoDialog();
+
     try {
-      infoDialog.show(context);
+      infoDialog.show(
+        context,
+        texts: const [
+          TextInfo(text: 'Aguarde um pouco...'),
+          TextInfo(
+            text: 'Estamos cortando seu vídeo em pedacinhos...',
+            duration: 3500,
+          ),
+          TextInfo(
+            text: 'Estamos gerando as Thumbnails dos seus clips...',
+            duration: 4000,
+          ),
+          TextInfo(text: 'Aguarde mais um pouco...'),
+        ],
+      );
 
       final _cachedFile = await _copyFileToCacheCase(url);
 
@@ -112,7 +128,17 @@ abstract class _HomeControllerBase with Store {
         secondsOfClip: secondsOfClip,
       );
 
-      final tempClips = await _getThumbnailCase(videosCuted);
+      List<Clip> tempClips = [];
+      for (final videoCuted in videosCuted) {
+        final thumbnail = await _getThumbnailCase(videoCuted);
+        final clip = Clip(
+          index: videosCuted.indexOf(videoCuted),
+          thumbnail: thumbnail,
+          url: videoCuted,
+        );
+
+        tempClips.add(clip);
+      }
 
       if (_cachedFile != '') {
         _storageService.deleteFile(_cachedFile);
