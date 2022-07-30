@@ -8,7 +8,6 @@ import 'package:flutter_video_cut/app/pages/join/join_page.dart';
 import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
-import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
@@ -62,7 +61,6 @@ abstract class _VideoControllerBase with Store {
 
   bool get _isLoop => playbackType == PlaybackType.loop;
 
-  final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
   final _saveFileInGalleryCase = Modular.get<SaveFileInGalleryCase>();
   final _dialogService = DialogService();
@@ -272,7 +270,8 @@ abstract class _VideoControllerBase with Store {
   void joinClips(BuildContext context) {
     Navigator.of(context)
         .push<List<Clip>>(
-          MaterialPageRoute(builder: (_) => JoinPage(clips: clips)),
+          MaterialPageRoute(
+              builder: (_) => JoinPage(clips: List<Clip>.from(clips))),
         )
         .then(_joinClips);
   }
@@ -299,7 +298,7 @@ abstract class _VideoControllerBase with Store {
     playerController?.dispose();
 
     for (Clip clip in clips) {
-      _storageService.deleteFile(clip.url);
+      _deleteFileFromStorageCase(clip.url);
     }
   }
 }

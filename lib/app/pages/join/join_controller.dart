@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
+import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/join_clips_case.dart';
 import 'package:mobx/mobx.dart';
 
@@ -22,6 +23,7 @@ abstract class JoinControllerBase with Store {
   List<Clip> clips = ObservableList<Clip>();
 
   final _joinClipsCase = Modular.get<JoinClipsCaseImpl>();
+  final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
 
   final _infoDialog = InfoDialog();
   final _dialogService = DialogService();
@@ -52,6 +54,7 @@ abstract class JoinControllerBase with Store {
   }
 
   _join(BuildContext context) async {
+    List<Clip> clipsCopy = [];
     try {
       _infoDialog.show(
         context,
@@ -61,8 +64,13 @@ abstract class JoinControllerBase with Store {
       selecteds.sort((a, b) => a.index.compareTo(b.index));
 
       final newClip = await _joinClipsCase(selecteds);
-      final index = clips.indexOf(selecteds[0]);
-      clips[index] = newClip;
+      clipsCopy = List<Clip>.from(clips);
+
+      clipsCopy.add(newClip);
+      clipsCopy.removeWhere((element) => selecteds.contains(element));
+      selecteds.forEach(_deleteSelectedClipFromStorage);
+
+      clipsCopy.sort((a, b) => a.index.compareTo(b.index));
     } catch (e, s) {
       _dialogService.showMessageError('Error on Join Clips');
       await FirebaseCrashlytics.instance
@@ -70,5 +78,15 @@ abstract class JoinControllerBase with Store {
     } finally {
       _infoDialog.close();
     }
+
+    if (clipsCopy.isEmpty) {
+      return;
+    }
+
+    Navigator.of(context).pop(clipsCopy);
+  }
+
+  _deleteSelectedClipFromStorage(Clip clip) {
+    _deleteFileFromStorageCase(clip.url);
   }
 }

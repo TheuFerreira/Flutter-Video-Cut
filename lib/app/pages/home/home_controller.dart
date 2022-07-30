@@ -113,7 +113,7 @@ abstract class _HomeControllerBase with Store {
             duration: 3500,
           ),
           TextInfo(
-            text: 'Estamos gerando as Thumbnails do seus clips...',
+            text: 'Estamos gerando as Thumbnails dos seus clips...',
             duration: 4000,
           ),
           TextInfo(text: 'Aguarde mais um pouco...'),
