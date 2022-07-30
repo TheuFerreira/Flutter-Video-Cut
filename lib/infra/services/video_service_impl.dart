@@ -5,10 +5,10 @@ import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/video_service.dart';
+import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
 
 class VideoServiceImpl implements VideoService {
-  final _methodChannel =
-      const MethodChannel('com.example.flutter_video_cut.path');
+  final _methodChannel = const MethodChannel(methodChannelName);
 
   @override
   Future<int> getSeconds(String path) async {
