@@ -35,6 +35,10 @@ class MainActivity: FlutterActivity() {
                         val path = call.arguments<String>()!!
                         callGetThumbnail(path, result)
                     }
+                    "openUrl" -> {
+                        val url = call.arguments<String>()!!
+                        callOpenUrl(url, result)
+                    }
                     /*"getSharedData" -> {
                         callHandler()
                         result.success(sharedData)
@@ -77,6 +81,19 @@ class MainActivity: FlutterActivity() {
 
         val byteArray = ConvertBitmapToByteArray().execute(bitmap)
         result.success(byteArray)
+    }
+
+    private fun callOpenUrl(url: String, result: MethodChannel.Result) {
+        try {
+            val uri = Uri.parse(url)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = uri
+            startActivity(intent)
+
+            result.success(true)
+        } catch (e: Exception) {
+            result.success(false)
+        }
     }
 
     /*private fun callHandler() {
