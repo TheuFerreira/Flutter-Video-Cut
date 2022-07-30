@@ -8,6 +8,7 @@ import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPage extends StatefulWidget {
@@ -24,11 +25,75 @@ class VideoPage extends StatefulWidget {
 class _VideoPageState extends State<VideoPage> {
   final _controller = VideoController();
   final _scrollClips = ScrollController();
+  final _listKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
     super.initState();
-    _controller.load(widget.clips);
+    _controller.start(widget.clips);
+    _controller.clips.observe(_observeListChanges);
+  }
+
+  _observeListChanges(ListChange<Clip> listChange) {
+    _onRangeChanges(listChange);
+    _onElementChanges(listChange);
+  }
+
+  _onRangeChanges(ListChange<Clip> listChange) {
+    final rangeChanges = listChange.rangeChanges;
+    if (rangeChanges == null) {
+      return;
+    }
+
+    final range = rangeChanges.first;
+    final oldValues = range.oldValues;
+    if (oldValues == null || range.newValues != null) {
+      return;
+    }
+
+    for (final clip in oldValues) {
+      final index = oldValues.indexOf(clip);
+      _listRemoveItem(0, index, clip);
+    }
+  }
+
+  _onElementChanges(ListChange<Clip> listChange) {
+    final elementChanges = listChange.elementChanges;
+    if (elementChanges == null) {
+      return;
+    }
+
+    for (final element in elementChanges) {
+      if (element.type == OperationType.add) {
+        _listKey.currentState!.insertItem(element.index);
+      } else if (element.type == OperationType.remove) {
+        final index = element.index;
+        final oldValue = element.oldValue!;
+        _listRemoveItem(index, index, oldValue);
+      }
+    }
+  }
+
+  _listRemoveItem(int positionToRemove, int index, Clip clip) {
+    _listKey.currentState!.removeItem(
+      positionToRemove,
+      (context, animation) {
+        return SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ),
+          axis: Axis.horizontal,
+          child: ClipComponent(
+            index: index,
+            title: 'Clip ${index + 1}',
+            thumbnail: clip.thumbnail,
+            isSelected: false,
+            onTap: (_) {},
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -149,33 +214,37 @@ class _VideoPageState extends State<VideoPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: Observer(
-                    builder: (builder) {
-                      final clips = _controller.clips;
-
-                      return AnimatedList(
-                        key: _controller.listKey,
-                        controller: _scrollClips,
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        initialItemCount: clips.length,
-                        itemBuilder: (ctx, index, animation) => Observer(
-                          builder: (context) {
-                            final isSelected =
-                                _controller.selectedClip == index;
-                            return ClipComponent(
+                  child: AnimatedList(
+                    key: _listKey,
+                    controller: _scrollClips,
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    initialItemCount: widget.clips.length,
+                    itemBuilder: (ctx, index, animation) {
+                      return Observer(
+                        builder: (_) {
+                          final clip = _controller.clips[index];
+                          final selectedClip = _controller.selectedClip;
+                          final isSelected = selectedClip == index;
+                          return SizeTransition(
+                            sizeFactor: CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOut,
+                            ),
+                            axis: Axis.horizontal,
+                            child: ClipComponent(
                               index: index,
                               title: 'Clip ${index + 1}',
-                              thumbnail: clips[index].thumbnail,
+                              thumbnail: clip.thumbnail,
                               isSelected: isSelected,
-                              onTap: (index) => _controller.selectClip(index),
-                            );
-                          },
-                        ),
+                              onTap: _controller.selectClip,
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
-                ),
+                )
               ],
             ),
           ),

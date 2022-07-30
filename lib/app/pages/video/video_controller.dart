@@ -9,7 +9,6 @@ import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
-import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
@@ -22,25 +21,32 @@ part 'video_controller.g.dart';
 class VideoController = _VideoControllerBase with _$VideoController;
 
 abstract class _VideoControllerBase with Store {
-  final listKey = GlobalKey<AnimatedListState>();
+  @observable
+  bool isLoaded = false;
 
   @observable
-  List<Clip> clips = ObservableList<Clip>();
+  ObservableList<Clip> clips = ObservableList<Clip>();
+
+  @observable
+  int selectedClip = -1;
+
+  @computed
+  bool get isFirstClip => selectedClip == 0;
+
+  @computed
+  bool get isLastClip {
+    if (clips.isEmpty) {
+      return false;
+    }
+
+    return selectedClip == clips.length - 1;
+  }
 
   @observable
   PlaybackType playbackType = PlaybackType.repeatOne;
 
   @observable
   PlaybackSpeed playbackSpeed = playbackSpeeds[0];
-
-  @observable
-  int selectedClip = 0;
-
-  @computed
-  bool get isFirstClip => selectedClip == 0;
-
-  @computed
-  bool get isLastClip => selectedClip == clips.length - 1;
 
   @observable
   bool isPlaying = false;
@@ -55,9 +61,6 @@ abstract class _VideoControllerBase with Store {
   @observable
   VideoPlayerController? playerController;
 
-  @observable
-  bool isLoaded = false;
-
   final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
   final _saveFileInGalleryCase = Modular.get<SaveFileInGalleryCase>();
@@ -66,140 +69,48 @@ abstract class _VideoControllerBase with Store {
   Timer? _timerTrack;
 
   @action
-  Future<void> load(List<Clip> tempClips) async {
+  void start(List<Clip> tempClips) => _start(tempClips);
+  _start(List<Clip> tempClips) async {
+    isLoaded = false;
+
     for (final clip in tempClips) {
       clips.add(clip);
     }
 
-    loadFile(clips[0].url);
+    selectedClip = 0;
+    await _loadClip(clips[selectedClip]);
   }
 
   @action
-  Future<void> deleteClip(BuildContext context) async {
-    final delete = await _dialogService.showQuestionDialog(
-      context,
-      'Confirmação de Exclusão',
-      'Tem certeza de que deseja excluir o clip selecionado?',
-    );
-    if (delete != true) {
-      return;
-    }
-
-    isPlaying = false;
-
-    int index = selectedClip;
-
-    listKey.currentState!.removeItem(
-      index,
-      (context, animation) {
-        return SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          ),
-          axis: Axis.horizontal,
-          child: ClipComponent(
-            index: index,
-            thumbnail: clips[index].thumbnail,
-            isSelected: true,
-            title: '',
-            onTap: (index) {},
-          ),
-        );
-      },
-    );
-
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
-
-    Clip clip = clips[index];
-    clips.remove(clip);
-
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    _deleteFileFromStorageCase(clip.url);
-
-    if (clips.isEmpty) {
-      Navigator.pop(context);
-      return;
-    }
-
-    final nextIndex = index == 0 ? index : index - 1;
-    await selectClip(nextIndex);
-  }
-
-  @action
-  void previousClip() => selectClip(selectedClip - 1);
-
-  @action
-  void nextClip() => selectClip(selectedClip + 1);
-
-  @action
-  Future<void> selectClip(int index) async {
-    isPlaying = false;
-
+  void selectClip(int index) => _selectClip(index);
+  _selectClip(int index) async {
     selectedClip = index;
-    final clip = clips[index];
-    await loadFile(clip.url);
+    await _loadClip(clips[selectedClip]);
   }
 
-  @action
-  Future<void> loadFile(String url) async {
+  _loadClip(Clip clip) async {
     isLoaded = false;
 
     currentTime = 0;
     _timerTrack?.cancel();
     playerController?.dispose();
 
-    final file = File(url);
+    final file = File(clip.url);
     playerController = VideoPlayerController.file(file);
     await playerController!.initialize();
     await playerController!.setLooping(playbackType == PlaybackType.repeat);
     await playerController!.setPlaybackSpeed(playbackSpeed.value);
 
     playerController!.addListener(() {
-      videoEnded();
+      _videoEnded();
       _checkIsPlaying();
-      _timer();
+      _updateCurrentTime();
     });
 
     _startTimer();
 
     isLoaded = true;
   }
-
-  @action
-  Future<void> resumeVideo() async {
-    if (!playerController!.value.isPlaying) {
-      await playerController!.play();
-    } else {
-      await playerController!.pause();
-    }
-
-    _checkIsPlaying();
-  }
-
-  void _checkIsPlaying() {
-    if (playerController!.value.isPlaying) {
-      isPlaying = true;
-      _startTimer();
-    } else {
-      isPlaying = false;
-      _timerTrack?.cancel();
-    }
-  }
-
-  void _startTimer() => _timerTrack = Timer.periodic(
-        const Duration(milliseconds: 500),
-        (_) => _timer(),
-      );
-
-  void _timer() =>
-      currentTime = playerController!.value.position.inMilliseconds.toDouble();
-
-  @action
-  void videoEnded() => _videoEnded();
 
   _videoEnded() async {
     final playerValue = playerController!.value;
@@ -215,27 +126,48 @@ abstract class _VideoControllerBase with Store {
       selectedClip = 0;
     }
 
-    await selectClip(selectedClip);
+    selectClip(selectedClip);
   }
 
   @action
-  void startChangeTrack(double newValue) {
-    _timerTrack?.cancel();
-
-    changeTrack(newValue);
-  }
+  void previousClip() => _selectClip(selectedClip - 1);
 
   @action
-  void endChangeTrack(double newValue) {
-    changeTrack(newValue);
+  void nextClip() => _selectClip(selectedClip + 1);
 
-    _startTimer();
-    _timer();
+  @action
+  void resumeVideo() => _resumeVideo();
+  _resumeVideo() async {
+    if (!playerController!.value.isPlaying) {
+      await playerController!.play();
+    } else {
+      await playerController!.pause();
+    }
+
+    _checkIsPlaying();
+  }
+
+  _checkIsPlaying() {
+    if (playerController!.value.isPlaying) {
+      isPlaying = true;
+      _startTimer();
+    } else {
+      isPlaying = false;
+      _timerTrack?.cancel();
+    }
+  }
+
+  _startTimer() {
+    const duration = Duration(milliseconds: 500);
+
+    _timerTrack = Timer.periodic(
+      duration,
+      (_) => _updateCurrentTime(),
+    );
   }
 
   @action
   void changePlaybackType() => _changePlaybackType();
-
   _changePlaybackType() async {
     if (playbackType == PlaybackType.repeatOne) {
       playbackType = PlaybackType.repeat;
@@ -250,7 +182,6 @@ abstract class _VideoControllerBase with Store {
 
   @action
   void changePlaybackSpeed() => _changePlaybackSpeed();
-
   _changePlaybackSpeed() async {
     int index = playbackSpeeds.indexOf(playbackSpeed);
     index++;
@@ -263,8 +194,61 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void saveFileInGallery(BuildContext context) => _saveFileInGallery(context);
+  void startChangeTrack(double newValue) {
+    _timerTrack?.cancel();
 
+    changeTrack(newValue);
+  }
+
+  @action
+  void endChangeTrack(double newValue) {
+    changeTrack(newValue);
+
+    _startTimer();
+    _updateCurrentTime();
+  }
+
+  @action
+  void changeTrack(double newValue) =>
+      playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
+
+  _updateCurrentTime() {
+    final milliseconds = playerController!.value.position.inMilliseconds;
+    currentTime = milliseconds.toDouble();
+  }
+
+  @action
+  void deleteClip(BuildContext context) => _deleteClip(context);
+  _deleteClip(BuildContext context) async {
+    final delete = await _dialogService.showQuestionDialog(
+      context,
+      'Confirmação de Exclusão',
+      'Tem certeza de que deseja excluir o clip selecionado?',
+    );
+    if (delete != true) {
+      return;
+    }
+
+    isPlaying = false;
+
+    final index = selectedClip;
+    Clip clip = clips[index];
+    clips.remove(clip);
+
+    _deleteFileFromStorageCase(clip.url);
+    _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
+
+    if (clips.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+
+    final nextIndex = index == 0 ? index : index - 1;
+    await _selectClip(nextIndex);
+  }
+
+  @action
+  void saveFileInGallery(BuildContext context) => _saveFileInGallery(context);
   _saveFileInGallery(BuildContext context) async {
     final clip = clips[selectedClip];
 
@@ -279,16 +263,29 @@ abstract class _VideoControllerBase with Store {
 
   @action
   void joinClips(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => JoinPage(clips: clips),
-      ),
-    );
+    Navigator.of(context)
+        .push<List<Clip>>(
+          MaterialPageRoute(builder: (_) => JoinPage(clips: clips)),
+        )
+        .then(_joinClips);
   }
 
-  @action
-  void changeTrack(double newValue) =>
-      playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
+  _joinClips(List<Clip>? newClips) async {
+    if (newClips == null) {
+      return;
+    }
+
+    isLoaded = false;
+    selectedClip = -1;
+    clips.clear();
+
+    for (final clip in newClips) {
+      clips.add(clip);
+    }
+
+    selectedClip = 0;
+    await _loadClip(clips[selectedClip]);
+  }
 
   void dispose() {
     _timerTrack?.cancel();
