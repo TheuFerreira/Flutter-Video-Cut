@@ -5,6 +5,7 @@ import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/get_thumbnail_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/join_clips_case.dart';
 import 'package:mobx/mobx.dart';
 
@@ -24,6 +25,7 @@ abstract class JoinControllerBase with Store {
 
   final _joinClipsCase = Modular.get<JoinClipsCaseImpl>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
+  final _getThumbnailCase = Modular.get<GetThumbnailCase>();
 
   final _infoDialog = InfoDialog();
   final _dialogService = DialogService();
@@ -64,6 +66,7 @@ abstract class JoinControllerBase with Store {
       selecteds.sort((a, b) => a.index.compareTo(b.index));
 
       final newClip = await _joinClipsCase(selecteds);
+      newClip.thumbnail = await _getThumbnailCase(newClip.url);
       clipsCopy = List<Clip>.from(clips);
 
       clipsCopy.add(newClip);

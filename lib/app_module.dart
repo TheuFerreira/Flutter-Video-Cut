@@ -19,7 +19,7 @@ import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart'
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
-import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/get_thumbnail_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/open_url_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
@@ -49,7 +49,7 @@ class AppModule extends Module {
         Bind.factory<DeleteFileFromStorageCase>(
             (i) => DeleteFileFromStorageCaseImpl(i(), i())),
         Bind.factory<ShareClipsCase>((i) => ShareClipsCaseImpl(i(), i())),
-        Bind.factory<GetThumbnailsCase>((i) => GetThumbnailsCaseImpl(i(), i())),
+        Bind.factory<GetThumbnailCase>((i) => GetThumbnailCaseImpl(i(), i())),
         Bind.factory<OpenUrlCase>((i) => OpenUrlCaseImpl(i(), i())),
         Bind.factory<CheckAppVersionCase>(
             (i) => CheckAppVersionCaseImpl(i(), i())),

@@ -3,9 +3,9 @@ import 'dart:typed_data';
 class Clip {
   final int index;
   late String url;
-  late Uint8List thumbnail;
+  late Uint8List? thumbnail;
 
-  Clip({required this.index, required this.url, required this.thumbnail});
+  Clip({required this.index, required this.url, this.thumbnail});
 
   @override
   bool operator ==(Object other) =>

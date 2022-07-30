@@ -88,7 +88,7 @@ class _VideoPageState extends State<VideoPage> {
           child: ClipComponent(
             index: index,
             title: 'Clip ${index + 1}',
-            thumbnail: clip.thumbnail,
+            thumbnail: clip.thumbnail!,
             isSelected: false,
             onTap: (_) {},
           ),
@@ -236,7 +236,7 @@ class _VideoPageState extends State<VideoPage> {
                             child: ClipComponent(
                               index: index,
                               title: 'Clip ${index + 1}',
-                              thumbnail: clip.thumbnail,
+                              thumbnail: clip.thumbnail!,
                               isSelected: isSelected,
                               onTap: _controller.selectClip,
                             ),

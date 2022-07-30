@@ -38,7 +38,7 @@ class ClipGridComponent extends StatelessWidget {
                 width: isSelected ? 3 : 2,
               ),
             ),
-            child: Image.memory(clip.thumbnail),
+            child: Image.memory(clip.thumbnail!),
           ),
         ),
         const SizedBox(height: 4),
