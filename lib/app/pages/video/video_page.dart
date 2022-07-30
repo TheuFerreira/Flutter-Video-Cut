@@ -1,3 +1,4 @@
+import 'package:animate_icons/animate_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/components/logo_component.dart';
@@ -178,21 +179,21 @@ class _VideoPageState extends State<VideoPage> {
                       );
                     },
                   ),
-                  Observer(
-                    builder: (context) {
-                      final isPlaying = _controller.isPlaying;
-                      if (isPlaying) {
-                        return ActionButtonComponent(
-                          icon: FontAwesomeIcons.pause,
-                          size: 40,
-                          onTap: _controller.resumeVideo,
-                        );
-                      }
-                      return ActionButtonComponent(
-                        icon: FontAwesomeIcons.play,
-                        size: 40,
-                        onTap: _controller.resumeVideo,
-                      );
+                  AnimateIcons(
+                    controller: _controller.animateIconController,
+                    startIcon: FontAwesomeIcons.play,
+                    endIcon: FontAwesomeIcons.pause,
+                    size: 40,
+                    startIconColor: Colors.amber,
+                    endIconColor: Colors.amber,
+                    duration: const Duration(milliseconds: 200),
+                    onStartIconPress: () {
+                      _controller.resumeVideo();
+                      return false;
+                    },
+                    onEndIconPress: () {
+                      _controller.resumeVideo();
+                      return false;
                     },
                   ),
                   Observer(

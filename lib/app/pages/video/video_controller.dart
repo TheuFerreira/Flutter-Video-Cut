@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:animate_icons/animate_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
@@ -20,6 +21,8 @@ part 'video_controller.g.dart';
 class VideoController = _VideoControllerBase with _$VideoController;
 
 abstract class _VideoControllerBase with Store {
+  final animateIconController = AnimateIconController();
+
   @observable
   bool isLoaded = false;
 
@@ -47,8 +50,7 @@ abstract class _VideoControllerBase with Store {
   @observable
   PlaybackSpeed playbackSpeed = playbackSpeeds[0];
 
-  @observable
-  bool isPlaying = false;
+  bool _isPlaying = false;
 
   @observable
   double currentTime = 0;
@@ -104,7 +106,7 @@ abstract class _VideoControllerBase with Store {
 
     if (_isLoop) {
       await playerController!.play();
-      isPlaying = true;
+      _updatePlaying(true);
     }
 
     playerController!.addListener(() {
@@ -154,11 +156,20 @@ abstract class _VideoControllerBase with Store {
 
   _checkIsPlaying() {
     if (playerController!.value.isPlaying) {
-      isPlaying = true;
+      _updatePlaying(true);
       _startTimer();
     } else {
-      isPlaying = false;
+      _updatePlaying(false);
       _timerTrack?.cancel();
+    }
+  }
+
+  _updatePlaying(bool value) {
+    _isPlaying = value;
+    if (_isPlaying) {
+      animateIconController.animateToEnd();
+    } else {
+      animateIconController.animateToStart();
     }
   }
 
@@ -234,7 +245,7 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
-    isPlaying = false;
+    _updatePlaying(false);
 
     final index = selectedClip;
     Clip clip = clips[index];
