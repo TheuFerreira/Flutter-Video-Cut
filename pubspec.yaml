@@ -38,7 +38,6 @@ dependencies:
   video_player: ^2.4.2
   ffmpeg_kit_flutter_min: 4.5.1-LTS
   path_provider: ^2.0.10
-  video_thumbnail: ^0.5.0
   firebase_crashlytics: ^2.8.0
   firebase_core: ^1.17.0
   new_version: ^0.3.0
