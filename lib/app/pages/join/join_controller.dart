@@ -15,7 +15,7 @@ class JoinController = JoinControllerBase with _$JoinController;
 
 abstract class JoinControllerBase with Store {
   @computed
-  bool get hasSelected => selecteds.length == 2;
+  bool get hasSelected => selecteds.length >= 2;
 
   @observable
   List<Clip> selecteds = ObservableList<Clip>();
