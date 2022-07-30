@@ -6,15 +6,12 @@ import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
-import android.util.Size
-import androidx.annotation.RequiresApi
-import androidx.core.net.toFile
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import use_cases.ConvertBitmapToByteArray
+import use_cases.GetDimensionsOfVideo
 import use_cases.GetUriFromPath
-import java.io.ByteArrayOutputStream
 import java.io.File
 
 class MainActivity: FlutterActivity() {
@@ -67,22 +64,19 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun callGetThumbnail(path: String, result: MethodChannel.Result) {
+        val bitmap: Bitmap
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val file = File(path);
-            // TODO: Get Resolution of video, https://stackoverflow.com/questions/9077436/how-to-determine-video-width-and-height-on-android, https://www.google.com/search?q=get+dimensions+of+video+in+android+in+java&sxsrf=ALiCzsbQ0TjbHFeLnYP8ieNc2yGAzEkzzw%3A1659203851084&ei=C3HlYu_mBM-p5OUPjoWE4Aw&ved=0ahUKEwivmJ2BmKH5AhXPFLkGHY4CAcwQ4dUDCA4&uact=5&oq=get+dimensions+of+video+in+android+in+java&gs_lcp=Cgdnd3Mtd2l6EAMyBwghEKABEAoyBwghEKABEAoyBwghEKABEAoyBAghEBU6BwgAEEcQsAM6BQghEKABOgoIIRAeEA8QFhAdOggIIRAeEBYQHUoECEEYAEoECEYYAFC5A1iGCmC-CmgBcAF4AIAB6wGIAfAJkgEFMC41LjKYAQCgAQHIAQjAAQE&sclient=gws-wiz
-            val size = Size(500, 500)
-            val bitmap = ThumbnailUtils.createVideoThumbnail(file, size, null)
-
-            val stream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            val byteArray = stream.toByteArray()
-            bitmap.recycle()
-
-            result.success(byteArray)
+            val file = File(path)
+            val size = GetDimensionsOfVideo().execute(path)
+            bitmap = ThumbnailUtils.createVideoThumbnail(file, size, null)
         } else {
-            // TODO: Old devices, https://developer.android.com/reference/android/media/ThumbnailUtils.html#createVideoThumbnail(java.lang.String,%20int)
+            @Suppress("DEPRECATION")
+            bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)!!
         }
 
+        val byteArray = ConvertBitmapToByteArray().execute(bitmap)
+        result.success(byteArray)
     }
 
     /*private fun callHandler() {
