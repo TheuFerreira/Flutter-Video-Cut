@@ -5,8 +5,8 @@ import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
+import 'package:flutter_video_cut/app/utils/texts.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
-import 'package:flutter_video_cut/domain/entities/text_info.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
@@ -106,18 +106,7 @@ abstract class _HomeControllerBase with Store {
     try {
       infoDialog.show(
         context,
-        texts: const [
-          TextInfo(text: 'Aguarde um pouco...'),
-          TextInfo(
-            text: 'Estamos cortando seu vídeo em pedacinhos...',
-            duration: 3500,
-          ),
-          TextInfo(
-            text: 'Estamos gerando as Thumbnails dos seus clips...',
-            duration: 4000,
-          ),
-          TextInfo(text: 'Aguarde mais um pouco...'),
-        ],
+        texts: cutVideoTexts,
       );
 
       final _cachedFile = await _copyFileToCacheCase(url);
