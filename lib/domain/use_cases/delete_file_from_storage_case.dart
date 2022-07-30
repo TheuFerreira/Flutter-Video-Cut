@@ -16,6 +16,13 @@ class DeleteFileFromStorageCaseImpl implements DeleteFileFromStorageCase {
 
   @override
   void call(String url) {
+    _logService.writeInfo('Checking if file exists in Storage');
+    final exists = _storageService.checkFileExists(url);
+    if (!exists) {
+      _logService.writeInfo('File doesn\'t exists');
+      return;
+    }
+
     _logService.writeError('Deleting file from Storage Case');
     _storageService.deleteFile(url);
   }

@@ -6,6 +6,7 @@ import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart'
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
+import 'package:flutter_video_cut/domain/entities/text_info.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
@@ -30,7 +31,6 @@ abstract class _HomeControllerBase with Store {
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
   final _getThumbnailCase = Modular.get<GetThumbnailsCase>();
-  final infoDialog = InfoDialog();
 
   final _dialogService = DialogService();
 
@@ -101,8 +101,24 @@ abstract class _HomeControllerBase with Store {
     int secondsOfClip,
     BuildContext context,
   ) async {
+    final infoDialog = InfoDialog();
+
     try {
-      infoDialog.show(context);
+      infoDialog.show(
+        context,
+        texts: const [
+          TextInfo(text: 'Aguarde um pouco...'),
+          TextInfo(
+            text: 'Estamos cortando seu vídeo em pedacinhos...',
+            duration: 3500,
+          ),
+          TextInfo(
+            text: 'Estamos gerando as Thumbnails do seus clips...',
+            duration: 4000,
+          ),
+          TextInfo(text: 'Aguarde mais um pouco...'),
+        ],
+      );
 
       final _cachedFile = await _copyFileToCacheCase(url);
 

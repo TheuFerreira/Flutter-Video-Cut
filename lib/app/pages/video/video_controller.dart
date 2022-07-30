@@ -54,12 +54,13 @@ abstract class _VideoControllerBase with Store {
   @observable
   double currentTime = 0;
 
-  @computed
-  double get totalTime =>
-      playerController!.value.duration.inMilliseconds.toDouble();
+  @observable
+  double totalTime = 1;
 
   @observable
   VideoPlayerController? playerController;
+
+  bool get _isLoop => playbackType == PlaybackType.loop;
 
   final _storageService = Modular.get<StorageService>();
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
@@ -92,6 +93,7 @@ abstract class _VideoControllerBase with Store {
     isLoaded = false;
 
     currentTime = 0;
+    totalTime = 1;
     _timerTrack?.cancel();
     playerController?.dispose();
 
@@ -100,6 +102,12 @@ abstract class _VideoControllerBase with Store {
     await playerController!.initialize();
     await playerController!.setLooping(playbackType == PlaybackType.repeat);
     await playerController!.setPlaybackSpeed(playbackSpeed.value);
+    totalTime = playerController!.value.duration.inMilliseconds.toDouble();
+
+    if (_isLoop) {
+      await playerController!.play();
+      isPlaying = true;
+    }
 
     playerController!.addListener(() {
       _videoEnded();
@@ -115,9 +123,8 @@ abstract class _VideoControllerBase with Store {
   _videoEnded() async {
     final playerValue = playerController!.value;
     final isEnded = playerValue.duration == playerValue.position;
-    final isLoop = playbackType == PlaybackType.loop;
 
-    if (!isEnded || playerValue.isPlaying || !isLoop) {
+    if (!isEnded || playerValue.isPlaying || !_isLoop) {
       return;
     }
 
@@ -173,7 +180,7 @@ abstract class _VideoControllerBase with Store {
       playbackType = PlaybackType.repeat;
     } else if (playbackType == PlaybackType.repeat) {
       playbackType = PlaybackType.loop;
-    } else if (playbackType == PlaybackType.loop) {
+    } else if (_isLoop) {
       playbackType = PlaybackType.repeatOne;
     }
 
