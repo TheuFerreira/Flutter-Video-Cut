@@ -39,12 +39,14 @@ class MockVideoService extends _i1.Mock implements _i2.VideoService {
   _i3.Future<List<String>?> cutVideo(
           {String? url,
           String? destiny,
+          String? baseFileName,
           int? secondsOfClip,
           int? seconds = 20}) =>
       (super.noSuchMethod(
               Invocation.method(#cutVideo, [], {
                 #url: url,
                 #destiny: destiny,
+                #baseFileName: baseFileName,
                 #secondsOfClip: secondsOfClip,
                 #seconds: seconds
               }),
