@@ -1,26 +1,48 @@
 package com.example.flutter_video_cut
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import use_cases.ConvertBitmapToByteArray
-import use_cases.GetDimensionsOfVideo
-import use_cases.GetUriFromPath
+import use_cases.*
 import java.io.File
+import java.io.IOException
 
 class MainActivity: FlutterActivity() {
     //private var sharedData: String = ""
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+
+            val permissions = ArrayList<String>()
+            if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+
+            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+
+            if (permissions.isNotEmpty()) {
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 102)
+            }
+        }
         //callHandler()
-    }*/
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -39,15 +61,16 @@ class MainActivity: FlutterActivity() {
                         val url = call.arguments<String>()!!
                         callOpenUrl(url, result)
                     }
+                    "saveInDCIM" -> {
+                        val path = call.arguments<String>()
+                        callSaveInDCIM(path!!, result)
+                    }
                     /*"getSharedData" -> {
                         callHandler()
                         result.success(sharedData)
                         sharedData = ""
                     }
-                    "saveFileInGallery" -> {
-                        //val arguments = call.arguments as ArrayList<String>
-                        //callSaveFileInGallery(arguments)
-                    }*/
+                    */
                 }
             }
     }
@@ -96,6 +119,67 @@ class MainActivity: FlutterActivity() {
         }
     }
 
+    private fun callSaveInDCIM(path: String, result: MethodChannel.Result) {
+        val resolver = context.contentResolver
+
+        val uri: Uri = GetUriFromPath().execute(context, path)
+        val mimeType = resolver.getType(uri)
+
+        val fileName = GetFileName().execute(resolver, uri)
+        val fileNameWithoutExtension = fileName.split(".")[0]
+
+        val uriSaved: Uri?
+        val contentValues: ContentValues
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentValues = ContentValues().apply {
+                put(MediaStore.Video.Media.TITLE, fileName)
+                put(MediaStore.Video.Media.DISPLAY_NAME, fileNameWithoutExtension)
+                put(MediaStore.Video.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM + "/Video Cut")
+                put(MediaStore.Video.Media.MIME_TYPE, mimeType)
+                put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
+            }
+
+            val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            uriSaved = resolver.insert(collection, contentValues)
+        } else {
+            @Suppress("DEPRECATION")
+            val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + "/Video Cut"
+            File("$directory/").mkdirs()
+
+            val createdVideo = File(directory, fileName)
+            contentValues = ContentValues().apply {
+                put(MediaStore.Video.Media.TITLE, fileName)
+                put(MediaStore.Video.Media.DISPLAY_NAME, fileName)
+                put(MediaStore.Video.Media.MIME_TYPE, mimeType)
+                put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
+                @Suppress("DEPRECATION")
+                put(MediaStore.Video.Media.DATA, createdVideo.absolutePath)
+            }
+
+            uriSaved = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentValues.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis())
+            contentValues.put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
+
+        try {
+            CopyFileToPath().execute(resolver, path, uriSaved!!)
+        } catch (e: IOException) {
+            result.error("IO Exception", e.message, e)
+            return
+        }
+
+        contentValues.clear()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        }
+
+        resolver.update(uriSaved, contentValues, null, null)
+        result.success(true)
+    }
+
     /*private fun callHandler() {
         if (intent?.action == Intent.ACTION_SEND) {
             if (intent.type!!.contains("video")) {
@@ -106,22 +190,6 @@ class MainActivity: FlutterActivity() {
             }
         }
     }
-
-    private fun callSaveFileInGallery(arguments : ArrayList<String>) {
-        var originalFilePath = arguments[0]
-        var originalFile = File(originalFilePath)
-
-        var newName = arguments[1]
-        var dcim = context.getExternalFilesDir(Environment.DIRECTORY_DCIM)
-        val newFilePath = "$dcim//$newName"
-        val newfile = File(newFilePath)
-
-        if (newfile.exists()) {
-            Log.i("New File", "Exists")
-        } else {
-            Log.i("New File", "Not Exists")
-            originalFile.copyTo(newfile, true)
-        }
-    }*/
+    */
 
 }
