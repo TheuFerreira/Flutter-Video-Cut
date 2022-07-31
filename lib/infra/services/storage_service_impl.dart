@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 
 class StorageServiceImpl implements StorageService {
   final _methodChannel = const MethodChannel(methodChannelName);
@@ -21,13 +20,13 @@ class StorageServiceImpl implements StorageService {
   }
 
   @override
-  Future<void> saveInGallery(String path) async =>
-      await GallerySaver.saveVideo(path, albumName: 'Video Cut');
+  Future<void> saveInGallery(String path) async {
+    await _methodChannel.invokeMethod("saveInDCIM", path);
+  }
 
   @override
   Future<void> shareFiles(List<String> files) async {
     await _methodChannel.invokeMethod('shareFiles', files);
-    return;
   }
 
   @override
