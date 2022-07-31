@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animate_icons/animate_icons.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
@@ -275,15 +276,24 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
-    final clip = clips[selectedClip];
-
     final infoDialog = InfoDialog();
-    infoDialog.show(context, text: 'Estamos salvando seu vídeo na galeria...');
 
-    await Future.delayed(const Duration(seconds: 2));
-    await _saveFileInGalleryCase(clip.url);
+    try {
+      infoDialog.show(context, text: 'Estamos salvando seu clip na galeria...');
+      final clip = clips[selectedClip];
 
-    infoDialog.close();
+      await Future.delayed(const Duration(seconds: 1));
+      await _saveFileInGalleryCase(clip.url);
+
+      _dialogService.showMessage('Clip salvo na galeria');
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Save Clip in DCIM/Video Cut');
+      _dialogService.showMessageError(
+          'Um problema aconteceu ao salvar o clip na galeria');
+    } finally {
+      infoDialog.close();
+    }
   }
 
   @action
