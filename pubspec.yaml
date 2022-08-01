@@ -46,8 +46,6 @@ dependencies:
   gallery_saver: ^2.3.2
   animated_text_kit: ^4.2.2
   animate_icons: ^2.0.0
-
-  
   google_mobile_ads: ^1.1.0
 
 dev_dependencies:
