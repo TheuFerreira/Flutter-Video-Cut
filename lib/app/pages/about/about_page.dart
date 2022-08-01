@@ -32,7 +32,7 @@ class _AboutPageState extends State<AboutPage> {
                   leading: const FaIcon(FontAwesomeIcons.code),
                   title: const Text('Desenvolvedor'),
                   subtitle: const Text('Matheus Ferreira'),
-                  trailing: const FaIcon(
+                  trailing: const Icon(
                     FontAwesomeIcons.linkedinIn,
                     color: Colors.amber,
                   ),
@@ -43,7 +43,7 @@ class _AboutPageState extends State<AboutPage> {
                   leading: const FaIcon(FontAwesomeIcons.palette),
                   title: const Text('Design'),
                   subtitle: const Text('Paulo Fernando'),
-                  trailing: const FaIcon(
+                  trailing: const Icon(
                     FontAwesomeIcons.linkedinIn,
                     color: Colors.amber,
                   ),
@@ -54,11 +54,22 @@ class _AboutPageState extends State<AboutPage> {
                   leading: const FaIcon(FontAwesomeIcons.arrowsRotate),
                   title: const Text('Atualização'),
                   subtitle: const Text('Procurar por nova versão'),
-                  trailing: const FaIcon(
+                  trailing: const Icon(
                     FontAwesomeIcons.googlePlay,
                     color: Colors.amber,
                   ),
                   onTap: () => _aboutController.checkForUpdates(context),
+                ),
+                ListTile(
+                  leading: const FaIcon(Icons.policy),
+                  title: const Text('Política de Privacidade'),
+                  subtitle: const Text('Acesse nossa política de privacidade'),
+                  trailing: const Icon(
+                    Icons.open_in_browser,
+                    color: Colors.amber,
+                  ),
+                  onTap: () => _aboutController.openUrl(
+                      'https://ferreiravideocut.blogspot.com/2022/07/privacy-policy.html'),
                 ),
               ],
             ),
