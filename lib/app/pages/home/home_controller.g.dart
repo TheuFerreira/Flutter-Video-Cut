@@ -25,6 +25,22 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
+  late final _$topBannerAtom =
+      Atom(name: '_HomeControllerBase.topBanner', context: context);
+
+  @override
+  BannerAd? get topBanner {
+    _$topBannerAtom.reportRead();
+    return super.topBanner;
+  }
+
+  @override
+  set topBanner(BannerAd? value) {
+    _$topBannerAtom.reportWrite(value, super.topBanner, () {
+      super.topBanner = value;
+    });
+  }
+
   late final _$searchVideoAsyncAction =
       AsyncAction('_HomeControllerBase.searchVideo', context: context);
 
@@ -33,10 +49,25 @@ mixin _$HomeController on _HomeControllerBase, Store {
     return _$searchVideoAsyncAction.run(() => super.searchVideo(context));
   }
 
+  late final _$_HomeControllerBaseActionController =
+      ActionController(name: '_HomeControllerBase', context: context);
+
+  @override
+  void loadBanner() {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+        name: '_HomeControllerBase.loadBanner');
+    try {
+      return super.loadBanner();
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-isSearching: ${isSearching}
+isSearching: ${isSearching},
+topBanner: ${topBanner}
     ''';
   }
 }
