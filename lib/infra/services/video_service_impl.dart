@@ -3,10 +3,13 @@ import 'dart:typed_data';
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/video_service.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
 
 class VideoServiceImpl implements VideoService {
+  final _methodChannel = const MethodChannel(methodChannelName);
+
   @override
   Future<int> getSeconds(String path) async {
     final videoInformation = await FFprobeKit.getMediaInformation(path);
@@ -67,12 +70,9 @@ class VideoServiceImpl implements VideoService {
 
   @override
   Future<Uint8List?> getThumbnail(String url) async {
-    final thumbnail = await VideoThumbnail.thumbnailData(
-      video: url,
-      imageFormat: ImageFormat.PNG,
-    );
-
-    return thumbnail!;
+    final thumbnail =
+        await _methodChannel.invokeMethod<Uint8List>('getThumbnail', url);
+    return thumbnail;
   }
 
   @override

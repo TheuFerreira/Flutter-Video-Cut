@@ -17,11 +17,8 @@ class OpenUrlCaseImpl implements OpenUrlCase {
 
   @override
   Future<void> call(String url) async {
-    _logService.writeInfo('Parsing URL to URI format, $url');
-    Uri uri = Uri.parse(url);
-
     _logService.writeInfo('Opening URL');
-    final success = await _urlLauncher.openUrl(uri);
+    final success = await _urlLauncher.openUrl(url);
     if (!success) {
       _logService.writeError('Error on open URL');
       throw UrlException();

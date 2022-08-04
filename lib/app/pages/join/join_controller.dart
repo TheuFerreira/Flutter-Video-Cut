@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
+import 'package:flutter_video_cut/app/utils/texts.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_thumbnail_case.dart';
@@ -15,7 +16,7 @@ class JoinController = JoinControllerBase with _$JoinController;
 
 abstract class JoinControllerBase with Store {
   @computed
-  bool get hasSelected => selecteds.length == 2;
+  bool get hasSelected => selecteds.length >= 2;
 
   @observable
   List<Clip> selecteds = ObservableList<Clip>();
@@ -60,7 +61,7 @@ abstract class JoinControllerBase with Store {
     try {
       _infoDialog.show(
         context,
-        text: 'Estamos unindo seus clips selecionados...',
+        texts: joinClipsText,
       );
 
       selecteds.sort((a, b) => a.index.compareTo(b.index));

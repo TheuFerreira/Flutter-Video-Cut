@@ -1,3 +1,3 @@
 abstract class UrlService {
-  Future<bool> openUrl(Uri uri);
+  Future<bool> openUrl(String url);
 }

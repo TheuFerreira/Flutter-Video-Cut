@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:animate_icons/animate_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/pages/join/join_page.dart';
 import 'package:flutter_video_cut/app/utils/playback_speeds.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
-import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
-import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
+import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/save_file_in_gallery_case.dart';
 import 'package:mobx/mobx.dart';
@@ -225,8 +225,7 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void changeTrack(double newValue) =>
-      playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
+  void changeTrack(double newValue) => playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
 
   _updateCurrentTime() {
     final milliseconds = playerController!.value.position.inMilliseconds;
@@ -266,6 +265,15 @@ abstract class _VideoControllerBase with Store {
   @action
   void saveFileInGallery(BuildContext context) => _saveFileInGallery(context);
   _saveFileInGallery(BuildContext context) async {
+    final save = await _dialogService.showQuestionDialog(
+      context,
+      'Confirmação de Salvamento',
+      'Tem certeza de que deseja salvar o clip selecionado na sua galeria?',
+    );
+    if (save != true) {
+      return;
+    }
+
     final clip = clips[selectedClip];
 
     final infoDialog = InfoDialog();
@@ -279,10 +287,18 @@ abstract class _VideoControllerBase with Store {
 
   @action
   void joinClips(BuildContext context) {
+    if (clips.length == 1) {
+      _dialogService.showErrorDialog(
+        context,
+        title: 'Aviso',
+        description: 'Você precisa de pelo menos 2 clips para junta-los',
+      );
+      return;
+    }
+
     Navigator.of(context)
         .push<List<Clip>>(
-          MaterialPageRoute(
-              builder: (_) => JoinPage(clips: List<Clip>.from(clips))),
+          MaterialPageRoute(builder: (_) => JoinPage(clips: List<Clip>.from(clips))),
         )
         .then(_joinClips);
   }
