@@ -51,17 +51,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Image.asset('assets/images/cut.png', height: 80),
                 const SizedBox(height: 16),
-                Observer(
-                  builder: (builder) {
-                    final isSearching = homeController.isSearching;
-                    if (isSearching) {
-                      return const CircularProgressIndicator();
-                    }
-
-                    return SearchVideoComponent(
-                      onPressed: () => homeController.searchVideo(builder),
-                    );
-                  },
+                SearchVideoComponent(
+                  onPressed: () => homeController.searchVideo(context),
                 ),
               ],
             ),
