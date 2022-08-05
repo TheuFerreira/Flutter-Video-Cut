@@ -19,8 +19,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    homeController.loadBanner();
     super.initState();
+    homeController.loadBanner();
+    homeController.load(context);
   }
 
   @override
