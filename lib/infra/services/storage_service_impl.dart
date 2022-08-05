@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class StorageServiceImpl implements StorageService {
   final _methodChannel = const MethodChannel(methodChannelName);
@@ -21,8 +22,7 @@ class StorageServiceImpl implements StorageService {
   }
 
   @override
-  Future<void> saveInGallery(String path) async =>
-      await GallerySaver.saveVideo(path, albumName: 'Video Cut');
+  Future<void> saveInGallery(String path) async => await GallerySaver.saveVideo(path, albumName: 'Video Cut');
 
   @override
   Future<void> shareFiles(List<String> files) async {
@@ -35,5 +35,17 @@ class StorageServiceImpl implements StorageService {
     final file = File(url);
     final exists = file.existsSync();
     return exists;
+  }
+
+  @override
+  Future<String?> getSharedFile() async {
+    final sharedMediaFiles = await ReceiveSharingIntent.getInitialMedia();
+    if (sharedMediaFiles.isEmpty) {
+      return null;
+    }
+
+    final sharedMediaFile = sharedMediaFiles.first;
+    final path = sharedMediaFile.path;
+    return path;
   }
 }
