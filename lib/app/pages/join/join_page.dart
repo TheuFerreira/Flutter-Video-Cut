@@ -29,8 +29,7 @@ class _JoinPageState extends State<JoinPage> {
   Widget build(BuildContext context) {
     const itemWidth = 160 * (1 / 1.5);
     const itemHeight = 160 * (1 / 1.5);
-    final crossAxisCount =
-        (MediaQuery.of(context).size.width / itemWidth).floorToDouble().toInt();
+    final crossAxisCount = (MediaQuery.of(context).size.width / itemWidth).floorToDouble().toInt();
 
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +79,7 @@ class _JoinPageState extends State<JoinPage> {
                     clip: clip,
                     itemHeight: itemHeight,
                     itemWidth: itemWidth,
-                    title: 'Clip ${index + 1}',
+                    title: 'Clip ${clip.index + 1}',
                     isSelected: isSelected,
                     onTap: _controller.tapClip,
                   );
