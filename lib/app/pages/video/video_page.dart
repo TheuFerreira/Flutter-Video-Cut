@@ -5,6 +5,7 @@ import 'package:flutter_video_cut/app/components/logo_component.dart';
 import 'package:flutter_video_cut/app/pages/share/share_page.dart';
 import 'package:flutter_video_cut/app/pages/video/components/action_button_component.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
+import 'package:flutter_video_cut/app/pages/video/components/modal_sheet_component.dart';
 import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
@@ -244,43 +245,12 @@ class _VideoPageState extends State<VideoPage> {
                                     borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                                   ),
                                   builder: (builder) {
-                                    return Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                          child: Text(
-                                            'Clip ${index + 1}',
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ),
-                                        ListTile(
-                                          title: const Text('Compartilhar'),
-                                          leading: const Icon(Icons.share),
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            _controller.shareClip(clip);
-                                          },
-                                        ),
-                                        ListTile(
-                                          title: const Text('Excluir Clip selecionado'),
-                                          leading: const Icon(FontAwesomeIcons.trashCan),
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            _controller.deleteSelectedClip(context, clip);
-                                          },
-                                        ),
-                                        ListTile(
-                                          title: const Text('Salvar na Galeria'),
-                                          leading: const Icon(Icons.download),
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                            _controller.saveSelectedFileInGallery(context, clip);
-                                          },
-                                        ),
-                                      ],
+                                    return ModalSheetComponent(
+                                      clip: clip,
+                                      title: 'Clip ${clip.index + 1}',
+                                      onShareTap: () => _controller.shareClip(clip),
+                                      onDeleteTap: () => _controller.deleteSelectedClip(context, clip),
+                                      onSaveTap: () => _controller.saveSelectedFileInGallery(context, clip),
                                     );
                                   },
                                 );
