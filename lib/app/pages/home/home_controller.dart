@@ -166,6 +166,9 @@ abstract class _HomeControllerBase with Store {
 
   @action
   void loadBanner() {
-    _loadAdBannerCase().then((value) => topBanner = value);
+    _loadAdBannerCase().then((value) => topBanner = value).onError((e, s) async {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Load Banner');
+      return null;
+    });
   }
 }

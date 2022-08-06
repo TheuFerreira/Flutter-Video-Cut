@@ -249,30 +249,35 @@ abstract class _VideoControllerBase with Store {
   }
 
   _deleteClip(BuildContext context, int index) async {
-    final delete = await _dialogService.showQuestionDialog(
-      context,
-      'Confirmação de Exclusão',
-      'Tem certeza de que deseja excluir o clip selecionado?',
-    );
-    if (delete != true) {
-      return;
+    try {
+      final delete = await _dialogService.showQuestionDialog(
+        context,
+        'Confirmação de Exclusão',
+        'Tem certeza de que deseja excluir o clip selecionado?',
+      );
+      if (delete != true) {
+        return;
+      }
+
+      _updatePlaying(false);
+
+      Clip clip = clips[index];
+      clips.remove(clip);
+
+      _deleteFileFromStorageCase(clip.url);
+      _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
+
+      if (clips.isEmpty) {
+        Navigator.pop(context);
+        return;
+      }
+
+      final nextIndex = index == 0 ? index : index - 1;
+      await _selectClip(clips[nextIndex]);
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Delete Clip');
+      _dialogService.showMessage('Um problema aconteceu');
     }
-
-    _updatePlaying(false);
-
-    Clip clip = clips[index];
-    clips.remove(clip);
-
-    _deleteFileFromStorageCase(clip.url);
-    _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
-
-    if (clips.isEmpty) {
-      Navigator.pop(context);
-      return;
-    }
-
-    final nextIndex = index == 0 ? index : index - 1;
-    await _selectClip(clips[nextIndex]);
   }
 
   @action
