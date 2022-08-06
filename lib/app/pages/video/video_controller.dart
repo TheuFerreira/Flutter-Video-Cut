@@ -286,28 +286,28 @@ abstract class _VideoControllerBase with Store {
   void saveSelectedFileInGallery(BuildContext context, Clip clip) => _saveFileInGallery(context, clip);
 
   _saveFileInGallery(BuildContext context, Clip clip) async {
-    try {
-      final save = await _dialogService.showQuestionDialog(
-        context,
-        'Confirmação de Salvamento',
-        'Tem certeza de que deseja salvar o clip selecionado na sua galeria?',
-      );
-      if (save != true) {
-        return;
-      }
+    final save = await _dialogService.showQuestionDialog(
+      context,
+      'Confirmação de Salvamento',
+      'Tem certeza de que deseja salvar o clip selecionado na sua galeria?',
+    );
+    if (save != true) {
+      return;
+    }
 
-      final infoDialog = InfoDialog();
+    final infoDialog = InfoDialog();
+    try {
       infoDialog.show(context, text: 'Estamos salvando seu clip na galeria...');
 
       await Future.delayed(const Duration(seconds: 2));
       await _saveFileInGalleryCase(clip.url);
 
-      infoDialog.close();
-
       _dialogService.showMessage('Clip salvo na galeria');
     } catch (e, s) {
-      FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Save File in DCIM');
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Save Clip in DCIM/Video Cut');
       _dialogService.showMessageError('Erro ao salvar o clip');
+    } finally {
+      infoDialog.close();
     }
   }
 

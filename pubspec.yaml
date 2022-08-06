@@ -43,7 +43,6 @@ dependencies:
   flutter_modular: ^5.0.3
   intl: ^0.17.0
   mockito: ^5.2.0
-  gallery_saver: ^2.3.2
   animated_text_kit: ^4.2.2
   animate_icons: ^2.0.0
   google_mobile_ads: ^1.1.0
