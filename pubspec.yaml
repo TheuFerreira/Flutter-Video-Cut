@@ -45,9 +45,8 @@ dependencies:
   mockito: ^5.2.0
   animated_text_kit: ^4.2.2
   animate_icons: ^2.0.0
-
-  
   google_mobile_ads: ^1.1.0
+  receive_sharing_intent: ^1.4.5
 
 dev_dependencies:
   flutter_test:

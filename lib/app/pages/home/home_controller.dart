@@ -2,8 +2,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
-import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
+import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
 import 'package:flutter_video_cut/app/utils/texts.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
@@ -14,7 +14,10 @@ import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart'
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_thumbnail_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/load_ad_banner_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/receive_shared_file_case.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
@@ -23,7 +26,7 @@ class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
   @observable
-  bool isSearching = false;
+  BannerAd? topBanner;
 
   final _storageService = Modular.get<StorageService>();
   final _pickVideoCase = Modular.get<PickVideoCase>();
@@ -31,15 +34,43 @@ abstract class _HomeControllerBase with Store {
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
   final _getThumbnailCase = Modular.get<GetThumbnailCase>();
+  final _loadAdBannerCase = Modular.get<LoadAdBannerCase>();
+  final _receiveSharedFileCase = Modular.get<ReceiveSharedFileCase>();
 
   final _dialogService = DialogService();
 
   @action
-  Future<void> searchVideo(BuildContext context) async {
-    isSearching = true;
+  void load(BuildContext context) => _load(context);
+  _load(BuildContext context) async {
+    try {
+      final path = await _receiveSharedFileCase();
+      await _validateVideo(context, path);
+    } on HomeNoVideoSharedException {
+      return;
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Load Shared Video');
+      _dialogService.showMessageError('Um problema aconteceu');
+    }
+  }
 
+  @action
+  void searchVideo(BuildContext context) => _searchVideo(context);
+  _searchVideo(BuildContext context) async {
     try {
       final path = await _pickVideoCase();
+      await _validateVideo(context, path);
+    } on HomeNotSelectedVideoException {
+      return;
+    } on HomeInvalidVideoException catch (e) {
+      _dialogService.showMessageError(e.message);
+    } on Exception catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Search Video');
+      _dialogService.showMessageError('Um problema aconteceu');
+    }
+  }
+
+  Future<void> _validateVideo(BuildContext context, String path) async {
+    try {
       final secondsOfVideo = await _getSecondsCase(path);
 
       final secondsOfClip = await showDialog<int>(
@@ -72,26 +103,18 @@ abstract class _HomeControllerBase with Store {
     } on HomeInvalidVideoException catch (e) {
       _dialogService.showMessageError(e.message);
     } on ThumbnailException {
-      _dialogService.showMessageError(
-          'Houve um problema ao buscar as Thumbnails dos vídeos.');
+      _dialogService.showMessageError('Houve um problema ao buscar as Thumbnails dos vídeos.');
     } on VideoCacheException catch (e, s) {
-      _dialogService
-          .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
+      _dialogService.showMessageError('Não foi possível encontrar o Cache do Video Cut.');
 
-      await FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'Error on Get Cache Path');
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Get Cache Path');
     } on VideoCopyException {
-      _dialogService.showMessageError(
-          'Problema ao copiar o arquivo para o cache do Video Cut.');
+      _dialogService.showMessageError('Problema ao copiar o arquivo para o cache do Video Cut.');
     } on VideoCutException {
-      _dialogService
-          .showMessageError('Houve um problema ao cortar o vídeo selecionado.');
+      _dialogService.showMessageError('Houve um problema ao cortar o vídeo selecionado.');
     } on Exception catch (e, s) {
-      await FirebaseCrashlytics.instance
-          .recordError(e, s, reason: 'Error on Search Video');
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Search Video');
       _dialogService.showMessageError('Um problema aconteceu');
-    } finally {
-      isSearching = false;
     }
   }
 
@@ -139,5 +162,13 @@ abstract class _HomeControllerBase with Store {
     } finally {
       infoDialog.close();
     }
+  }
+
+  @action
+  void loadBanner() {
+    _loadAdBannerCase().then((value) => topBanner = value).onError((e, s) async {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Load Banner');
+      return null;
+    });
   }
 }

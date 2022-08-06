@@ -22,6 +22,12 @@ class MainActivity: FlutterActivity() {
     //private var sharedData: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if (intent.getIntExtra("org.chromium.chrome.extra.TASK_ID", -1) == this.taskId) {
+            this.finish()
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

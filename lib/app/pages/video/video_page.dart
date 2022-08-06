@@ -5,6 +5,7 @@ import 'package:flutter_video_cut/app/components/logo_component.dart';
 import 'package:flutter_video_cut/app/pages/share/share_page.dart';
 import 'package:flutter_video_cut/app/pages/video/components/action_button_component.dart';
 import 'package:flutter_video_cut/app/pages/video/components/clip_component.dart';
+import 'package:flutter_video_cut/app/pages/video/components/modal_sheet_component.dart';
 import 'package:flutter_video_cut/app/pages/video/video_controller.dart';
 import 'package:flutter_video_cut/app/utils/playback_type.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
@@ -86,11 +87,9 @@ class _VideoPageState extends State<VideoPage> {
           ),
           axis: Axis.horizontal,
           child: ClipComponent(
-            index: index,
+            clip: clip,
             title: 'Clip ${index + 1}',
-            thumbnail: clip.thumbnail!,
             isSelected: false,
-            onTap: (_) {},
           ),
         );
       },
@@ -126,8 +125,7 @@ class _VideoPageState extends State<VideoPage> {
                   }
 
                   return AspectRatio(
-                    aspectRatio:
-                        _controller.playerController!.value.aspectRatio,
+                    aspectRatio: _controller.playerController!.value.aspectRatio,
                     child: Stack(
                       fit: StackFit.loose,
                       children: [
@@ -234,11 +232,29 @@ class _VideoPageState extends State<VideoPage> {
                             ),
                             axis: Axis.horizontal,
                             child: ClipComponent(
-                              index: index,
-                              title: 'Clip ${index + 1}',
-                              thumbnail: clip.thumbnail!,
+                              clip: clip,
+                              title: 'Clip ${clip.index + 1}',
                               isSelected: isSelected,
                               onTap: _controller.selectClip,
+                              onLongPress: (Clip clip) {
+                                _controller.selectClip(clip);
+
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                  ),
+                                  builder: (builder) {
+                                    return ModalSheetComponent(
+                                      clip: clip,
+                                      title: 'Clip ${clip.index + 1}',
+                                      onShareTap: () => _controller.shareClip(clip),
+                                      onDeleteTap: () => _controller.deleteSelectedClip(context, clip),
+                                      onSaveTap: () => _controller.saveSelectedFileInGallery(context, clip),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           );
                         },
