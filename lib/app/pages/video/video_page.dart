@@ -86,11 +86,9 @@ class _VideoPageState extends State<VideoPage> {
           ),
           axis: Axis.horizontal,
           child: ClipComponent(
-            index: index,
+            clip: clip,
             title: 'Clip ${index + 1}',
-            thumbnail: clip.thumbnail!,
             isSelected: false,
-            onTap: (_) {},
           ),
         );
       },
@@ -126,8 +124,7 @@ class _VideoPageState extends State<VideoPage> {
                   }
 
                   return AspectRatio(
-                    aspectRatio:
-                        _controller.playerController!.value.aspectRatio,
+                    aspectRatio: _controller.playerController!.value.aspectRatio,
                     child: Stack(
                       fit: StackFit.loose,
                       children: [
@@ -234,11 +231,60 @@ class _VideoPageState extends State<VideoPage> {
                             ),
                             axis: Axis.horizontal,
                             child: ClipComponent(
-                              index: index,
-                              title: 'Clip ${index + 1}',
-                              thumbnail: clip.thumbnail!,
+                              clip: clip,
+                              title: 'Clip ${clip.index + 1}',
                               isSelected: isSelected,
                               onTap: _controller.selectClip,
+                              onLongPress: (Clip clip) {
+                                _controller.selectClip(clip);
+
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                  ),
+                                  builder: (builder) {
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Text(
+                                            'Clip ${index + 1}',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                        ListTile(
+                                          title: const Text('Compartilhar'),
+                                          leading: const Icon(Icons.share),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _controller.shareClip(clip);
+                                          },
+                                        ),
+                                        ListTile(
+                                          title: const Text('Excluir Clip selecionado'),
+                                          leading: const Icon(FontAwesomeIcons.trashCan),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _controller.deleteSelectedClip(context, clip);
+                                          },
+                                        ),
+                                        ListTile(
+                                          title: const Text('Salvar na Galeria'),
+                                          leading: const Icon(Icons.download),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _controller.saveSelectedFileInGallery(context, clip);
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           );
                         },

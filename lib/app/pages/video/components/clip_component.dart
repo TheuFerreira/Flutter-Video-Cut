@@ -1,19 +1,18 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/domain/entities/clip.dart' as entities;
 
 class ClipComponent extends StatefulWidget {
-  final int index;
+  final entities.Clip clip;
   final String title;
-  final Uint8List thumbnail;
   final bool isSelected;
-  final Function(int) onTap;
+  final void Function(entities.Clip)? onTap;
+  final void Function(entities.Clip)? onLongPress;
   const ClipComponent({
     Key? key,
-    required this.index,
+    required this.clip,
     required this.title,
-    required this.thumbnail,
-    required this.onTap,
+    this.onTap,
+    this.onLongPress,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -27,7 +26,8 @@ class _ClipComponentState extends State<ClipComponent> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () => widget.onTap(widget.index),
+          onTap: () => widget.onTap == null ? null : widget.onTap!(widget.clip),
+          onLongPress: () => widget.onLongPress == null ? null : widget.onLongPress!(widget.clip),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 100),
             height: 90 * (1 / 1.5),
@@ -35,9 +35,7 @@ class _ClipComponentState extends State<ClipComponent> {
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 20, 20, 20),
               border: Border.all(
-                color: widget.isSelected
-                    ? Colors.red[700]!
-                    : const Color.fromARGB(255, 20, 20, 20),
+                color: widget.isSelected ? Colors.red[700]! : const Color.fromARGB(255, 20, 20, 20),
                 width: widget.isSelected ? 3 : 2,
               ),
               borderRadius: BorderRadius.circular(8),
@@ -46,7 +44,7 @@ class _ClipComponentState extends State<ClipComponent> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.memory(
-                widget.thumbnail,
+                widget.clip.thumbnail!,
                 isAntiAlias: true,
               ),
             ),
