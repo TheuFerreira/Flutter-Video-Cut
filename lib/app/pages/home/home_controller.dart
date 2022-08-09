@@ -5,6 +5,7 @@ import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/app/pages/home/dialogs/time_video_dialog.dart';
 import 'package:flutter_video_cut/app/dialogs/info_dialog.dart';
 import 'package:flutter_video_cut/app/pages/video/video_page.dart';
+import 'package:flutter_video_cut/app/utils/texts.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/errors/home_errors.dart';
 import 'package:flutter_video_cut/domain/errors/video_errors.dart';
@@ -12,8 +13,10 @@ import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/domain/use_cases/copy_file_to_cache_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/cut_video_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/get_seconds_case.dart';
-import 'package:flutter_video_cut/domain/use_cases/get_thumbnails_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/get_thumbnail_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/load_ad_banner_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/pick_video_case.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
@@ -24,13 +27,16 @@ abstract class _HomeControllerBase with Store {
   @observable
   bool isSearching = false;
 
+  @observable
+  BannerAd? topBanner;
+
   final _storageService = Modular.get<StorageService>();
   final _pickVideoCase = Modular.get<PickVideoCase>();
   final _getSecondsCase = Modular.get<GetSecondsCase>();
   final _cutVideoCase = Modular.get<CutVideoCase>();
   final _copyFileToCacheCase = Modular.get<CopyFileToCacheCase>();
-  final _getThumbnailCase = Modular.get<GetThumbnailsCase>();
-  final infoDialog = InfoDialog();
+  final _getThumbnailCase = Modular.get<GetThumbnailCase>();
+  final _loadAdBannerCase = Modular.get<LoadAdBannerCase>();
 
   final _dialogService = DialogService();
 
@@ -101,8 +107,13 @@ abstract class _HomeControllerBase with Store {
     int secondsOfClip,
     BuildContext context,
   ) async {
+    final infoDialog = InfoDialog();
+
     try {
-      infoDialog.show(context);
+      infoDialog.show(
+        context,
+        texts: cutVideoTexts,
+      );
 
       final _cachedFile = await _copyFileToCacheCase(url);
 
@@ -112,7 +123,17 @@ abstract class _HomeControllerBase with Store {
         secondsOfClip: secondsOfClip,
       );
 
-      final tempClips = await _getThumbnailCase(videosCuted);
+      List<Clip> tempClips = [];
+      for (final videoCuted in videosCuted) {
+        final thumbnail = await _getThumbnailCase(videoCuted);
+        final clip = Clip(
+          index: videosCuted.indexOf(videoCuted),
+          thumbnail: thumbnail,
+          url: videoCuted,
+        );
+
+        tempClips.add(clip);
+      }
 
       if (_cachedFile != '') {
         _storageService.deleteFile(_cachedFile);
@@ -124,5 +145,10 @@ abstract class _HomeControllerBase with Store {
     } finally {
       infoDialog.close();
     }
+  }
+
+  @action
+  void loadBanner() {
+    _loadAdBannerCase().then((value) => topBanner = value);
   }
 }

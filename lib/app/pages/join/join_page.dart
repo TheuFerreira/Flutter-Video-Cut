@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_video_cut/app/components/clip_grid_component.dart';
-import 'package:flutter_video_cut/app/pages/share/share_controller.dart';
+import 'package:flutter_video_cut/app/pages/join/join_controller.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SharePage extends StatefulWidget {
+class JoinPage extends StatefulWidget {
   final List<Clip> clips;
-  const SharePage({
+  const JoinPage({
     Key? key,
     required this.clips,
   }) : super(key: key);
 
   @override
-  State<SharePage> createState() => _SharePageState();
+  State<JoinPage> createState() => _JoinPageState();
 }
 
-class _SharePageState extends State<SharePage> {
-  final _controller = ShareController();
+class _JoinPageState extends State<JoinPage> {
+  late JoinController _controller;
+
+  @override
+  void initState() {
+    _controller = JoinController(widget.clips);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,7 @@ class _SharePageState extends State<SharePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Compartilhar',
+          'Unir Clips',
           style: TextStyle(
             color: Colors.amber,
             fontSize: 22,
@@ -65,10 +71,10 @@ class _SharePageState extends State<SharePage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              itemCount: widget.clips.length,
+              itemCount: _controller.clips.length,
               itemBuilder: (ctx, index) => Observer(
                 builder: (context) {
-                  final clip = widget.clips[index];
+                  final clip = _controller.clips[index];
                   final isSelected = _controller.selecteds.contains(clip);
                   return ClipGridComponent(
                     clip: clip,
@@ -95,11 +101,9 @@ class _SharePageState extends State<SharePage> {
                           duration: const Duration(milliseconds: 200),
                           opacity: _controller.hasSelected ? 1 : 0,
                           child: ElevatedButton.icon(
-                            icon: const Icon(Icons.share),
-                            label: const Text('Compartilhar'),
-                            onPressed: _controller.hasSelected
-                                ? _controller.share
-                                : null,
+                            icon: const Icon(FontAwesomeIcons.objectGroup),
+                            label: const Text('Unir'),
+                            onPressed: () => _controller.join(context),
                           ),
                         ),
                       ),

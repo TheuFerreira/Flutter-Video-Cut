@@ -10,4 +10,9 @@ abstract class VideoService {
     required int secondsOfClip,
     int seconds = 20,
   });
+  Future<String?> joinClips({
+    required String pathTxtFile,
+    required String destiny,
+    required String baseFileName,
+  });
 }

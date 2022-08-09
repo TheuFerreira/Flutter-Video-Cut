@@ -24,19 +24,51 @@ mixin _$VideoController on _VideoControllerBase, Store {
               name: '_VideoControllerBase.isLastClip'))
           .value;
 
+  late final _$isLoadedAtom =
+      Atom(name: '_VideoControllerBase.isLoaded', context: context);
+
+  @override
+  bool get isLoaded {
+    _$isLoadedAtom.reportRead();
+    return super.isLoaded;
+  }
+
+  @override
+  set isLoaded(bool value) {
+    _$isLoadedAtom.reportWrite(value, super.isLoaded, () {
+      super.isLoaded = value;
+    });
+  }
+
   late final _$clipsAtom =
       Atom(name: '_VideoControllerBase.clips', context: context);
 
   @override
-  List<Clip> get clips {
+  ObservableList<Clip> get clips {
     _$clipsAtom.reportRead();
     return super.clips;
   }
 
   @override
-  set clips(List<Clip> value) {
+  set clips(ObservableList<Clip> value) {
     _$clipsAtom.reportWrite(value, super.clips, () {
       super.clips = value;
+    });
+  }
+
+  late final _$selectedClipAtom =
+      Atom(name: '_VideoControllerBase.selectedClip', context: context);
+
+  @override
+  int get selectedClip {
+    _$selectedClipAtom.reportRead();
+    return super.selectedClip;
+  }
+
+  @override
+  set selectedClip(int value) {
+    _$selectedClipAtom.reportWrite(value, super.selectedClip, () {
+      super.selectedClip = value;
     });
   }
 
@@ -69,38 +101,6 @@ mixin _$VideoController on _VideoControllerBase, Store {
   set playbackSpeed(PlaybackSpeed value) {
     _$playbackSpeedAtom.reportWrite(value, super.playbackSpeed, () {
       super.playbackSpeed = value;
-    });
-  }
-
-  late final _$selectedClipAtom =
-      Atom(name: '_VideoControllerBase.selectedClip', context: context);
-
-  @override
-  int get selectedClip {
-    _$selectedClipAtom.reportRead();
-    return super.selectedClip;
-  }
-
-  @override
-  set selectedClip(int value) {
-    _$selectedClipAtom.reportWrite(value, super.selectedClip, () {
-      super.selectedClip = value;
-    });
-  }
-
-  late final _$isPlayingAtom =
-      Atom(name: '_VideoControllerBase.isPlaying', context: context);
-
-  @override
-  bool get isPlaying {
-    _$isPlayingAtom.reportRead();
-    return super.isPlaying;
-  }
-
-  @override
-  set isPlaying(bool value) {
-    _$isPlayingAtom.reportWrite(value, super.isPlaying, () {
-      super.isPlaying = value;
     });
   }
 
@@ -152,64 +152,30 @@ mixin _$VideoController on _VideoControllerBase, Store {
     });
   }
 
-  late final _$isLoadedAtom =
-      Atom(name: '_VideoControllerBase.isLoaded', context: context);
-
-  @override
-  bool get isLoaded {
-    _$isLoadedAtom.reportRead();
-    return super.isLoaded;
-  }
-
-  @override
-  set isLoaded(bool value) {
-    _$isLoadedAtom.reportWrite(value, super.isLoaded, () {
-      super.isLoaded = value;
-    });
-  }
-
-  late final _$loadAsyncAction =
-      AsyncAction('_VideoControllerBase.load', context: context);
-
-  @override
-  Future<void> load(List<Clip> tempClips) {
-    return _$loadAsyncAction.run(() => super.load(tempClips));
-  }
-
-  late final _$deleteClipAsyncAction =
-      AsyncAction('_VideoControllerBase.deleteClip', context: context);
-
-  @override
-  Future<void> deleteClip(BuildContext context) {
-    return _$deleteClipAsyncAction.run(() => super.deleteClip(context));
-  }
-
-  late final _$selectClipAsyncAction =
-      AsyncAction('_VideoControllerBase.selectClip', context: context);
-
-  @override
-  Future<void> selectClip(int index) {
-    return _$selectClipAsyncAction.run(() => super.selectClip(index));
-  }
-
-  late final _$loadFileAsyncAction =
-      AsyncAction('_VideoControllerBase.loadFile', context: context);
-
-  @override
-  Future<void> loadFile(String url) {
-    return _$loadFileAsyncAction.run(() => super.loadFile(url));
-  }
-
-  late final _$resumeVideoAsyncAction =
-      AsyncAction('_VideoControllerBase.resumeVideo', context: context);
-
-  @override
-  Future<void> resumeVideo() {
-    return _$resumeVideoAsyncAction.run(() => super.resumeVideo());
-  }
-
   late final _$_VideoControllerBaseActionController =
       ActionController(name: '_VideoControllerBase', context: context);
+
+  @override
+  void start(List<Clip> tempClips) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.start');
+    try {
+      return super.start(tempClips);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void selectClip(int index) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.selectClip');
+    try {
+      return super.selectClip(index);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void previousClip() {
@@ -234,33 +200,11 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
-  void videoEnded() {
+  void resumeVideo() {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.videoEnded');
+        name: '_VideoControllerBase.resumeVideo');
     try {
-      return super.videoEnded();
-    } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void startChangeTrack(double newValue) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.startChangeTrack');
-    try {
-      return super.startChangeTrack(newValue);
-    } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void endChangeTrack(double newValue) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.endChangeTrack');
-    try {
-      return super.endChangeTrack(newValue);
+      return super.resumeVideo();
     } finally {
       _$_VideoControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -289,11 +233,22 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
-  void saveFileInGallery(BuildContext context) {
+  void startChangeTrack(double newValue) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.saveFileInGallery');
+        name: '_VideoControllerBase.startChangeTrack');
     try {
-      return super.saveFileInGallery(context);
+      return super.startChangeTrack(newValue);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void endChangeTrack(double newValue) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.endChangeTrack');
+    try {
+      return super.endChangeTrack(newValue);
     } finally {
       _$_VideoControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -311,17 +266,49 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void deleteClip(BuildContext context) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.deleteClip');
+    try {
+      return super.deleteClip(context);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void saveFileInGallery(BuildContext context) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.saveFileInGallery');
+    try {
+      return super.saveFileInGallery(context);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void joinClips(BuildContext context) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.joinClips');
+    try {
+      return super.joinClips(context);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
+isLoaded: ${isLoaded},
 clips: ${clips},
+selectedClip: ${selectedClip},
 playbackType: ${playbackType},
 playbackSpeed: ${playbackSpeed},
-selectedClip: ${selectedClip},
-isPlaying: ${isPlaying},
 currentTime: ${currentTime},
 totalTime: ${totalTime},
 playerController: ${playerController},
-isLoaded: ${isLoaded},
 isFirstClip: ${isFirstClip},
 isLastClip: ${isLastClip}
     ''';

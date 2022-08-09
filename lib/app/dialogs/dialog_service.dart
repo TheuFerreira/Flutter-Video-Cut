@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_video_cut/app/dialogs/error_dialog.dart';
 import 'package:flutter_video_cut/app/dialogs/question_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,5 +34,17 @@ class DialogService {
     );
 
     return delete == true;
+  }
+
+  void showErrorDialog(BuildContext context, {required String title, required String description}) {
+    showDialog(
+      context: context,
+      builder: (builder) {
+        return ErrorDialog(
+          title: title,
+          description: description,
+        );
+      },
+    );
   }
 }

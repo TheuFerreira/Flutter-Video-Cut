@@ -20,4 +20,10 @@ class VersionServiceImpl implements VersionService {
     final status = await _version.getVersionStatus();
     _version.launchAppStore(status!.appStoreLink);
   }
+
+  @override
+  Future<String> getVersion() async {
+    final version = await _version.getVersionStatus();
+    return version!.localVersion;
+  }
 }

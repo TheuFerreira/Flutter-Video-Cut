@@ -42,7 +42,14 @@ class _ClipComponentState extends State<ClipComponent> {
               ),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Image.memory(widget.thumbnail),
+            clipBehavior: Clip.hardEdge,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(
+                widget.thumbnail,
+                isAntiAlias: true,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 4),
