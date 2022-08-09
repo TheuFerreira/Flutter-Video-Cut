@@ -4,3 +4,5 @@ class HomeInvalidVideoException implements Exception {
   final String message;
   HomeInvalidVideoException(this.message);
 }
+
+class HomeNoVideoSharedException implements Exception {}

@@ -9,22 +9,6 @@ part of 'home_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeController on _HomeControllerBase, Store {
-  late final _$isSearchingAtom =
-      Atom(name: '_HomeControllerBase.isSearching', context: context);
-
-  @override
-  bool get isSearching {
-    _$isSearchingAtom.reportRead();
-    return super.isSearching;
-  }
-
-  @override
-  set isSearching(bool value) {
-    _$isSearchingAtom.reportWrite(value, super.isSearching, () {
-      super.isSearching = value;
-    });
-  }
-
   late final _$topBannerAtom =
       Atom(name: '_HomeControllerBase.topBanner', context: context);
 
@@ -41,16 +25,30 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
-  late final _$searchVideoAsyncAction =
-      AsyncAction('_HomeControllerBase.searchVideo', context: context);
-
-  @override
-  Future<void> searchVideo(BuildContext context) {
-    return _$searchVideoAsyncAction.run(() => super.searchVideo(context));
-  }
-
   late final _$_HomeControllerBaseActionController =
       ActionController(name: '_HomeControllerBase', context: context);
+
+  @override
+  void load(BuildContext context) {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+        name: '_HomeControllerBase.load');
+    try {
+      return super.load(context);
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void searchVideo(BuildContext context) {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+        name: '_HomeControllerBase.searchVideo');
+    try {
+      return super.searchVideo(context);
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void loadBanner() {
@@ -66,7 +64,6 @@ mixin _$HomeController on _HomeControllerBase, Store {
   @override
   String toString() {
     return '''
-isSearching: ${isSearching},
 topBanner: ${topBanner}
     ''';
   }
