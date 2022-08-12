@@ -320,9 +320,12 @@ class _VideoPageState extends State<VideoPage> {
                   );
                 },
               ),
-              IconButton(
-                onPressed: () => _controller.saveFileInGallery(context),
-                icon: const Icon(Icons.download),
+              DragTarget<Clip>(
+                onAccept: (clip) => _controller.saveSelectedFileInGallery(context, clip),
+                builder: (_, __, ___) => IconButton(
+                  onPressed: () => _controller.saveFileInGallery(context),
+                  icon: const Icon(Icons.download),
+                ),
               ),
               IconButton(
                 onPressed: () => _controller.joinClips(context),
