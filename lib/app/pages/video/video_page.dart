@@ -231,30 +231,43 @@ class _VideoPageState extends State<VideoPage> {
                               curve: Curves.easeOut,
                             ),
                             axis: Axis.horizontal,
-                            child: ClipComponent(
-                              clip: clip,
-                              title: 'Clip ${clip.index + 1}',
-                              isSelected: isSelected,
-                              onTap: _controller.selectClip,
-                              onLongPress: (Clip clip) {
-                                _controller.selectClip(clip);
+                            child: Draggable<Clip>(
+                              data: clip,
+                              childWhenDragging: ClipComponent(
+                                clip: clip,
+                                title: 'Clip ${clip.index + 1}',
+                                showThumbnail: false,
+                                isSelected: isSelected,
+                              ),
+                              feedback: ClipComponent(
+                                clip: clip,
+                                isSelected: isSelected,
+                              ),
+                              child: ClipComponent(
+                                clip: clip,
+                                title: 'Clip ${clip.index + 1}',
+                                isSelected: isSelected,
+                                onTap: _controller.selectClip,
+                                onDoubleTap: (Clip clip) {
+                                  _controller.selectClip(clip);
 
-                                showModalBottomSheet(
-                                  context: context,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                                  ),
-                                  builder: (builder) {
-                                    return ModalSheetComponent(
-                                      clip: clip,
-                                      title: 'Clip ${clip.index + 1}',
-                                      onShareTap: () => _controller.shareClip(clip),
-                                      onDeleteTap: () => _controller.deleteSelectedClip(context, clip),
-                                      onSaveTap: () => _controller.saveSelectedFileInGallery(context, clip),
-                                    );
-                                  },
-                                );
-                              },
+                                  showModalBottomSheet(
+                                    context: context,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                    ),
+                                    builder: (builder) {
+                                      return ModalSheetComponent(
+                                        clip: clip,
+                                        title: 'Clip ${clip.index + 1}',
+                                        onShareTap: () => _controller.shareClip(clip),
+                                        onDeleteTap: () => _controller.deleteSelectedClip(context, clip),
+                                        onSaveTap: () => _controller.saveSelectedFileInGallery(context, clip),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
                           );
                         },
@@ -268,11 +281,14 @@ class _VideoPageState extends State<VideoPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: () => _controller.deleteClip(context),
-                icon: const FaIcon(
-                  FontAwesomeIcons.trashCan,
-                  color: Colors.white38,
+              DragTarget<Clip>(
+                onAccept: (clip) => _controller.deleteSelectedClip(context, clip),
+                builder: (_, __, ___) => IconButton(
+                  onPressed: () => _controller.deleteClip(context),
+                  icon: const FaIcon(
+                    FontAwesomeIcons.trashCan,
+                    color: Colors.white38,
+                  ),
                 ),
               ),
               Observer(

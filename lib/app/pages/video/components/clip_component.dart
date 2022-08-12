@@ -3,17 +3,19 @@ import 'package:flutter_video_cut/domain/entities/clip.dart' as entities;
 
 class ClipComponent extends StatefulWidget {
   final entities.Clip clip;
-  final String title;
+  final String? title;
   final bool isSelected;
+  final bool showThumbnail;
   final void Function(entities.Clip)? onTap;
-  final void Function(entities.Clip)? onLongPress;
+  final void Function(entities.Clip)? onDoubleTap;
   const ClipComponent({
     Key? key,
     required this.clip,
-    required this.title,
+    this.title,
     this.onTap,
-    this.onLongPress,
+    this.onDoubleTap,
     this.isSelected = false,
+    this.showThumbnail = true,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class _ClipComponentState extends State<ClipComponent> {
       children: [
         GestureDetector(
           onTap: () => widget.onTap == null ? null : widget.onTap!(widget.clip),
-          onLongPress: () => widget.onLongPress == null ? null : widget.onLongPress!(widget.clip),
+          onDoubleTap: () => widget.onDoubleTap == null ? null : widget.onDoubleTap!(widget.clip),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 100),
             height: 90 * (1 / 1.5),
@@ -43,21 +45,22 @@ class _ClipComponentState extends State<ClipComponent> {
             clipBehavior: Clip.hardEdge,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.memory(
+              child: widget.showThumbnail ? Image.memory(
                 widget.clip.thumbnail!,
                 isAntiAlias: true,
-              ),
+              ) : null,
             ),
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          widget.title,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Color.fromARGB(255, 150, 150, 150),
+        if (widget.title != null)
+          Text(
+            widget.title!,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Color.fromARGB(255, 150, 150, 150),
+            ),
           ),
-        ),
       ],
     );
   }
