@@ -23,8 +23,7 @@ class _SharePageState extends State<SharePage> {
   Widget build(BuildContext context) {
     const itemWidth = 160 * (1 / 1.5);
     const itemHeight = 160 * (1 / 1.5);
-    final crossAxisCount =
-        (MediaQuery.of(context).size.width / itemWidth).floorToDouble().toInt();
+    final crossAxisCount = (MediaQuery.of(context).size.width / itemWidth).floorToDouble().toInt();
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +73,7 @@ class _SharePageState extends State<SharePage> {
                     clip: clip,
                     itemHeight: itemHeight,
                     itemWidth: itemWidth,
-                    title: 'Clip ${index + 1}',
+                    title: 'Clip ${clip.index + 1}',
                     isSelected: isSelected,
                     onTap: _controller.tapClip,
                   );
@@ -97,9 +96,7 @@ class _SharePageState extends State<SharePage> {
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.share),
                             label: const Text('Compartilhar'),
-                            onPressed: _controller.hasSelected
-                                ? _controller.share
-                                : null,
+                            onPressed: _controller.hasSelected ? _controller.share : null,
                           ),
                         ),
                       ),

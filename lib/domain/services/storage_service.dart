@@ -4,4 +4,5 @@ abstract class StorageService {
   Future<void> saveInGallery(String url);
   Future<void> shareFiles(List<String> files);
   bool checkFileExists(String url);
+  Future<String?> getSharedFile();
 }

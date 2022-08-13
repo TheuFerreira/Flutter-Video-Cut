@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:animate_icons/animate_icons.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_video_cut/domain/entities/clip.dart';
 import 'package:flutter_video_cut/domain/entities/playback_speed.dart';
 import 'package:flutter_video_cut/domain/use_cases/delete_file_from_storage_case.dart';
 import 'package:flutter_video_cut/domain/use_cases/save_file_in_gallery_case.dart';
+import 'package:flutter_video_cut/domain/use_cases/share_clips_case.dart';
 import 'package:mobx/mobx.dart';
 import 'package:video_player/video_player.dart';
 
@@ -65,6 +67,7 @@ abstract class _VideoControllerBase with Store {
 
   final _deleteFileFromStorageCase = Modular.get<DeleteFileFromStorageCase>();
   final _saveFileInGalleryCase = Modular.get<SaveFileInGalleryCase>();
+  final _shareClipsCase = Modular.get<ShareClipsCase>();
   final _dialogService = DialogService();
 
   Timer? _timerTrack;
@@ -83,8 +86,13 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void selectClip(int index) => _selectClip(index);
-  _selectClip(int index) async {
+  void selectClip(Clip clip) => _selectClip(clip);
+  _selectClip(Clip clip) async {
+    final index = clips.indexOf(clip);
+    if (index == selectedClip) {
+      return;
+    }
+
     selectedClip = index;
     await _loadClip(clips[selectedClip]);
   }
@@ -133,14 +141,14 @@ abstract class _VideoControllerBase with Store {
       selectedClip = 0;
     }
 
-    selectClip(selectedClip);
+    selectClip(clips[selectedClip]);
   }
 
   @action
-  void previousClip() => _selectClip(selectedClip - 1);
+  void previousClip() => _selectClip(clips[selectedClip - 1]);
 
   @action
-  void nextClip() => _selectClip(selectedClip + 1);
+  void nextClip() => _selectClip(clips[selectedClip + 1]);
 
   @action
   void resumeVideo() => _resumeVideo();
@@ -233,38 +241,51 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void deleteClip(BuildContext context) => _deleteClip(context);
-  _deleteClip(BuildContext context) async {
-    final delete = await _dialogService.showQuestionDialog(
-      context,
-      'Confirmação de Exclusão',
-      'Tem certeza de que deseja excluir o clip selecionado?',
-    );
-    if (delete != true) {
-      return;
+  void deleteClip(BuildContext context) => _deleteClip(context, selectedClip);
+  @action
+  void deleteSelectedClip(BuildContext context, Clip clip) {
+    int index = clips.indexOf(clip);
+    _deleteClip(context, index);
+  }
+
+  _deleteClip(BuildContext context, int index) async {
+    try {
+      final delete = await _dialogService.showQuestionDialog(
+        context,
+        'Confirmação de Exclusão',
+        'Tem certeza de que deseja excluir o clip selecionado?',
+      );
+      if (delete != true) {
+        return;
+      }
+
+      _updatePlaying(false);
+
+      Clip clip = clips[index];
+      clips.remove(clip);
+
+      _deleteFileFromStorageCase(clip.url);
+      _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
+
+      if (clips.isEmpty) {
+        Navigator.pop(context);
+        return;
+      }
+
+      final nextIndex = index == 0 ? index : index - 1;
+      await _selectClip(clips[nextIndex]);
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Delete Clip');
+      _dialogService.showMessage('Um problema aconteceu');
     }
-
-    _updatePlaying(false);
-
-    final index = selectedClip;
-    Clip clip = clips[index];
-    clips.remove(clip);
-
-    _deleteFileFromStorageCase(clip.url);
-    _dialogService.showMessage('Clip ${index + 1} deletado com sucesso');
-
-    if (clips.isEmpty) {
-      Navigator.pop(context);
-      return;
-    }
-
-    final nextIndex = index == 0 ? index : index - 1;
-    await _selectClip(nextIndex);
   }
 
   @action
-  void saveFileInGallery(BuildContext context) => _saveFileInGallery(context);
-  _saveFileInGallery(BuildContext context) async {
+  void saveFileInGallery(BuildContext context) => _saveFileInGallery(context, clips[selectedClip]);
+  @action
+  void saveSelectedFileInGallery(BuildContext context, Clip clip) => _saveFileInGallery(context, clip);
+
+  _saveFileInGallery(BuildContext context, Clip clip) async {
     final save = await _dialogService.showQuestionDialog(
       context,
       'Confirmação de Salvamento',
@@ -274,15 +295,20 @@ abstract class _VideoControllerBase with Store {
       return;
     }
 
-    final clip = clips[selectedClip];
-
     final infoDialog = InfoDialog();
-    infoDialog.show(context, text: 'Estamos salvando seu vídeo na galeria...');
+    try {
+      infoDialog.show(context, text: 'Estamos salvando seu clip na galeria...');
 
-    await Future.delayed(const Duration(seconds: 2));
-    await _saveFileInGalleryCase(clip.url);
+      await Future.delayed(const Duration(seconds: 2));
+      await _saveFileInGalleryCase(clip.url);
 
-    infoDialog.close();
+      _dialogService.showMessage('Clip salvo na galeria');
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Save Clip in DCIM/Video Cut');
+      _dialogService.showMessageError('Erro ao salvar o clip');
+    } finally {
+      infoDialog.close();
+    }
   }
 
   @action
@@ -318,6 +344,14 @@ abstract class _VideoControllerBase with Store {
 
     selectedClip = 0;
     await _loadClip(clips[selectedClip]);
+  }
+
+  @action
+  shareClip(Clip clip) {
+    _shareClipsCase.call([clip]).onError((e, s) {
+      FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Share Clip');
+      _dialogService.showMessageError('Erro ao compartilhar clip');
+    });
   }
 
   void dispose() {

@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
 import 'package:flutter_video_cut/domain/entities/clip.dart';
@@ -40,8 +41,9 @@ abstract class ShareControllerBase with Store {
       selecteds.sort((a, b) => a.index.compareTo(b.index));
 
       await _shareClipsCase(selecteds);
-    } catch (e) {
-      _dialogService.showMessageError('Erro ao compartilhar vídeos');
+    } catch (e, s) {
+      FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Share Clip');
+      _dialogService.showMessageError('Erro ao compartilhar clips');
     }
   }
 }

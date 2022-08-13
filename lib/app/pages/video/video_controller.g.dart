@@ -167,11 +167,11 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
-  void selectClip(int index) {
+  void selectClip(Clip clip) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.selectClip');
     try {
-      return super.selectClip(index);
+      return super.selectClip(clip);
     } finally {
       _$_VideoControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -277,6 +277,17 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void deleteSelectedClip(BuildContext context, Clip clip) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.deleteSelectedClip');
+    try {
+      return super.deleteSelectedClip(context, clip);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void saveFileInGallery(BuildContext context) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.saveFileInGallery');
@@ -288,11 +299,33 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   @override
+  void saveSelectedFileInGallery(BuildContext context, Clip clip) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.saveSelectedFileInGallery');
+    try {
+      return super.saveSelectedFileInGallery(context, clip);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void joinClips(BuildContext context) {
     final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
         name: '_VideoControllerBase.joinClips');
     try {
       return super.joinClips(context);
+    } finally {
+      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic shareClip(Clip clip) {
+    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
+        name: '_VideoControllerBase.shareClip');
+    try {
+      return super.shareClip(clip);
     } finally {
       _$_VideoControllerBaseActionController.endAction(_$actionInfo);
     }

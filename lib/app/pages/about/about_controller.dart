@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_video_cut/app/dialogs/dialog_service.dart';
@@ -43,8 +44,8 @@ abstract class _AboutControllerBase with Store {
     try {
       await _checkAppVersionCase();
 
-      final confirm = await _dialogService.showQuestionDialog(
-          context, 'Atualização disponível', 'Deseja atualizar o Video Cut?');
+      final confirm =
+          await _dialogService.showQuestionDialog(context, 'Atualização disponível', 'Deseja atualizar o Video Cut?');
       if (!confirm) {
         return;
       }
@@ -52,12 +53,20 @@ abstract class _AboutControllerBase with Store {
       _updateAppCase();
     } on AppDontHaveUpdateException {
       _dialogService.showMessage('Você está na versão mais atual');
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Update Video Cut');
+      _dialogService.showMessageError('Um problema aconteceu');
     }
   }
 
   @action
   void getAppVersion() => _getAppVersion();
   _getAppVersion() async {
-    version = await _getVersionCase();
+    try {
+      version = await _getVersionCase();
+    } catch (e, s) {
+      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Get Version of App');
+      _dialogService.showMessageError('Um problema aconteceu');
+    }
   }
 }

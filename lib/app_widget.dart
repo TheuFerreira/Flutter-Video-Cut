@@ -24,6 +24,15 @@ class AppWidget extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Colors.white38,
         ),
+        listTileTheme: const ListTileThemeData(
+          iconColor: Colors.white38,
+        ),
+        textTheme: const TextTheme(
+          titleMedium: TextStyle(
+            color: Colors.white38,
+            fontSize: 16,
+          ),
+        ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             primary: Colors.white38,
