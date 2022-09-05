@@ -21,10 +21,8 @@ class _TimeVideoDialogState extends State<TimeVideoDialog> {
   @override
   void initState() {
     super.initState();
-    secondsController = TextEditingController(
-        text: widget.maxSecondsOfVideo >= 29
-            ? '29'
-            : '${widget.maxSecondsOfVideo}');
+    secondsController =
+        TextEditingController(text: widget.maxSecondsOfVideo >= 29 ? '29' : '${widget.maxSecondsOfVideo}');
   }
 
   @override
@@ -37,8 +35,7 @@ class _TimeVideoDialogState extends State<TimeVideoDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             child: Column(
               children: [
                 const SizedBox(height: 8.0),
@@ -70,6 +67,7 @@ class _TimeVideoDialogState extends State<TimeVideoDialog> {
                       textAlign: TextAlign.center,
                       controller: secondsController,
                       validator: validateSeconds,
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(hintText: '29'),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
