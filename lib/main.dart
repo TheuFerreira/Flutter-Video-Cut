@@ -26,7 +26,8 @@ void onStart(ServiceInstance service) async {
 
     if (!extension.contains('mp4')) continue;
 
-    final deleteFileFromStorageCase = DeleteFileFromStorageCaseImpl(StorageServiceImpl(), LogServiceImpl());
+    final deleteFileFromStorageCase =
+        DeleteFileFromStorageCaseImpl(StorageServiceImpl(), LogServiceImpl());
     deleteFileFromStorageCase(path);
   }
 
@@ -40,13 +41,14 @@ void main() async {
 
   final service = FlutterBackgroundService();
   await service.configure(
-    iosConfiguration: IosConfiguration(onForeground: onStart, onBackground: onIosBackground),
+    iosConfiguration:
+        IosConfiguration(onForeground: onStart, onBackground: onIosBackground),
     androidConfiguration: AndroidConfiguration(
       onStart: onStart,
       isForegroundMode: false,
       autoStart: true,
-      foregroundServiceNotificationTitle: 'Limpeza',
-      foregroundServiceNotificationContent: 'Limpando resíduos...',
+      initialNotificationTitle: 'Limpeza',
+      initialNotificationContent: 'Limpando resíduos...',
     ),
   );
 

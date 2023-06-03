@@ -35,7 +35,7 @@ class AppWidget extends StatelessWidget {
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            primary: Colors.white38,
+            foregroundColor: Colors.white38,
           ),
         ),
         sliderTheme: SliderThemeData(

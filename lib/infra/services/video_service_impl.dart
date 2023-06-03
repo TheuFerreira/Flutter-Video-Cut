@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:ffmpeg_kit_flutter_min/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_min/return_code.dart';
