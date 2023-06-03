@@ -19,7 +19,6 @@ import java.io.File
 import java.io.IOException
 
 class MainActivity: FlutterActivity() {
-    //private var sharedData: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -47,7 +46,6 @@ class MainActivity: FlutterActivity() {
                 requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE), 102)
             }
         }
-        //callHandler()
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -71,12 +69,6 @@ class MainActivity: FlutterActivity() {
                         val path = call.arguments<String>()
                         callSaveInDCIM(path!!, result)
                     }
-                    /*"getSharedData" -> {
-                        callHandler()
-                        result.success(sharedData)
-                        sharedData = ""
-                    }
-                    */
                 }
             }
     }
@@ -148,7 +140,6 @@ class MainActivity: FlutterActivity() {
             val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
             uriSaved = resolver.insert(collection, contentValues)
         } else {
-            @Suppress("DEPRECATION")
             val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath + "/Video Cut"
             File("$directory/").mkdirs()
 
@@ -158,7 +149,6 @@ class MainActivity: FlutterActivity() {
                 put(MediaStore.Video.Media.DISPLAY_NAME, fileName)
                 put(MediaStore.Video.Media.MIME_TYPE, mimeType)
                 put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
-                @Suppress("DEPRECATION")
                 put(MediaStore.Video.Media.DATA, createdVideo.absolutePath)
             }
 
@@ -185,17 +175,4 @@ class MainActivity: FlutterActivity() {
         resolver.update(uriSaved, contentValues, null, null)
         result.success(true)
     }
-
-    /*private fun callHandler() {
-        if (intent?.action == Intent.ACTION_SEND) {
-            if (intent.type!!.contains("video")) {
-                (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { uri ->
-                    val filePath = FileUtils(context).getPath(uri)
-                    sharedData = filePath
-                }
-            }
-        }
-    }
-    */
-
 }
