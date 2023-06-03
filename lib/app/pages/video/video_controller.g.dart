@@ -8,24 +8,24 @@ part of 'video_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$VideoController on _VideoControllerBase, Store {
+mixin _$VideoController on VideoControllerBase, Store {
   Computed<bool>? _$isFirstClipComputed;
 
   @override
   bool get isFirstClip =>
       (_$isFirstClipComputed ??= Computed<bool>(() => super.isFirstClip,
-              name: '_VideoControllerBase.isFirstClip'))
+              name: 'VideoControllerBase.isFirstClip'))
           .value;
   Computed<bool>? _$isLastClipComputed;
 
   @override
   bool get isLastClip =>
       (_$isLastClipComputed ??= Computed<bool>(() => super.isLastClip,
-              name: '_VideoControllerBase.isLastClip'))
+              name: 'VideoControllerBase.isLastClip'))
           .value;
 
   late final _$isLoadedAtom =
-      Atom(name: '_VideoControllerBase.isLoaded', context: context);
+      Atom(name: 'VideoControllerBase.isLoaded', context: context);
 
   @override
   bool get isLoaded {
@@ -41,7 +41,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$clipsAtom =
-      Atom(name: '_VideoControllerBase.clips', context: context);
+      Atom(name: 'VideoControllerBase.clips', context: context);
 
   @override
   ObservableList<Clip> get clips {
@@ -57,7 +57,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$selectedClipAtom =
-      Atom(name: '_VideoControllerBase.selectedClip', context: context);
+      Atom(name: 'VideoControllerBase.selectedClip', context: context);
 
   @override
   int get selectedClip {
@@ -73,7 +73,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$playbackTypeAtom =
-      Atom(name: '_VideoControllerBase.playbackType', context: context);
+      Atom(name: 'VideoControllerBase.playbackType', context: context);
 
   @override
   PlaybackType get playbackType {
@@ -89,7 +89,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$playbackSpeedAtom =
-      Atom(name: '_VideoControllerBase.playbackSpeed', context: context);
+      Atom(name: 'VideoControllerBase.playbackSpeed', context: context);
 
   @override
   PlaybackSpeed get playbackSpeed {
@@ -105,7 +105,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$currentTimeAtom =
-      Atom(name: '_VideoControllerBase.currentTime', context: context);
+      Atom(name: 'VideoControllerBase.currentTime', context: context);
 
   @override
   double get currentTime {
@@ -121,7 +121,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$totalTimeAtom =
-      Atom(name: '_VideoControllerBase.totalTime', context: context);
+      Atom(name: 'VideoControllerBase.totalTime', context: context);
 
   @override
   double get totalTime {
@@ -137,7 +137,7 @@ mixin _$VideoController on _VideoControllerBase, Store {
   }
 
   late final _$playerControllerAtom =
-      Atom(name: '_VideoControllerBase.playerController', context: context);
+      Atom(name: 'VideoControllerBase.playerController', context: context);
 
   @override
   VideoPlayerController? get playerController {
@@ -152,182 +152,182 @@ mixin _$VideoController on _VideoControllerBase, Store {
     });
   }
 
-  late final _$_VideoControllerBaseActionController =
-      ActionController(name: '_VideoControllerBase', context: context);
+  late final _$VideoControllerBaseActionController =
+      ActionController(name: 'VideoControllerBase', context: context);
 
   @override
   void start(List<Clip> tempClips) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.start');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.start');
     try {
       return super.start(tempClips);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void selectClip(Clip clip) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.selectClip');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.selectClip');
     try {
       return super.selectClip(clip);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void previousClip() {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.previousClip');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.previousClip');
     try {
       return super.previousClip();
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void nextClip() {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.nextClip');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.nextClip');
     try {
       return super.nextClip();
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void resumeVideo() {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.resumeVideo');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.resumeVideo');
     try {
       return super.resumeVideo();
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void changePlaybackType() {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.changePlaybackType');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.changePlaybackType');
     try {
       return super.changePlaybackType();
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void changePlaybackSpeed() {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.changePlaybackSpeed');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.changePlaybackSpeed');
     try {
       return super.changePlaybackSpeed();
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void startChangeTrack(double newValue) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.startChangeTrack');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.startChangeTrack');
     try {
       return super.startChangeTrack(newValue);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void endChangeTrack(double newValue) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.endChangeTrack');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.endChangeTrack');
     try {
       return super.endChangeTrack(newValue);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void changeTrack(double newValue) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.changeTrack');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.changeTrack');
     try {
       return super.changeTrack(newValue);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void deleteClip(BuildContext context) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.deleteClip');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.deleteClip');
     try {
       return super.deleteClip(context);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void deleteSelectedClip(BuildContext context, Clip clip) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.deleteSelectedClip');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.deleteSelectedClip');
     try {
       return super.deleteSelectedClip(context, clip);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void saveFileInGallery(BuildContext context) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.saveFileInGallery');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.saveFileInGallery');
     try {
       return super.saveFileInGallery(context);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void saveSelectedFileInGallery(BuildContext context, Clip clip) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.saveSelectedFileInGallery');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.saveSelectedFileInGallery');
     try {
       return super.saveSelectedFileInGallery(context, clip);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void joinClips(BuildContext context) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.joinClips');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.joinClips');
     try {
       return super.joinClips(context);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   dynamic shareClip(Clip clip) {
-    final _$actionInfo = _$_VideoControllerBaseActionController.startAction(
-        name: '_VideoControllerBase.shareClip');
+    final _$actionInfo = _$VideoControllerBaseActionController.startAction(
+        name: 'VideoControllerBase.shareClip');
     try {
       return super.shareClip(clip);
     } finally {
-      _$_VideoControllerBaseActionController.endAction(_$actionInfo);
+      _$VideoControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 

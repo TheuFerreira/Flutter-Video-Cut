@@ -8,9 +8,9 @@ part of 'home_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$HomeController on _HomeControllerBase, Store {
+mixin _$HomeController on HomeControllerBase, Store {
   late final _$topBannerAtom =
-      Atom(name: '_HomeControllerBase.topBanner', context: context);
+      Atom(name: 'HomeControllerBase.topBanner', context: context);
 
   @override
   BannerAd? get topBanner {
@@ -25,39 +25,39 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
-  late final _$_HomeControllerBaseActionController =
-      ActionController(name: '_HomeControllerBase', context: context);
+  late final _$HomeControllerBaseActionController =
+      ActionController(name: 'HomeControllerBase', context: context);
 
   @override
   void load(BuildContext context) {
-    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
-        name: '_HomeControllerBase.load');
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.load');
     try {
       return super.load(context);
     } finally {
-      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void searchVideo(BuildContext context) {
-    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
-        name: '_HomeControllerBase.searchVideo');
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.searchVideo');
     try {
       return super.searchVideo(context);
     } finally {
-      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void loadBanner() {
-    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
-        name: '_HomeControllerBase.loadBanner');
+    final _$actionInfo = _$HomeControllerBaseActionController.startAction(
+        name: 'HomeControllerBase.loadBanner');
     try {
       return super.loadBanner();
     } finally {
-      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+      _$HomeControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 

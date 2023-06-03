@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -22,9 +24,9 @@ import 'package:mobx/mobx.dart';
 
 part 'home_controller.g.dart';
 
-class HomeController = _HomeControllerBase with _$HomeController;
+class HomeController = HomeControllerBase with _$HomeController;
 
-abstract class _HomeControllerBase with Store {
+abstract class HomeControllerBase with Store {
   @observable
   BannerAd? topBanner;
 
@@ -48,7 +50,8 @@ abstract class _HomeControllerBase with Store {
     } on HomeNoVideoSharedException {
       return;
     } catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Load Shared Video');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Load Shared Video');
       _dialogService.showMessageError('Um problema aconteceu');
     }
   }
@@ -64,7 +67,8 @@ abstract class _HomeControllerBase with Store {
     } on HomeInvalidVideoException catch (e) {
       _dialogService.showMessageError(e.message);
     } on Exception catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Search Video');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Search Video');
       _dialogService.showMessageError('Um problema aconteceu');
     }
   }
@@ -103,17 +107,23 @@ abstract class _HomeControllerBase with Store {
     } on HomeInvalidVideoException catch (e) {
       _dialogService.showMessageError(e.message);
     } on ThumbnailException {
-      _dialogService.showMessageError('Houve um problema ao buscar as Thumbnails dos vídeos.');
+      _dialogService.showMessageError(
+          'Houve um problema ao buscar as Thumbnails dos vídeos.');
     } on VideoCacheException catch (e, s) {
-      _dialogService.showMessageError('Não foi possível encontrar o Cache do Video Cut.');
+      _dialogService
+          .showMessageError('Não foi possível encontrar o Cache do Video Cut.');
 
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Get Cache Path');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Get Cache Path');
     } on VideoCopyException {
-      _dialogService.showMessageError('Problema ao copiar o arquivo para o cache do Video Cut.');
+      _dialogService.showMessageError(
+          'Problema ao copiar o arquivo para o cache do Video Cut.');
     } on VideoCutException {
-      _dialogService.showMessageError('Houve um problema ao cortar o vídeo selecionado.');
+      _dialogService
+          .showMessageError('Houve um problema ao cortar o vídeo selecionado.');
     } on Exception catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Search Video');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Search Video');
       _dialogService.showMessageError('Um problema aconteceu');
     }
   }
@@ -132,10 +142,10 @@ abstract class _HomeControllerBase with Store {
         texts: cutVideoTexts,
       );
 
-      final _cachedFile = await _copyFileToCacheCase(url);
+      final cachedFile = await _copyFileToCacheCase(url);
 
       List<String> videosCuted = await _cutVideoCase(
-        cachedFile: _cachedFile,
+        cachedFile: cachedFile,
         secondsOfVideo: secondsOfVideo,
         secondsOfClip: secondsOfClip,
       );
@@ -152,8 +162,8 @@ abstract class _HomeControllerBase with Store {
         tempClips.add(clip);
       }
 
-      if (_cachedFile != '') {
-        _storageService.deleteFile(_cachedFile);
+      if (cachedFile != '') {
+        _storageService.deleteFile(cachedFile);
       }
 
       return tempClips;
@@ -166,8 +176,11 @@ abstract class _HomeControllerBase with Store {
 
   @action
   void loadBanner() {
-    _loadAdBannerCase().then((value) => topBanner = value).onError((e, s) async {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Load Banner');
+    _loadAdBannerCase()
+        .then((value) => topBanner = value)
+        .onError((e, s) async {
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Load Banner');
       return null;
     });
   }

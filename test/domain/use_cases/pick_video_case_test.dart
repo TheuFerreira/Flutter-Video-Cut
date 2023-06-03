@@ -22,12 +22,12 @@ class MockLogService implements LogService {
 void main() {
   final mockGallery = MockGalleryService();
   final mockLog = MockLogService();
-  final _pickVideoCase = PickVideoCaseImpl(mockGallery, mockLog);
+  final pickVideoCase = PickVideoCaseImpl(mockGallery, mockLog);
 
   test('Get video successfull', () async {
     when(mockGallery.pickVideo()).thenAnswer((_) async => File(''));
 
-    final path = await _pickVideoCase();
+    final path = await pickVideoCase();
     expect(path, isA<String>());
   });
 
@@ -35,7 +35,7 @@ void main() {
     when(mockGallery.pickVideo()).thenAnswer((_) async => null);
 
     try {
-      await _pickVideoCase();
+      await pickVideoCase();
     } catch (ex) {
       expect(ex, isA<HomeNotSelectedVideoException>());
     }

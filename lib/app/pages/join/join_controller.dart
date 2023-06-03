@@ -87,6 +87,7 @@ abstract class JoinControllerBase with Store {
       return;
     }
 
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop(clipsCopy);
   }
 

@@ -12,9 +12,9 @@ import 'package:mobx/mobx.dart';
 
 part 'about_controller.g.dart';
 
-class AboutController = _AboutControllerBase with _$AboutController;
+class AboutController = AboutControllerBase with _$AboutController;
 
-abstract class _AboutControllerBase with Store {
+abstract class AboutControllerBase with Store {
   @observable
   String version = '';
 
@@ -24,7 +24,7 @@ abstract class _AboutControllerBase with Store {
   final _updateAppCase = Modular.get<UpdateAppCase>();
   final _getVersionCase = Modular.get<GetVersionCase>();
 
-  _AboutControllerBase() {
+  AboutControllerBase() {
     getAppVersion();
   }
 
@@ -44,8 +44,9 @@ abstract class _AboutControllerBase with Store {
     try {
       await _checkAppVersionCase();
 
-      final confirm =
-          await _dialogService.showQuestionDialog(context, 'Atualização disponível', 'Deseja atualizar o Video Cut?');
+      // ignore: use_build_context_synchronously
+      final confirm = await _dialogService.showQuestionDialog(
+          context, 'Atualização disponível', 'Deseja atualizar o Video Cut?');
       if (!confirm) {
         return;
       }
@@ -54,7 +55,8 @@ abstract class _AboutControllerBase with Store {
     } on AppDontHaveUpdateException {
       _dialogService.showMessage('Você está na versão mais atual');
     } catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Update Video Cut');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Update Video Cut');
       _dialogService.showMessageError('Um problema aconteceu');
     }
   }
@@ -65,7 +67,8 @@ abstract class _AboutControllerBase with Store {
     try {
       version = await _getVersionCase();
     } catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Get Version of App');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Get Version of App');
       _dialogService.showMessageError('Um problema aconteceu');
     }
   }

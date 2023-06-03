@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 
@@ -20,9 +22,9 @@ import 'package:video_player/video_player.dart';
 
 part 'video_controller.g.dart';
 
-class VideoController = _VideoControllerBase with _$VideoController;
+class VideoController = VideoControllerBase with _$VideoController;
 
-abstract class _VideoControllerBase with Store {
+abstract class VideoControllerBase with Store {
   final animateIconController = AnimateIconController();
 
   @observable
@@ -233,7 +235,8 @@ abstract class _VideoControllerBase with Store {
   }
 
   @action
-  void changeTrack(double newValue) => playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
+  void changeTrack(double newValue) =>
+      playerController!.seekTo(Duration(milliseconds: newValue.toInt()));
 
   _updateCurrentTime() {
     final milliseconds = playerController!.value.position.inMilliseconds;
@@ -275,15 +278,18 @@ abstract class _VideoControllerBase with Store {
       final nextIndex = index == 0 ? index : index - 1;
       await _selectClip(clips[nextIndex]);
     } catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Delete Clip');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Delete Clip');
       _dialogService.showMessage('Um problema aconteceu');
     }
   }
 
   @action
-  void saveFileInGallery(BuildContext context) => _saveFileInGallery(context, clips[selectedClip]);
+  void saveFileInGallery(BuildContext context) =>
+      _saveFileInGallery(context, clips[selectedClip]);
   @action
-  void saveSelectedFileInGallery(BuildContext context, Clip clip) => _saveFileInGallery(context, clip);
+  void saveSelectedFileInGallery(BuildContext context, Clip clip) =>
+      _saveFileInGallery(context, clip);
 
   _saveFileInGallery(BuildContext context, Clip clip) async {
     final save = await _dialogService.showQuestionDialog(
@@ -304,7 +310,8 @@ abstract class _VideoControllerBase with Store {
 
       _dialogService.showMessage('Clip salvo na galeria');
     } catch (e, s) {
-      await FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Save Clip in DCIM/Video Cut');
+      await FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Save Clip in DCIM/Video Cut');
       _dialogService.showMessageError('Erro ao salvar o clip');
     } finally {
       infoDialog.close();
@@ -324,7 +331,8 @@ abstract class _VideoControllerBase with Store {
 
     Navigator.of(context)
         .push<List<Clip>>(
-          MaterialPageRoute(builder: (_) => JoinPage(clips: List<Clip>.from(clips))),
+          MaterialPageRoute(
+              builder: (_) => JoinPage(clips: List<Clip>.from(clips))),
         )
         .then(_joinClips);
   }
@@ -349,7 +357,8 @@ abstract class _VideoControllerBase with Store {
   @action
   shareClip(Clip clip) {
     _shareClipsCase.call([clip]).onError((e, s) {
-      FirebaseCrashlytics.instance.recordError(e, s, reason: 'Error on Share Clip');
+      FirebaseCrashlytics.instance
+          .recordError(e, s, reason: 'Error on Share Clip');
       _dialogService.showMessageError('Erro ao compartilhar clip');
     });
   }
