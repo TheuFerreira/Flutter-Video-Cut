@@ -1,8 +1,11 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/version_service.dart';
+import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
 import 'package:new_version/new_version.dart';
 
 class VersionServiceImpl implements VersionService {
   final _version = NewVersion();
+  final _methodChannel = const MethodChannel(methodChannelName);
 
   @override
   Future<bool> hasUpdate() async {
@@ -23,7 +26,7 @@ class VersionServiceImpl implements VersionService {
 
   @override
   Future<String> getVersion() async {
-    final version = await _version.getVersionStatus();
-    return version!.localVersion;
+    final version = await _methodChannel.invokeMethod<String>('getVersion');
+    return version!;
   }
 }

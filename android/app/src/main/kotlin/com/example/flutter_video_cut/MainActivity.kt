@@ -69,6 +69,9 @@ class MainActivity: FlutterActivity() {
                         val path = call.arguments<String>()
                         callSaveInDCIM(path!!, result)
                     }
+                    "getVersion" -> {
+                        getVersionName(result)
+                    }
                 }
             }
     }
@@ -174,5 +177,10 @@ class MainActivity: FlutterActivity() {
 
         resolver.update(uriSaved, contentValues, null, null)
         result.success(true)
+    }
+
+    private fun getVersionName(result: MethodChannel.Result) {
+        val versionName = GetVersionName().execute(context)
+        result.success(versionName)
     }
 }
