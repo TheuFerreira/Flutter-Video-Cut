@@ -2,6 +2,7 @@ package com.example.flutter_video_cut
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -71,6 +72,10 @@ class MainActivity: FlutterActivity() {
                     }
                     "getVersion" -> {
                         getVersionName(result)
+                    }
+                    "getCacheDirectory" -> {
+                        val path = cacheDir.path;
+                        result.success(path)
                     }
                 }
             }

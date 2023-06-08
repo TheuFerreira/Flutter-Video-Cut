@@ -1,17 +1,14 @@
-import 'package:flutter_video_cut/domain/errors/video_errors.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/path_service.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
 
 class PathServiceImpl implements PathService {
+  final _methodChannel = const MethodChannel(methodChannelName);
+
   @override
   Future<String> getCachePath() async {
-    try {
-      final temporaryDirectory = await getTemporaryDirectory();
-      final path = temporaryDirectory.path;
-      return path;
-    } on Exception {
-      throw VideoCacheException();
-    }
+    final path = await _methodChannel.invokeMethod<String>('getCacheDirectory');
+    return path!;
   }
 
   @override
