@@ -1,14 +1,11 @@
 package use_cases;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import com.example.flutter_video_cut.BuildConfig;
 
 public class GetVersionName {
 
-    public String execute(Context context) throws PackageManager.NameNotFoundException {
-        PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        String versionName = info.versionName;
+    public String execute() {
+        String versionName = BuildConfig.VERSION_NAME;
         return versionName;
     }
 }
