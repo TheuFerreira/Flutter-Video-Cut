@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_video_cut/domain/services/storage_service.dart';
 import 'package:flutter_video_cut/infra/utils/method_channel_name.dart';
-//import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:receive_sharing_intent_plus/receive_sharing_intent_plus.dart';
 
 class StorageServiceImpl implements StorageService {
   final _methodChannel = const MethodChannel(methodChannelName);
@@ -39,15 +39,13 @@ class StorageServiceImpl implements StorageService {
 
   @override
   Future<String?> getSharedFile() async {
-    return null;
-    /*final sharedMediaFiles =
-        await ReceiveSharingIntent.instance.getInitialMedia();
+    final sharedMediaFiles = await ReceiveSharingIntentPlus.getInitialMedia();
     if (sharedMediaFiles.isEmpty) {
       return null;
     }
 
     final sharedMediaFile = sharedMediaFiles.first;
     final path = sharedMediaFile.path;
-    return path;*/
+    return path;
   }
 }

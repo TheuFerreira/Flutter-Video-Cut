@@ -44,7 +44,7 @@ dependencies:
   animated_text_kit: 4.2.2
   animate_icons: 2.0.0
   google_mobile_ads: 5.1.0
-  # receive_sharing_intent: 1.8.0
+  receive_sharing_intent_plus: 1.0.1
 
 dev_dependencies:
   flutter_test:
