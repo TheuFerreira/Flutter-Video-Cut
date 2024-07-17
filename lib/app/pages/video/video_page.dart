@@ -143,6 +143,7 @@ class _VideoPageState extends State<VideoPage> {
                                 min: 0,
                                 value: currentTime,
                                 max: totalTime,
+                                activeColor: Colors.amber,
                                 onChangeStart: _controller.startChangeTrack,
                                 onChanged: _controller.changeTrack,
                                 onChangeEnd: _controller.endChangeTrack,
@@ -210,7 +211,7 @@ class _VideoPageState extends State<VideoPage> {
           ),
           const SizedBox(height: 16),
           SizedBox(
-            height: 80,
+            height: 90,
             child: Column(
               children: [
                 Expanded(

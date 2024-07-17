@@ -16,6 +16,13 @@ class AppWidget extends StatelessWidget {
         fontFamily: defaulFontFamily,
         scaffoldBackgroundColor: const Color.fromARGB(255, 30, 30, 30),
         primarySwatch: Colors.amber,
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Colors.amber,
+        ),
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.black,
+          surface: Colors.amber,
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
           elevation: 0,
