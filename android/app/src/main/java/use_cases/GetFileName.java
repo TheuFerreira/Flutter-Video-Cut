@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 public class GetFileName {
     public String execute(@NonNull ContentResolver resolver, Uri uri) {
         Cursor returnCursor = resolver.query(uri, null, null, null, null);
+        assert returnCursor != null;
+
         int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
 
         returnCursor.moveToFirst();

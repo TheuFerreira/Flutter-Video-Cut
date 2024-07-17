@@ -29,31 +29,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  image_picker: ^0.8.7+5
-  mobx: ^2.2.0
-  flutter_mobx: ^2.0.6+5
-  font_awesome_flutter: ^10.4.0
-  fluttertoast: ^8.2.2
-  video_player: ^2.6.1
-  ffmpeg_kit_flutter_min: 5.1.0-LTS
-  firebase_crashlytics: ^3.3.2
-  firebase_core: ^2.13.1
-  new_version: ^0.3.1
-  flutter_modular: ^5.0.3
-  intl: ^0.18.1
-  mockito: ^5.3.2
-  animated_text_kit: ^4.2.2
-  animate_icons: ^2.0.0
-  google_mobile_ads: ^3.0.0
-  receive_sharing_intent: ^1.4.5
+  image_picker: 0.8.8
+  mobx: 2.2.0
+  flutter_mobx: 2.0.6+5
+  font_awesome_flutter: 10.4.0
+  fluttertoast: 8.2.6
+  video_player: 2.6.1
+  ffmpeg_kit_flutter_min: 6.0.3
+  firebase_crashlytics: 3.3.2
+  firebase_core: 2.13.1
+  # new_version: 0.3.1
+  flutter_modular: 5.0.3
+  intl: 0.18.1
+  animated_text_kit: 4.2.2
+  animate_icons: 2.0.0
+  google_mobile_ads: 5.1.0
+  # receive_sharing_intent: 1.8.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mobx_codegen: ^2.3.0
-  build_runner: ^2.3.3
-  flutter_lints: ^2.0.1
-  flutter_launcher_icons: ^0.13.1
+  mobx_codegen: 2.3.0
+  build_runner: 2.3.3
+  flutter_lints: 2.0.1
+  flutter_launcher_icons: 0.13.1
+  mockito: 5.4.4
 
 flutter_icons:
   ios: false

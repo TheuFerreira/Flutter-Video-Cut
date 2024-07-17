@@ -44,9 +44,12 @@ abstract class AboutControllerBase with Store {
     try {
       await _checkAppVersionCase();
 
-      // ignore: use_build_context_synchronously
       final confirm = await _dialogService.showQuestionDialog(
-          context, 'Atualização disponível', 'Deseja atualizar o Video Cut?');
+        // ignore: use_build_context_synchronously
+        context,
+        'Atualização disponível',
+        'Deseja atualizar o Video Cut?',
+      );
       if (!confirm) {
         return;
       }

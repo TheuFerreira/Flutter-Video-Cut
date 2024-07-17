@@ -1,6 +1,6 @@
 package use_cases;
 
-import com.example.flutter_video_cut.BuildConfig;
+import androidx.multidex.BuildConfig;
 
 public class GetVersionName {
 

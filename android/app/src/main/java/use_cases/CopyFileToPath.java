@@ -15,6 +15,7 @@ public class CopyFileToPath {
         try {
             ParcelFileDescriptor video = resolver.openFileDescriptor(destiny, "w");
 
+            assert video != null;
             FileOutputStream output = new FileOutputStream(video.getFileDescriptor());
             FileInputStream input = new FileInputStream(path);
 

@@ -6,9 +6,9 @@ class LogoComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         FaIcon(
           FontAwesomeIcons.scissors,
           color: Colors.amber,

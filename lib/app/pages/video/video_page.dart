@@ -275,8 +275,8 @@ class _VideoPageState extends State<VideoPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DragTarget<Clip>(
-                onAccept: (clip) =>
-                    _controller.deleteSelectedClip(context, clip),
+                onAcceptWithDetails: (clip) =>
+                    _controller.deleteSelectedClip(context, clip.data),
                 builder: (_, __, ___) => IconButton(
                   onPressed: () => _controller.deleteClip(context),
                   icon: const FaIcon(
@@ -315,8 +315,8 @@ class _VideoPageState extends State<VideoPage> {
                 },
               ),
               DragTarget<Clip>(
-                onAccept: (clip) =>
-                    _controller.saveSelectedFileInGallery(context, clip),
+                onAcceptWithDetails: (clip) =>
+                    _controller.saveSelectedFileInGallery(context, clip.data),
                 builder: (_, __, ___) => IconButton(
                   onPressed: () => _controller.saveFileInGallery(context),
                   icon: const Icon(Icons.download),
